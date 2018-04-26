@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bf="http://www.lizo.com/schema/bf"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.lizo.com/schema/bf
+        http://www.lizo.com/schema/bf.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bf:busFactory/>
+
+
+    <bean id="findMax" class="x.demo.station.FindMax"/>
+    <bean id="findMin" class="x.demo.station.FindMin"/>
+    <bean id="soutOutOk" class="x.demo.station.SoutOutOk"/>
+    <bean id="soutOutNo" class="x.demo.station.SoutOutNo"/>
+    <bean id="getDiff" class="x.demo.station.GetDiff"/>
+
+    <bean id="end" class="x.demo.station.TestEndStation"/>
+
+    <bf:bus id="testBus" start="findMaxStop" record="false" finish="end" class="x.busflow.bus.DefaultBus"/>
+
+    <bf:stop id="findMaxStop" ref="findMax" method="doBusiness">
+        <bf:routing to="findMinStop"/>
+    </bf:stop>
+
+    <bf:stop id="findMinStop" ref="findMin" method="doBusiness">
+        <bf:routing to="getDiffStop"/>
+    </bf:stop>
+
+    <bf:stop id="getDiffStop" ref="getDiff" method="abstractCalculate">
+        <bf:routing value="ok" to="soutOutOkStop"/>
+        <bf:routing value="no" to="soutOutNoStop"/>
+    </bf:stop>
+
+    <bf:stop id="soutOutOkStop" ref="soutOutOk" method="printOk">
+    </bf:stop>
+
+
+    <bf:stop id="soutOutNoStop" ref="soutOutNo" method="printNo">
+    </bf:stop>
+
+
+</beans>
