@@ -1,12 +1,17 @@
-package taskflow.bus;
+package taskflow.worker;
 
 import taskflow.context.BusContext;
 import taskflow.task.StationRoutingWrap;
 
 /**
- * Created by lizhou on 2017/5/10/010.
+ * worker在定义的时候是SCOPE_PROTOTYPE
+ * 
+ * @author bailey.fu
+ * @date 2018年4月26日
+ * @version 1.0
+ * @description Created by lizhou on 2017/4/8/008. update by bailey.fu
  */
-public interface Bus {
+public interface Worker {
     /**
      * 获取bus上下文环境
      * @return

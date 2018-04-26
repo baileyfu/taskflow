@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-       xmlns:bf="http://www.lizo.com/schema/bf"
+       xmlns:tf="http://www.xteam.org/taskflow"
        xmlns:xcache="http://www.xteam.org/xcache"
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.lizo.com/schema/bf http://www.lizo.com/schema/bf.xsd 
+        http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-1.0.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
         http://www.xteam.org/xcache http://www.xteam.org/xcache/xcache-1.0.xsd">
 
-    <bf:busFactory/>
+    <tf:workerFactory/>
     
     <bean id="initStatus" class="x.demo.station1.InitStatus"/>
     <bean id="oneStatus" class="x.demo.station1.StationOne"/>
@@ -17,23 +17,23 @@
     <bean id="threeStatus" class="x.demo.station1.StationThree"/>
     <bean id="endStatus" class="x.demo.station1.EndStation"/>
     
-    <bf:bus id="testStatusBus" start="initStatusStop" record="true" finish="end" class="x.demo.StatusHolderBus"/>
+    <tf:worker id="testStatusBus" start="initStatusStop" record="true" finish="end" class="x.demo.StatusHolderBus"/>
 
-    <bf:stop id="initStatusStop" ref="initStatus" method="init">
-        <bf:routing value="oneStop" to="oneStop"/>
-        <bf:routing value="twoStop" to="twoStop"/>
-        <bf:routing value="threeStop" to="threeStop"/>
-    </bf:stop>
-    <bf:stop id="oneStop" ref="oneStatus" method="doBusiness">
-        <bf:routing value="twoStop" to="twoStop"/>
-    </bf:stop>
-    <bf:stop id="twoStop" ref="twoStatus" method="doBusiness">
-        <bf:routing value="threeStop" to="threeStop"/>
-    </bf:stop>
-    <bf:stop id="threeStop" ref="threeStatus" method="doBusiness">
-    </bf:stop>
-    <bf:stop id="end" ref="endStatus" method="over">
-    </bf:stop>
+    <tf:task id="initStatusStop" ref="initStatus" method="init">
+        <tf:routing value="oneStop" to="oneStop"/>
+        <tf:routing value="twoStop" to="twoStop"/>
+        <tf:routing value="threeStop" to="threeStop"/>
+    </tf:task>
+    <tf:task id="oneStop" ref="oneStatus" method="doBusiness">
+        <tf:routing value="twoStop" to="twoStop"/>
+    </tf:task>
+    <tf:task id="twoStop" ref="twoStatus" method="doBusiness">
+        <tf:routing value="threeStop" to="threeStop"/>
+    </tf:task>
+    <tf:task id="threeStop" ref="threeStatus" method="doBusiness">
+    </tf:task>
+    <tf:task id="end" ref="endStatus" method="over">
+    </tf:task>
     
     <bean id="localCache" class="xcache.bean.SingleMapCache"/>
 	<xcache:config local="localCache"/>

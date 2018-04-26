@@ -2,16 +2,16 @@ package x.demo.station;
 
 import java.util.List;
 
-import taskflow.bus.Bus;
 import taskflow.task.BusParameter;
 import taskflow.task.Task;
+import taskflow.worker.Worker;
 
 /**
  * Created by lizhou on 2017/4/8/008.
  */
 public class FindMax implements Task {
     public static final String FindMaxKey = "maxValue";
-    public void doBusiness(@BusParameter("intList") List<Integer> l, Bus bus) {
+    public void doBusiness(@BusParameter("intList") List<Integer> l, Worker bus) {
         if (l.size() == 0) {
             return;
         }

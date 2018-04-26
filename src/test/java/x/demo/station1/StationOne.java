@@ -1,12 +1,12 @@
 package x.demo.station1;
 
-import taskflow.bus.Bus;
 import taskflow.task.Task;
+import taskflow.worker.Worker;
 import x.demo.StatusHolderBus;
 
 public class StationOne implements Task{
 
-	public void doBusiness(Bus bus) {
+	public void doBusiness(Worker bus) {
 		StatusHolderBus sBus=(StatusHolderBus)bus;
 		String routingKey="twoStop";
         try {

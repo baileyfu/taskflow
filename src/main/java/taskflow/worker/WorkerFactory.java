@@ -1,4 +1,4 @@
-package taskflow.bus;
+package taskflow.worker;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -9,15 +9,14 @@ import org.springframework.beans.factory.BeanFactoryAware;
  * 该bean在定义的时候是SCOPE_PROTOTYPE
  * Created by lizhou on 2017/4/8/008.
  */
-public class BusFactory implements BeanFactoryAware {
+public class WorkerFactory implements BeanFactoryAware {
     private static BeanFactory beanFactory;
-    private Class BusClass;
 
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        BusFactory.beanFactory = beanFactory;
+        WorkerFactory.beanFactory = beanFactory;
     }
 
-    public static Bus createNewBus(String id) {
-        return beanFactory.getBean(id, Bus.class);
+    public static Worker createNewBus(String id) {
+        return beanFactory.getBean(id, Worker.class);
     }
 }

@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns="http://www.lizo.com/schema/bf" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+<xsd:schema xmlns="http://www.xteam.org/taskflow" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:beans="http://www.springframework.org/schema/beans"
             xmlns:tool="http://www.springframework.org/schema/tool"
-            targetNamespace="http://www.lizo.com/schema/bf" elementFormDefault="qualified"
+            targetNamespace="http://www.xteam.org/taskflow" elementFormDefault="qualified"
             attributeFormDefault="unqualified" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd">
-
-
     <xsd:import namespace="http://www.springframework.org/schema/beans"/>
 
-
-    <xsd:element name="stop">
+    <xsd:element name="task">
         <xsd:complexType>
             <xsd:complexContent>
                 <xsd:extension base="beans:identifiedType">
-                    <xsd:group ref="stopElements"/>
-                    <xsd:attributeGroup ref="stopAttributes"/>
+                    <xsd:group ref="taskElements"/>
+                    <xsd:attributeGroup ref="taskAttributes"/>
                 </xsd:extension>
             </xsd:complexContent>
         </xsd:complexType>
     </xsd:element>
 
-
-    <xsd:group name="stopElements">
+    <xsd:group name="taskElements">
         <xsd:sequence>
             <xsd:element ref="description" minOccurs="0"/>
             <xsd:choice minOccurs="0" maxOccurs="unbounded">
@@ -45,7 +41,7 @@
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:attributeGroup name="stopAttributes">
+    <xsd:attributeGroup name="taskAttributes">
         <xsd:attribute name="ref" type="xsd:IDREF" use="required">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
@@ -67,7 +63,7 @@
         <xsd:complexType>
             <xsd:complexContent>
                 <xsd:extension base="beans:identifiedType">
-                    <!--<xsd:group ref="stopElements"/>-->
+                    <!--<xsd:group ref="taskElements"/>-->
                     <xsd:attributeGroup ref="routingAttributes"/>
                 </xsd:extension>
             </xsd:complexContent>
@@ -115,14 +111,14 @@
     </xsd:complexType>
 
 
-    <xsd:element name="bus" type="busType">
+    <xsd:element name="worker" type="workerType">
         <xsd:annotation>
             <xsd:documentation><![CDATA[ The method invoke timeout. ]]></xsd:documentation>
         </xsd:annotation>
     </xsd:element>
 
 
-    <xsd:complexType name="busType">
+    <xsd:complexType name="workerType">
         <xsd:attribute name="id" type="xsd:ID" use="required">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
@@ -165,13 +161,13 @@
         <xsd:attribute name="record" type="xsd:boolean" default="true">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="class" type="xsd:string" default="com.lizo.busflow.bus.DefaultBus">
+        <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.DefaultWorker">
             <![CDATA[ ]]>
         </xsd:attribute>
     </xsd:complexType>
 
 
-    <xsd:element name="busFactory">
+    <xsd:element name="workerFactory">
         <xsd:annotation>
             <xsd:documentation><![CDATA[ The method invoke timeout. ]]></xsd:documentation>
         </xsd:annotation>

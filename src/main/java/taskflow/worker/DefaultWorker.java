@@ -1,4 +1,4 @@
-package taskflow.bus;
+package taskflow.worker;
 
 import com.alibaba.fastjson.JSON;
 
@@ -13,11 +13,9 @@ import java.util.List;
 
 /**
  * <p>
- * 该bean在定义的时候是SCOPE_PROTOTYPE，因此每次获取的时候都是一个全新的对象
- * 创建使用{@link BusFactory}
- * Created by lizhou on 2017/4/8/008.
+ * 任务串行执行
  */
-public class DefaultBus implements Bus {
+public class DefaultWorker implements Worker {
     private Object start;
     private int maxPath;
 
@@ -29,14 +27,14 @@ public class DefaultBus implements Bus {
 
     private int arriveStationNums;
 
-    public DefaultBus() {
+    public DefaultWorker() {
         busContext = new MapBusContext();
     }
 
     public BusContext run() {
         try {
             if (!(start instanceof StationRoutingWrap)) {
-                throw new IllegalArgumentException("bus start must be <bf:stop id=\"\">");
+                throw new IllegalArgumentException("worker start must be <tf:task id=\"\">");
             }
             ((StationRoutingWrap) start).doBusiness(this);
         } catch (Exception e) {

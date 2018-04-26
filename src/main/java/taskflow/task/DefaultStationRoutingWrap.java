@@ -1,7 +1,7 @@
 package taskflow.task;
 
 
-import taskflow.bus.Bus;
+import taskflow.worker.Worker;
 
 /**
  * Created by lizhou on 2017/3/14/014.
@@ -10,7 +10,7 @@ public class DefaultStationRoutingWrap extends AbstractStationRoutingWrap {
 
     private BusHandlerMethod handlerMethod;
 
-    public void doBusiness(Bus bus) {
+    public void doBusiness(Worker bus) {
         if (handlerMethod != null && handlerMethod.getBean() != null) {
             super.doBusiness(bus);
         }
@@ -28,7 +28,7 @@ public class DefaultStationRoutingWrap extends AbstractStationRoutingWrap {
         this.handlerMethod = handlerMethod;
     }
 
-    public void invokeStationMethod(Bus bus) throws Exception {
+    public void invokeStationMethod(Worker bus) throws Exception {
         handlerMethod.invokeForBus(bus);
     }
 }

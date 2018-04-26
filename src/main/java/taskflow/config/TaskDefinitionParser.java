@@ -24,7 +24,7 @@ import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate
  * 对于ref的Station，使用{@link StationRoutingWrap}进行包装
  * Created by lizhou on 2017/3/14/014.
  */
-public class BusinessFlowStopDefinitionParser implements BeanDefinitionParser {
+public class TaskDefinitionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String id = element.getAttribute(ID_ATTRIBUTE);
         String ref = element.getAttribute("ref");
@@ -45,7 +45,7 @@ public class BusinessFlowStopDefinitionParser implements BeanDefinitionParser {
             org.w3c.dom.Node node = element.getChildNodes().item(i);
             if (node.getNodeType() == node.ELEMENT_NODE) {
                 Element e = (Element) node;
-                if ("bf:routing".equals(e.getTagName())) {
+                if (Tag.ROUTING.getTagName().equals(e.getTagName())) {
                     routingConditions.add(dealHeadRouting(e));
                 }
             }

@@ -1,13 +1,13 @@
 package x.demo.station;
 
-import taskflow.bus.DefaultBus;
 import taskflow.task.Task;
+import taskflow.worker.DefaultWorker;
 
 /**
  * Created by lizhou on 2017/4/8/008.
  */
 public class TestEndStation implements Task {
-    public void doBusiness(DefaultBus bus) {
+    public void doBusiness(DefaultWorker bus) {
         System.out.println("over");
     }
 

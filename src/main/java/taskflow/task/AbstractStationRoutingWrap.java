@@ -1,7 +1,7 @@
 package taskflow.task;
 
-import taskflow.bus.Bus;
 import taskflow.routing.Routing;
+import taskflow.worker.Worker;
 
 /**
  * Created by lizhou on 2017/5/10/010.
@@ -9,7 +9,7 @@ import taskflow.routing.Routing;
 public abstract class AbstractStationRoutingWrap implements StationRoutingWrap {
     private Routing routing;
 
-    public void doBusiness(Bus bus) {
+    public void doBusiness(Worker bus) {
         try {
             bus.arrive(this);
             invokeStationMethod(bus);

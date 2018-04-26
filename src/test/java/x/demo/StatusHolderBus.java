@@ -1,8 +1,8 @@
 package x.demo;
 
-import taskflow.bus.DefaultBus;
+import taskflow.worker.DefaultWorker;
 
-public class StatusHolderBus extends DefaultBus {
+public class StatusHolderBus extends DefaultWorker {
 
 	public static final String STATUS_INIT="INIT";
 	public static final String STATUS_PASSED_ONE="ONE";

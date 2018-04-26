@@ -6,8 +6,8 @@ import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import taskflow.bus.Bus;
 import taskflow.context.BusContext;
+import taskflow.worker.Worker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,12 +30,12 @@ public class BusParameterResolve {
         put(short.class, DEFAULT_VALUE.defaultShort);
     }};
 
-    public static Object[] resolve(MethodParameter[] parameters, Bus bus) {
+    public static Object[] resolve(MethodParameter[] parameters, Worker bus) {
         Object[] res = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             MethodParameter methodParameter = parameters[i];
             methodParameter.initParameterNameDiscovery(parameterNameDiscoverer);
-            if (methodParameter.getParameterType().isAssignableFrom(Bus.class)) {
+            if (methodParameter.getParameterType().isAssignableFrom(Worker.class)) {
                 res[i] = bus;
                 continue;
             } else if (methodParameter.getParameterType().isAssignableFrom(BusContext.class)) {
