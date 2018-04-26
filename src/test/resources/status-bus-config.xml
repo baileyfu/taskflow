@@ -9,7 +9,7 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
         http://www.xteam.org/xcache http://www.xteam.org/xcache/xcache-1.0.xsd">
 
-    <tf:workerFactory/>
+    
     
     <bean id="initStatus" class="x.demo.station1.InitStatus"/>
     <bean id="oneStatus" class="x.demo.station1.StationOne"/>
@@ -17,7 +17,7 @@
     <bean id="threeStatus" class="x.demo.station1.StationThree"/>
     <bean id="endStatus" class="x.demo.station1.EndStation"/>
     
-    <tf:worker id="testStatusBus" start="initStatusStop" record="true" finish="end" class="x.demo.StatusHolderBus"/>
+    <tf:work id="testStatusBus" start="initStatusStop" record="true" finish="end" class="x.demo.StatusHolderBus"/>
 
     <tf:task id="initStatusStop" ref="initStatus" method="init">
         <tf:routing value="oneStop" to="oneStop"/>

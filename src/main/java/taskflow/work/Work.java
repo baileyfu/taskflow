@@ -1,7 +1,7 @@
-package taskflow.worker;
+package taskflow.work;
 
-import taskflow.context.BusContext;
-import taskflow.task.StationRoutingWrap;
+import taskflow.context.WorkContext;
+import taskflow.task.TaskRoutingWrap;
 
 /**
  * worker在定义的时候是SCOPE_PROTOTYPE
@@ -11,12 +11,12 @@ import taskflow.task.StationRoutingWrap;
  * @version 1.0
  * @description Created by lizhou on 2017/4/8/008. update by bailey.fu
  */
-public interface Worker {
+public interface Work {
     /**
      * 获取bus上下文环境
      * @return
      */
-    BusContext getBusContext();
+    WorkContext getBusContext();
 
     /**
      * 异常处理
@@ -29,7 +29,7 @@ public interface Worker {
      * @param StationRoutingWrap 包含Station具体业务逻辑和Routing信息
      * @throws Exception
      */
-    void arrive(StationRoutingWrap StationRoutingWrap) throws Exception;
+    void arrive(TaskRoutingWrap StationRoutingWrap) throws Exception;
 
     /**
      * 加入上下文环境
@@ -42,11 +42,11 @@ public interface Worker {
      * 业务开始
      * @return
      */
-    BusContext run();
+    WorkContext run();
 
     /**
      * 设置BusContext
      * @param busContext
      */
-    void setBusContext(BusContext busContext);
+    void setBusContext(WorkContext busContext);
 }

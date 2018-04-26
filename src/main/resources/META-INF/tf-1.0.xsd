@@ -111,14 +111,14 @@
     </xsd:complexType>
 
 
-    <xsd:element name="worker" type="workerType">
+    <xsd:element name="work" type="workType">
         <xsd:annotation>
             <xsd:documentation><![CDATA[ The method invoke timeout. ]]></xsd:documentation>
         </xsd:annotation>
     </xsd:element>
 
 
-    <xsd:complexType name="workerType">
+    <xsd:complexType name="workType">
         <xsd:attribute name="id" type="xsd:ID" use="required">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
@@ -161,13 +161,13 @@
         <xsd:attribute name="record" type="xsd:boolean" default="true">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.DefaultWorker">
+        <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.DefaultWork">
             <![CDATA[ ]]>
         </xsd:attribute>
     </xsd:complexType>
 
 
-    <xsd:element name="workerFactory">
+    <xsd:element name="workFactory">
         <xsd:annotation>
             <xsd:documentation><![CDATA[ The method invoke timeout. ]]></xsd:documentation>
         </xsd:annotation>

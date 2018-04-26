@@ -4,14 +4,14 @@ import java.util.List;
 
 import taskflow.task.BusParameter;
 import taskflow.task.Task;
-import taskflow.worker.Worker;
+import taskflow.work.Work;
 
 /**
  * Created by lizhou on 2017/4/8/008.
  */
 public class FindMax implements Task {
     public static final String FindMaxKey = "maxValue";
-    public void doBusiness(@BusParameter("intList") List<Integer> l, Worker bus) {
+    public void doBusiness(@BusParameter("intList") List<Integer> l, Work bus) {
         if (l.size() == 0) {
             return;
         }

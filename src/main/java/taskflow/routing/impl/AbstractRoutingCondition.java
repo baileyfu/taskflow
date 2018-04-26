@@ -1,20 +1,20 @@
 package taskflow.routing.impl;
 
 import taskflow.routing.RoutingCondition;
-import taskflow.task.StationRoutingWrap;
+import taskflow.task.TaskRoutingWrap;
 
 /**
  * RoutingCondition抽象实现类，反向代理StationRoutingWrap的调用。
  * Created by lizhou on 2017/4/7/007.
  */
 public abstract class AbstractRoutingCondition implements RoutingCondition {
-    private StationRoutingWrap stationRoutingWrap;
+    private TaskRoutingWrap stationRoutingWrap;
 
-    public StationRoutingWrap getStationRoutingWrap() {
+    public TaskRoutingWrap getStationRoutingWrap() {
         return stationRoutingWrap;
     }
 
-    public void setStationRoutingWrap(StationRoutingWrap stationRoutingWrap) {
+    public void setStationRoutingWrap(TaskRoutingWrap stationRoutingWrap) {
         this.stationRoutingWrap = stationRoutingWrap;
     }
 }

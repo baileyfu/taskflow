@@ -2,10 +2,10 @@ package taskflow.routing.impl;
 
 import java.util.List;
 
-import taskflow.context.BusContext;
+import taskflow.context.WorkContext;
 import taskflow.routing.Routing;
 import taskflow.routing.RoutingCondition;
-import taskflow.task.StationRoutingWrap;
+import taskflow.task.TaskRoutingWrap;
 
 /**
  * Created by lizhou on 2017/4/7/007.
@@ -20,7 +20,7 @@ public class DefaultRouting implements Routing {
     public DefaultRouting() {
     }
 
-    public StationRoutingWrap doRouting(BusContext busContext) {
+    public TaskRoutingWrap doRouting(WorkContext busContext) {
         for (RoutingCondition routingCondition : routingConditions) {
             if (routingCondition.isDefaultMatch() ||routingCondition.matched(busContext)) {
                 return routingCondition.getStationRoutingWrap();

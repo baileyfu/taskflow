@@ -8,20 +8,20 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import taskflow.worker.WorkerFactory;
+import taskflow.work.WorkFactory;
 
 /**
- * 处理<workerFactory>标签，开启该标签以后才能使用{@link WorkerFactory}
+ * 处理<workFactory>标签，开启该标签以后才能使用{@link WorkFactory}
  * Created by lizhou on 2017/3/14/014.
  */
-public class WorkerFactoryDefinitionParser implements BeanDefinitionParser {
+public class WorkFactoryDefinitionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
 
 
         RootBeanDefinition workerFactory = new RootBeanDefinition();
-        workerFactory.setBeanClass(WorkerFactory.class);
+        workerFactory.setBeanClass(WorkFactory.class);
 
-        BeanDefinitionHolder holder = new BeanDefinitionHolder(workerFactory, WorkerFactory.class.getSimpleName());
+        BeanDefinitionHolder holder = new BeanDefinitionHolder(workerFactory, WorkFactory.class.getSimpleName());
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, parserContext.getRegistry());
         return workerFactory;
     }

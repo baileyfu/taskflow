@@ -1,8 +1,8 @@
 package x.demo;
 
-import taskflow.worker.DefaultWorker;
+import taskflow.work.DefaultWork;
 
-public class StatusHolderBus extends DefaultWorker {
+public class StatusHolderBus extends DefaultWork {
 
 	public static final String STATUS_INIT="INIT";
 	public static final String STATUS_PASSED_ONE="ONE";
@@ -17,6 +17,11 @@ public class StatusHolderBus extends DefaultWorker {
 		status = STATUS_INIT;
 	}
 	
+	public StatusHolderBus(String userName) {
+		this.userName=userName;
+		status = STATUS_INIT;
+	}
+	
 	public String getStatus() {
 		return status;
 	}
@@ -28,14 +33,9 @@ public class StatusHolderBus extends DefaultWorker {
 	public String getUserName() {
 		return userName;
 	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
 	public boolean hasFinished() {
 		return status.equals(STATUS_PASSED_END);
 	}
-	
 	public String getCacheName(String id) {
 		System.out.println("INVOKE.....................");
 		return "KAISER";

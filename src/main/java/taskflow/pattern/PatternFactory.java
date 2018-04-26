@@ -3,7 +3,7 @@ package taskflow.pattern;
 import java.util.HashMap;
 import java.util.Map;
 
-import taskflow.exception.BusinessFlowInitException;
+import taskflow.exception.TaskFlowException;
 import taskflow.pattern.match.PatternMatch;
 
 /**
@@ -22,12 +22,12 @@ public class PatternFactory {
                 if (o instanceof PatternMatch) {
                     patternMatchMap.put(patternType, (PatternMatch) o);
                 } else {
-                    throw new BusinessFlowInitException(o.getClass().getName() + " not instanceof PatternMatch");
+                    throw new TaskFlowException(o.getClass().getName() + " not instanceof PatternMatch");
                 }
             } catch (InstantiationException e) {
-                throw new BusinessFlowInitException("PatternFactory init error,can not newInstance " + clazz.getName());
+                throw new TaskFlowException("PatternFactory init error,can not newInstance " + clazz.getName());
             } catch (IllegalAccessException e) {
-                throw new BusinessFlowInitException("PatternFactory init error,can not newInstance " + clazz.getName());
+                throw new TaskFlowException("PatternFactory init error,can not newInstance " + clazz.getName());
             }
 
             ;
@@ -37,14 +37,14 @@ public class PatternFactory {
     public static PatternMatch getPatternMatch(PatternType patternType) {
         PatternMatch ret = patternMatchMap.get(patternType);
         if (ret == null) {
-            throw new BusinessFlowInitException("not find " + patternType + "in PatternFactory!");
+            throw new TaskFlowException("not find " + patternType + "in PatternFactory!");
         }
         return ret;
     }
 
     public static void checkPattern(PatternType patternType) {
         if (!patternMatchMap.containsKey(patternType)) {
-            throw new BusinessFlowInitException("not find " + patternType + "in PatternFactory!");
+            throw new TaskFlowException("not find " + patternType + "in PatternFactory!");
         }
     }
 

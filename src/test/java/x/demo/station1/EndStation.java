@@ -1,12 +1,12 @@
 package x.demo.station1;
 
 import taskflow.task.Task;
-import taskflow.worker.Worker;
+import taskflow.work.Work;
 import x.demo.StatusHolderBus;
 
 public class EndStation implements Task{
 
-	public void over(Worker bus) {
+	public void over(Work bus) {
 		StatusHolderBus sBus=(StatusHolderBus)bus;
 		if(sBus.getStart().equals(StatusHolderBus.STATUS_PASSED_THREE)) {
 			sBus.setStatus(StatusHolderBus.STATUS_PASSED_END);

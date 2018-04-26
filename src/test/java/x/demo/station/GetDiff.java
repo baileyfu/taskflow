@@ -1,6 +1,6 @@
 package x.demo.station;
 
-import taskflow.context.BusContext;
+import taskflow.context.WorkContext;
 import taskflow.task.BusParameter;
 import taskflow.task.Task;
 
@@ -9,7 +9,7 @@ import taskflow.task.Task;
  */
 public class GetDiff implements Task {
 
-    public void abstractCalculate(@BusParameter("maxValue") int a, @BusParameter("minValue") int b, BusContext busContext) {
+    public void abstractCalculate(@BusParameter("maxValue") int a, @BusParameter("minValue") int b, WorkContext busContext) {
 
         if (Math.abs(a - b) < 10) {
             busContext.setRoutingKey("ok");

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class TaskFlowNamespaceHandlerSupport extends NamespaceHandlerSupport {
 	public void init() {
 		registerBeanDefinitionParser(Tag.TASK.VALUE, new TaskDefinitionParser());
-		registerBeanDefinitionParser(Tag.WORKER.VALUE, new WorkerDefinitionParser());
-		registerBeanDefinitionParser(Tag.WORKER_FACTORY.VALUE, new WorkerFactoryDefinitionParser());
+		registerBeanDefinitionParser(Tag.WORK.VALUE, new WorkDefinitionParser());
+		registerBeanDefinitionParser(Tag.WORK_FACTORY.VALUE, new WorkFactoryDefinitionParser());
 	}
 }

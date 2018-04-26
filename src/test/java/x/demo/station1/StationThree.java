@@ -1,12 +1,12 @@
 package x.demo.station1;
 
 import taskflow.task.Task;
-import taskflow.worker.Worker;
+import taskflow.work.Work;
 import x.demo.StatusHolderBus;
 
 public class StationThree implements Task{
 
-	public void doBusiness(Worker bus) {
+	public void doBusiness(Work bus) {
 		StatusHolderBus sBus=(StatusHolderBus)bus;
         try {
         	System.out.println("Step Three begging...");

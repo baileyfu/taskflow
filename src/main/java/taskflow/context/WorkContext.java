@@ -3,7 +3,7 @@ package taskflow.context;
 /**
  * Created by lizhou on 2017/5/10/010.
  */
-public interface BusContext {
+public interface WorkContext {
 
 
     /**

@@ -1,7 +1,7 @@
 package taskflow.routing;
 
-import taskflow.context.BusContext;
-import taskflow.task.StationRoutingWrap;
+import taskflow.context.WorkContext;
+import taskflow.task.TaskRoutingWrap;
 import taskflow.task.Task;
 
 /**
@@ -11,5 +11,5 @@ import taskflow.task.Task;
  * Created by lizhou on 2017/3/14/014.
  */
 public interface Routing {
-    StationRoutingWrap doRouting(BusContext busContext);
+    TaskRoutingWrap doRouting(WorkContext busContext);
 }

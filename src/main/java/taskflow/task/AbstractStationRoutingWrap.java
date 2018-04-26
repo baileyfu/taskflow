@@ -1,15 +1,15 @@
 package taskflow.task;
 
 import taskflow.routing.Routing;
-import taskflow.worker.Worker;
+import taskflow.work.Work;
 
 /**
  * Created by lizhou on 2017/5/10/010.
  */
-public abstract class AbstractStationRoutingWrap implements StationRoutingWrap {
+public abstract class AbstractStationRoutingWrap implements TaskRoutingWrap {
     private Routing routing;
 
-    public void doBusiness(Worker bus) {
+    public void doBusiness(Work bus) {
         try {
             bus.arrive(this);
             invokeStationMethod(bus);
@@ -17,7 +17,7 @@ public abstract class AbstractStationRoutingWrap implements StationRoutingWrap {
             bus.dealExcpetion(e);
         }
         if (routing != null) {
-            StationRoutingWrap next = routing.doRouting(bus.getBusContext());
+            TaskRoutingWrap next = routing.doRouting(bus.getBusContext());
             if (next != null) {
                 next.doBusiness(bus);
             }

@@ -1,6 +1,6 @@
 package taskflow.routing.impl;
 
-import taskflow.context.BusContext;
+import taskflow.context.WorkContext;
 import taskflow.pattern.PatternFactory;
 import taskflow.pattern.PatternType;
 import taskflow.pattern.match.PatternMatch;
@@ -13,7 +13,7 @@ public class SimpleRoutingCondition extends AbstractRoutingCondition {
     private PatternType pattern;
     private String condition;
 
-    public boolean matched(BusContext busContext) {
+    public boolean matched(WorkContext busContext) {
         String routingKey = busContext.getRoutingKey();
         PatternMatch patternMatch = PatternFactory.getPatternMatch(pattern);
         return patternMatch.isMatched(routingKey, condition);

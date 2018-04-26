@@ -14,10 +14,10 @@ import org.w3c.dom.Element;
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.ID_ATTRIBUTE;
 
 /**
- * 解析<bf:bus>标签
+ * 解析<tf:work>标签
  * Created by lizhou on 2017/3/14/014.
  */
-public class WorkerDefinitionParser implements BeanDefinitionParser {
+public class WorkDefinitionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String id = element.getAttribute(ID_ATTRIBUTE);
         String start = element.getAttribute("start"); // 起始Station

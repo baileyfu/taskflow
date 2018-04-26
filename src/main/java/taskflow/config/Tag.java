@@ -9,8 +9,8 @@ package taskflow.config;
  * @description
  */
 public enum Tag {
-	WORKER_FACTORY("workerFactory"),
-	WORKER("worker"),
+	WORK_FACTORY("workFactory"),
+	WORK("work"),
 	TASK("task"),
 	ROUTING("routing");
 	public String VALUE;

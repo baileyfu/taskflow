@@ -15,13 +15,13 @@ import taskflow.pattern.PatternType;
 import taskflow.routing.impl.DefaultRouting;
 import taskflow.routing.impl.SimpleRoutingCondition;
 import taskflow.task.BusHandlerMethod;
-import taskflow.task.DefaultStationRoutingWrap;
+import taskflow.task.DefaultTaskRoutingWrap;
 
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.ID_ATTRIBUTE;
 
 /**
  * 处理<bf:stop>标签
- * 对于ref的Station，使用{@link StationRoutingWrap}进行包装
+ * 对于ref的Station，使用{@link TaskRoutingWrap}进行包装
  * Created by lizhou on 2017/3/14/014.
  */
 public class TaskDefinitionParser implements BeanDefinitionParser {
@@ -31,7 +31,7 @@ public class TaskDefinitionParser implements BeanDefinitionParser {
         String method = element.getAttribute("method");
 
         RootBeanDefinition nodeWrapDefinition = new RootBeanDefinition();
-        nodeWrapDefinition.setBeanClass(DefaultStationRoutingWrap.class);
+        nodeWrapDefinition.setBeanClass(DefaultTaskRoutingWrap.class);
 
         //解析ref属性，因为ref引用的也是一个StationRoutingWrap,可能在这里还未注册
         //因此使用RuntimeBeanReference

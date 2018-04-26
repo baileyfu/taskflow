@@ -1,47 +1,47 @@
-package taskflow.worker;
-
-import com.alibaba.fastjson.JSON;
-
-import taskflow.context.BusContext;
-import taskflow.context.BusPathRecord;
-import taskflow.context.MapBusContext;
-import taskflow.exception.MaxPathException;
-import taskflow.task.StationRoutingWrap;
+package taskflow.work;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.alibaba.fastjson.JSON;
+
+import taskflow.context.WorkContext;
+import taskflow.context.TaskTrace;
+import taskflow.context.MapWorkContext;
+import taskflow.exception.TaskFlowException;
+import taskflow.task.TaskRoutingWrap;
 
 /**
  * <p>
  * 任务串行执行
  */
-public class DefaultWorker implements Worker {
+public class DefaultWork implements Work {
     private Object start;
     private int maxPath;
 
     private Object exception;
     private Object finish;
-    private BusContext busContext;
+    private WorkContext busContext;
 
-    private List<BusPathRecord> busPathRecords = new ArrayList<BusPathRecord>();
+    private List<TaskTrace> busPathRecords = new ArrayList<TaskTrace>();
 
     private int arriveStationNums;
 
-    public DefaultWorker() {
-        busContext = new MapBusContext();
+    public DefaultWork() {
+        busContext = new MapWorkContext();
     }
 
-    public BusContext run() {
+    public WorkContext run() {
         try {
-            if (!(start instanceof StationRoutingWrap)) {
+            if (!(start instanceof TaskRoutingWrap)) {
                 throw new IllegalArgumentException("worker start must be <tf:task id=\"\">");
             }
-            ((StationRoutingWrap) start).doBusiness(this);
+            ((TaskRoutingWrap) start).doBusiness(this);
         } catch (Exception e) {
             dealExcpetion(e);
         } finally {
-            if (finish != null && finish instanceof StationRoutingWrap) {
-                ((StationRoutingWrap) finish).doBusiness(this);
+            if (finish != null && finish instanceof TaskRoutingWrap) {
+                ((TaskRoutingWrap) finish).doBusiness(this);
             }
         }
         return busContext;
@@ -49,21 +49,21 @@ public class DefaultWorker implements Worker {
 
     public void dealExcpetion(Exception e) {
         busContext.holderException(e);
-        if (exception != null && exception instanceof StationRoutingWrap) {
-            ((StationRoutingWrap) exception).doBusiness(this);
+        if (exception != null && exception instanceof TaskRoutingWrap) {
+            ((TaskRoutingWrap) exception).doBusiness(this);
         } else {
             System.err.println(e.getMessage());
         }
     }
 
-    public void arrive(StationRoutingWrap stationRoutingWrap) throws Exception {
+    public void arrive(TaskRoutingWrap stationRoutingWrap) throws Exception {
         if (maxPath <= arriveStationNums++) {
-            throw new MaxPathException("max path is:" + maxPath);
+            throw new TaskFlowException("max path is:" + maxPath);
         }
-        busPathRecords.add(new BusPathRecord(stationRoutingWrap.getName(), JSON.toJSONString(getBusContext())));
+        busPathRecords.add(new TaskTrace(stationRoutingWrap.getName(), JSON.toJSONString(getBusContext())));
     }
 
-    public BusContext getBusContext() {
+    public WorkContext getBusContext() {
         return busContext;
     }
 
@@ -116,7 +116,7 @@ public class DefaultWorker implements Worker {
         return busContext.getValue(key);
     }
 
-    public void setBusContext(BusContext busContext) {
+    public void setBusContext(WorkContext busContext) {
         this.busContext = busContext;
     }
 

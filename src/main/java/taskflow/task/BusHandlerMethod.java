@@ -11,7 +11,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
-import taskflow.worker.Worker;
+import taskflow.work.Work;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -58,8 +58,8 @@ public class BusHandlerMethod {
         this.parameters = initMethodParameters();
     }
 
-    public void invokeForBus(Worker Bus) throws Exception {
-        Object[] agrs = BusParameterResolve.resolve(parameters, Bus);
+    public void invokeForBus(Work Bus) throws Exception {
+        Object[] agrs = WorkerParameterResolve.resolve(parameters, Bus);
         doInvoke(agrs);
     }
 

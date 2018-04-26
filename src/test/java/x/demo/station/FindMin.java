@@ -4,7 +4,7 @@ import java.util.List;
 
 import taskflow.task.BusParameter;
 import taskflow.task.Task;
-import taskflow.worker.Worker;
+import taskflow.work.Work;
 
 /**
  * Created by lizhou on 2017/4/8/008.
@@ -12,7 +12,7 @@ import taskflow.worker.Worker;
 public class FindMin implements Task {
     public static final String FindMinKey = "minValue";
 
-    public void doBusiness(List<Integer> intList, @BusParameter(value = "test", require = false) char test, Worker bus) {
+    public void doBusiness(List<Integer> intList, @BusParameter(value = "test", require = false) char test, Work bus) {
         if (intList.size() == 0) {
             return;
         }

@@ -6,8 +6,8 @@ import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import taskflow.context.BusContext;
-import taskflow.worker.Worker;
+import taskflow.context.WorkContext;
+import taskflow.work.Work;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by lizhou on 2017/5/4/004.
  */
 @Component
-public class BusParameterResolve {
+public class WorkerParameterResolve {
     private static ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
     private static final DefaultValue DEFAULT_VALUE = new DefaultValue();
     private static final Map primitiveDefaultValueMap = new HashMap() {{
@@ -30,15 +30,15 @@ public class BusParameterResolve {
         put(short.class, DEFAULT_VALUE.defaultShort);
     }};
 
-    public static Object[] resolve(MethodParameter[] parameters, Worker bus) {
+    public static Object[] resolve(MethodParameter[] parameters, Work bus) {
         Object[] res = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             MethodParameter methodParameter = parameters[i];
             methodParameter.initParameterNameDiscovery(parameterNameDiscoverer);
-            if (methodParameter.getParameterType().isAssignableFrom(Worker.class)) {
+            if (methodParameter.getParameterType().isAssignableFrom(Work.class)) {
                 res[i] = bus;
                 continue;
-            } else if (methodParameter.getParameterType().isAssignableFrom(BusContext.class)) {
+            } else if (methodParameter.getParameterType().isAssignableFrom(WorkContext.class)) {
                 res[i] = bus.getBusContext();
                 continue;
             }
@@ -51,7 +51,7 @@ public class BusParameterResolve {
                 }
                 requeire = methodParameter.getParameterAnnotation(BusParameter.class).require();
             }
-            BusContext busContext = bus.getBusContext();
+            WorkContext busContext = bus.getBusContext();
             Object candicate = busContext.getValue(parameterName);
             if (candicate == null) {
                 if (requeire) {
