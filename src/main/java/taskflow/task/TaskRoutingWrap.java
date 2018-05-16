@@ -3,13 +3,22 @@ package taskflow.task;
 import taskflow.work.Work;
 
 /**
- * Created by lizhou on 2017/5/10/010.
+ * 执行task的逻辑并routing到下一个task
  */
 public interface TaskRoutingWrap {
+	String getName();
 
-    void invokeStationMethod(Work bus) throws Exception;
+	/**
+	 * 执行当前task并路由到下一个
+	 * 
+	 * @param bus
+	 */
+	void doTask(Work bus);
 
-    String getName();
-
-    void doBusiness(Work bus);
+	/**
+	 * 当前Task
+	 * 
+	 * @return
+	 */
+	Task getTask();
 }

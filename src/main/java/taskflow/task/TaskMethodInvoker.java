@@ -20,27 +20,22 @@ import java.lang.reflect.Method;
 /**
  * Created by lizhou on 2017/5/4/004.
  */
-public class BusHandlerMethod {
+public class TaskMethodInvoker {
     /**
      * Logger that is available to subclasses
      */
     protected final Log logger = LogFactory.getLog(getClass());
-
-    private final Object bean;
-
+    private final Task task;
     private final Class<?> beanType;
-
     private Method method;
-
     private final Method bridgedMethod;
-
     private final MethodParameter[] parameters;
 
 
-    public BusHandlerMethod(Object bean, String methodName) throws NoSuchMethodException {
+    public TaskMethodInvoker(Task bean, String methodName) throws NoSuchMethodException {
         Assert.notNull(bean, "Bean is required");
         Assert.notNull(methodName, "Method name is required");
-        this.bean = bean;
+        this.task = bean;
         this.beanType = ClassUtils.getUserClass(bean);
 //        this.method = station.getClass().getMethod(methodName, parameterTypes);
         for (Method tempMethod : bean.getClass().getMethods()) {
@@ -58,8 +53,8 @@ public class BusHandlerMethod {
         this.parameters = initMethodParameters();
     }
 
-    public void invokeForBus(Work Bus) throws Exception {
-        Object[] agrs = WorkerParameterResolve.resolve(parameters, Bus);
+    public void invokeTask(Work work) throws Exception {
+        Object[] agrs = WorkerParameterResolve.resolve(parameters, work);
         doInvoke(agrs);
     }
 
@@ -69,9 +64,8 @@ public class BusHandlerMethod {
     protected void doInvoke(Object... args) throws Exception {
         ReflectionUtils.makeAccessible(getBridgedMethod());
         try {
-            getBridgedMethod().invoke(bean, args);
+            getBridgedMethod().invoke(task, args);
         } catch (IllegalArgumentException ex) {
-            String text = (ex.getMessage() != null ? ex.getMessage() : "Illegal argument");
             throw new IllegalStateException(ex);
         } catch (InvocationTargetException ex) {
             // Unwrap for HandlerExceptionResolvers ...
@@ -100,11 +94,9 @@ public class BusHandlerMethod {
         }
         return result;
     }
-
-    public Object getBean() {
-        return bean;
+    public Task getTask() {
+        return task;
     }
-
     /**
      * Returns the method for this handler method.
      */
@@ -194,16 +186,16 @@ public class BusHandlerMethod {
         if (this == other) {
             return true;
         }
-        if (!(other instanceof BusHandlerMethod)) {
+        if (!(other instanceof TaskMethodInvoker)) {
             return false;
         }
-        BusHandlerMethod otherMethod = (BusHandlerMethod) other;
-        return (this.bean.equals(otherMethod.bean) && this.method.equals(otherMethod.method));
+        TaskMethodInvoker otherMethod = (TaskMethodInvoker) other;
+        return (this.task.equals(otherMethod.task) && this.method.equals(otherMethod.method));
     }
 
     @Override
     public int hashCode() {
-        return (this.bean.hashCode() * 31 + this.method.hashCode());
+        return (this.task.hashCode() * 31 + this.method.hashCode());
     }
 
     @Override
@@ -218,7 +210,7 @@ public class BusHandlerMethod {
     protected class HandlerMethodParameter extends SynthesizingMethodParameter {
 
         public HandlerMethodParameter(int index) {
-            super(BusHandlerMethod.this.bridgedMethod, index);
+            super(TaskMethodInvoker.this.bridgedMethod, index);
         }
 
         protected HandlerMethodParameter(HandlerMethodParameter original) {
@@ -227,17 +219,17 @@ public class BusHandlerMethod {
 
         @Override
         public Class<?> getContainingClass() {
-            return BusHandlerMethod.this.getBeanType();
+            return TaskMethodInvoker.this.getBeanType();
         }
 
         @Override
         public <T extends Annotation> T getMethodAnnotation(Class<T> annotationType) {
-            return BusHandlerMethod.this.getMethodAnnotation(annotationType);
+            return TaskMethodInvoker.this.getMethodAnnotation(annotationType);
         }
 
         @Override
         public <T extends Annotation> boolean hasMethodAnnotation(Class<T> annotationType) {
-            return BusHandlerMethod.this.hasMethodAnnotation(annotationType);
+            return TaskMethodInvoker.this.hasMethodAnnotation(annotationType);
         }
 
         @Override

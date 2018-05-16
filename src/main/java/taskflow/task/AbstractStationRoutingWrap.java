@@ -4,32 +4,38 @@ import taskflow.routing.Routing;
 import taskflow.work.Work;
 
 /**
- * Created by lizhou on 2017/5/10/010.
+ * 仅持有routing
  */
 public abstract class AbstractStationRoutingWrap implements TaskRoutingWrap {
-    private Routing routing;
+	private Routing routing;
 
-    public void doBusiness(Work bus) {
-        try {
-            bus.arrive(this);
-            invokeStationMethod(bus);
-        } catch (Exception e) {
-            bus.dealExcpetion(e);
-        }
-        if (routing != null) {
-            TaskRoutingWrap next = routing.doRouting(bus.getBusContext());
-            if (next != null) {
-                next.doBusiness(bus);
-            }
-        }
-    }
+	public void doTask(Work work) {
+		try {
+			work.receive(this);
+			invokeTaskMethod(work);
+		} catch (Exception e) {
+			work.dealExcpetion(e);
+		}
+		if (routing != null) {
+			TaskRoutingWrap next = routing.doRouting(work.getWorkContext());
+			if (next != null) {
+				next.doTask(work);
+			}
+		}
+	}
 
+	public Routing getRouting() {
+		return routing;
+	}
 
-    public Routing getRouting() {
-        return routing;
-    }
+	public void setRouting(Routing routing) {
+		this.routing = routing;
+	}
 
-    public void setRouting(Routing routing) {
-        this.routing = routing;
-    }
+	/**
+	 * 执行task的业务方法
+	 * 
+	 * @param work
+	 */
+	abstract void invokeTaskMethod(Work work)throws Exception;
 }

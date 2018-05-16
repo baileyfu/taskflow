@@ -24,13 +24,13 @@
         <tf:routing value="twoStop" to="twoStop"/>
         <tf:routing value="threeStop" to="threeStop"/>
     </tf:task>
-    <tf:task id="oneStop" ref="oneStatus" method="doBusiness">
+    <tf:task id="oneStop" ref="oneStatus">
         <tf:routing value="twoStop" to="twoStop"/>
     </tf:task>
-    <tf:task id="twoStop" ref="twoStatus" method="doBusiness">
+    <tf:task id="twoStop" ref="twoStatus">
         <tf:routing value="threeStop" to="threeStop"/>
     </tf:task>
-    <tf:task id="threeStop" ref="threeStatus" method="doBusiness">
+    <tf:task id="threeStop" ref="threeStatus">
     </tf:task>
     <tf:task id="end" ref="endStatus" method="over">
     </tf:task>

@@ -19,7 +19,9 @@ import java.util.Map;
 public class WorkerParameterResolve {
     private static ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
     private static final DefaultValue DEFAULT_VALUE = new DefaultValue();
-    private static final Map primitiveDefaultValueMap = new HashMap() {{
+    private static final Map<?,Object> primitiveDefaultValueMap = new HashMap<Object,Object>() {
+		private static final long serialVersionUID = 8334474156660330551L;
+	{
         put(boolean.class, DEFAULT_VALUE.defaultBoolean);
         put(byte.class, DEFAULT_VALUE.defaultByte);
         put(char.class, DEFAULT_VALUE.defaultChar);
@@ -30,16 +32,16 @@ public class WorkerParameterResolve {
         put(short.class, DEFAULT_VALUE.defaultShort);
     }};
 
-    public static Object[] resolve(MethodParameter[] parameters, Work bus) {
+    public static Object[] resolve(MethodParameter[] parameters, Work work) {
         Object[] res = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             MethodParameter methodParameter = parameters[i];
             methodParameter.initParameterNameDiscovery(parameterNameDiscoverer);
             if (methodParameter.getParameterType().isAssignableFrom(Work.class)) {
-                res[i] = bus;
+                res[i] = work;
                 continue;
             } else if (methodParameter.getParameterType().isAssignableFrom(WorkContext.class)) {
-                res[i] = bus.getBusContext();
+                res[i] = work.getWorkContext();
                 continue;
             }
             String parameterName = methodParameter.getParameterName();
@@ -51,7 +53,7 @@ public class WorkerParameterResolve {
                 }
                 requeire = methodParameter.getParameterAnnotation(BusParameter.class).require();
             }
-            WorkContext busContext = bus.getBusContext();
+            WorkContext busContext = work.getWorkContext();
             Object candicate = busContext.getValue(parameterName);
             if (candicate == null) {
                 if (requeire) {
@@ -68,7 +70,7 @@ public class WorkerParameterResolve {
     }
 
     private static Object nullValue(Class<?> parameterType) {
-
+    	//原始类型
         if (parameterType.isPrimitive()) {
             return primitiveDefaultValueMap.get(parameterType);
         }

@@ -1,10 +1,10 @@
 package x.demo.station1;
 
-import taskflow.task.Task;
+import taskflow.task.CustomMethodTask;
 import taskflow.work.Work;
 import x.demo.StatusHolderBus;
 
-public class InitStatus implements Task {
+public class InitStatus extends CustomMethodTask {
 
 	public void init(Work bus) {
 		StatusHolderBus sBus = (StatusHolderBus) bus;
@@ -21,10 +21,4 @@ public class InitStatus implements Task {
 			}
 		}
 	}
-
-	@Override
-	public String getName() {
-		return "InitStatus";
-	}
-
 }

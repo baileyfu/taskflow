@@ -1,10 +1,10 @@
 package x.demo.station1;
 
-import taskflow.task.Task;
+import taskflow.task.CustomMethodTask;
 import taskflow.work.Work;
 import x.demo.StatusHolderBus;
 
-public class EndStation implements Task{
+public class EndStation extends CustomMethodTask{
 
 	public void over(Work bus) {
 		StatusHolderBus sBus=(StatusHolderBus)bus;
@@ -13,10 +13,4 @@ public class EndStation implements Task{
 		}
         System.out.println("UserName:"+sBus.getUserName()+" has already fineshed the work flow!");
     }
-	
-	@Override
-	public String getName() {
-		return "End";
-	}
-
 }

@@ -6,7 +6,7 @@ import x.demo.StatusHolderBus;
 
 public class StationTwo implements Task{
 
-	public void doBusiness(Work bus) {
+	public void execute(Work bus) {
 		StatusHolderBus sBus=(StatusHolderBus)bus;
 		String routingKey="threeStop";
         try {

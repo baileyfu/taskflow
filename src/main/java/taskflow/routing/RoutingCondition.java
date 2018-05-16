@@ -8,13 +8,15 @@ import taskflow.task.TaskRoutingWrap;
  * Created by lizhou on 2017/4/7/007.
  */
 public interface RoutingCondition {
-    boolean matched(WorkContext busContext);
-
-    TaskRoutingWrap getStationRoutingWrap();
-
+	/**
+	 * 是否匹配workContext中指定的routing
+	 * @param workContext
+	 * @return
+	 */
+    boolean matched(WorkContext workContext);
     /**
-     * 如果返回true，则默认匹配成功
+     * 当前路由对应的taskWrap
      * @return
      */
-    boolean isDefaultMatch();
+    TaskRoutingWrap getTaskRoutingWrap();
 }

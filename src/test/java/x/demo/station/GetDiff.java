@@ -2,12 +2,12 @@ package x.demo.station;
 
 import taskflow.context.WorkContext;
 import taskflow.task.BusParameter;
-import taskflow.task.Task;
+import taskflow.task.CustomMethodTask;
 
 /**
  * Created by lizhou on 2017/4/8/008.
  */
-public class GetDiff implements Task {
+public class GetDiff extends CustomMethodTask {
 
     public void abstractCalculate(@BusParameter("maxValue") int a, @BusParameter("minValue") int b, WorkContext busContext) {
 
@@ -16,11 +16,6 @@ public class GetDiff implements Task {
         } else {
             busContext.setRoutingKey("no");
         }
-    }
-
-    @Override
-    public String getName() {
-        return null;
     }
 
 }

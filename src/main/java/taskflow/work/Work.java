@@ -9,14 +9,15 @@ import taskflow.task.TaskRoutingWrap;
  * @author bailey.fu
  * @date 2018年4月26日
  * @version 1.0
- * @description Created by lizhou on 2017/4/8/008. update by bailey.fu
+ * @description Created by lizhou on 2017/4/8/008. <br/>
+ * update by bailey.fu
  */
 public interface Work {
     /**
-     * 获取bus上下文环境
+     * 获取work上下文环境
      * @return
      */
-    WorkContext getBusContext();
+    WorkContext getWorkContext();
 
     /**
      * 异常处理
@@ -25,11 +26,11 @@ public interface Work {
     void dealExcpetion(Exception e);
 
     /**
-     * 对于每个Station在调用真正的Station业务逻辑之前进行操作
+     * 在调用真正的Task业务逻辑之前进行操作
      * @param StationRoutingWrap 包含Station具体业务逻辑和Routing信息
      * @throws Exception
      */
-    void arrive(TaskRoutingWrap StationRoutingWrap) throws Exception;
+    void receive(TaskRoutingWrap taskRoutingWrap) throws Exception;
 
     /**
      * 加入上下文环境
@@ -48,5 +49,5 @@ public interface Work {
      * 设置BusContext
      * @param busContext
      */
-    void setBusContext(WorkContext busContext);
+    void setWorkContext(WorkContext workContext);
 }

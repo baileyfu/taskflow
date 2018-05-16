@@ -12,18 +12,15 @@ import taskflow.task.TaskRoutingWrap;
  */
 public class DefaultRouting implements Routing {
     private List<RoutingCondition> routingConditions;
-
+    public DefaultRouting() {}
     public DefaultRouting(List<RoutingCondition> routingConditions) {
         this.routingConditions = routingConditions;
     }
 
-    public DefaultRouting() {
-    }
-
     public TaskRoutingWrap doRouting(WorkContext busContext) {
         for (RoutingCondition routingCondition : routingConditions) {
-            if (routingCondition.isDefaultMatch() ||routingCondition.matched(busContext)) {
-                return routingCondition.getStationRoutingWrap();
+            if (routingCondition.matched(busContext)) {
+                return routingCondition.getTaskRoutingWrap();
             }
         }
         return null;

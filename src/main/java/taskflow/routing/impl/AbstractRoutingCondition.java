@@ -8,13 +8,13 @@ import taskflow.task.TaskRoutingWrap;
  * Created by lizhou on 2017/4/7/007.
  */
 public abstract class AbstractRoutingCondition implements RoutingCondition {
-    private TaskRoutingWrap stationRoutingWrap;
+    private TaskRoutingWrap taskRoutingWrap;
 
-    public TaskRoutingWrap getStationRoutingWrap() {
-        return stationRoutingWrap;
-    }
+	public TaskRoutingWrap getTaskRoutingWrap() {
+		return taskRoutingWrap;
+	}
 
-    public void setStationRoutingWrap(TaskRoutingWrap stationRoutingWrap) {
-        this.stationRoutingWrap = stationRoutingWrap;
-    }
+	public void setTaskRoutingWrap(TaskRoutingWrap taskRoutingWrap) {
+		this.taskRoutingWrap = taskRoutingWrap;
+	}
 }
