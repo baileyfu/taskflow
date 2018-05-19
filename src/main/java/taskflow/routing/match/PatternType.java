@@ -1,7 +1,4 @@
-package taskflow.pattern;
-
-import taskflow.pattern.match.impl.RegexPatternMatch;
-import taskflow.pattern.match.impl.StringPatternMatch;
+package taskflow.routing.match;
 
 /**
  * Created by lizhou on 2017/3/14/014.

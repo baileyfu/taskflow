@@ -1,6 +1,5 @@
-package taskflow.routing.impl;
+package taskflow.routing;
 
-import taskflow.routing.RoutingCondition;
 import taskflow.task.TaskRoutingWrap;
 
 /**

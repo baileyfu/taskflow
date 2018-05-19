@@ -1,6 +1,4 @@
-package taskflow.pattern.match.impl;
-
-import taskflow.pattern.match.PatternMatch;
+package taskflow.routing.match;
 
 /**
  * Created by lizhou on 2017/3/14/014.

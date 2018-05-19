@@ -14,9 +14,9 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import taskflow.pattern.PatternType;
-import taskflow.routing.impl.DefaultRouting;
-import taskflow.routing.impl.PatternRoutingCondition;
+import taskflow.routing.DefaultRouting;
+import taskflow.routing.PatternRoutingCondition;
+import taskflow.routing.match.PatternType;
 import taskflow.task.DefaultTaskRoutingWrap;
 import taskflow.task.ReflectedTaskRoutingWrap;
 import taskflow.task.TaskMethodInvoker;

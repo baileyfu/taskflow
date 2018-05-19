@@ -1,10 +1,10 @@
-package taskflow.routing.impl;
+package taskflow.routing;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import taskflow.pattern.PatternFactory;
-import taskflow.pattern.PatternType;
-import taskflow.pattern.match.PatternMatch;
+import taskflow.routing.match.PatternFactory;
+import taskflow.routing.match.PatternMatch;
+import taskflow.routing.match.PatternType;
 import taskflow.work.context.WorkContext;
 
 /**

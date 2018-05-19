@@ -1,10 +1,9 @@
-package taskflow.pattern;
+package taskflow.routing.match;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import taskflow.exception.TaskFlowException;
-import taskflow.pattern.match.PatternMatch;
 
 /**
  * 创建PatternMatch的工厂
