@@ -39,7 +39,7 @@ public class WorkDefinitionParser implements BeanDefinitionParser {
         //保证每次获取的都是新的对象
         work.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
 
-        if(work.getBeanClass()==CustomRouteWork.class) {//只有CustomRouteWork才解析start和finish
+        if(CustomRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有CustomRouteWork才解析start和finish
         	String start = element.getAttribute("start");
             String finish = element.getAttribute("finish");
         	
@@ -49,7 +49,7 @@ public class WorkDefinitionParser implements BeanDefinitionParser {
                 RuntimeBeanReference finishBean = new RuntimeBeanReference(finish);
                 work.getPropertyValues().add("finish", finishBean);
             }
-        }else if(work.getBeanClass()==SequentialRouteWork.class) {//只有SerialRouteWork才解析sequence
+        }else if(SequentialRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有SerialRouteWork才解析sequence
         	ManagedMap<String, RuntimeBeanReference> tasksMap=new ManagedMap<>();
         	int length = element.getChildNodes().getLength();
     		for (int i = 0; i < length; i++) {
