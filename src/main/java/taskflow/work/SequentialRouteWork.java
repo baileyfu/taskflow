@@ -35,6 +35,7 @@ public class SequentialRouteWork extends AbstractWork {
 			try {
 				if (tasks!=null&&tasks.size()>0) {
 					for(TaskRoutingWrap task:tasks.values()) {
+						receive(task);
 						((AbstractTaskRoutingWrap)task).invokeTaskMethod(this);
 					}
 				}

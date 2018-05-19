@@ -1,7 +1,6 @@
 package taskflow.work;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 
@@ -15,9 +14,10 @@ public abstract class AbstractWork implements Work{
 	protected int maxTasks;
 	protected int executedTasks;
 	protected WorkContext workContext;
-	protected List<TaskTrace> taskRecords = new ArrayList<TaskTrace>();
+	protected ArrayList<TaskTrace> taskRecords;
 	public AbstractWork() {
 		workContext = new MapWorkContext();
+		taskRecords = new ArrayList<TaskTrace>();
 	}
 	/**
 	 * 最好创建子类覆盖次方法以自定义异常处理
@@ -34,6 +34,9 @@ public abstract class AbstractWork implements Work{
 			throw new TaskFlowException("max tasks is:" + maxTasks);
 		}
 		taskRecords.add(new TaskTrace(stationRoutingWrap.getName(), JSON.toJSONString(getWorkContext())));
+	}
+	public ArrayList<TaskTrace> getTaskTrace() {
+		return taskRecords;
 	}
 	public WorkContext getWorkContext() {
 		return workContext;
