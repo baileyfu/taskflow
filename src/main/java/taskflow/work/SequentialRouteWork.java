@@ -20,10 +20,6 @@ public class SequentialRouteWork extends AbstractWork {
 
 	public SequentialRouteWork() {
 	}
-	public SequentialRouteWork(LinkedHashMap<String, TaskRoutingWrap> tasks) {
-		this.tasks = tasks;
-	}
-
 	public void appendTask(TaskRoutingWrap task) {
 		if (task != null)
 			tasks.put(task.getName(), task);
@@ -44,5 +40,8 @@ public class SequentialRouteWork extends AbstractWork {
 			}
 		}
 		return workContext;
+	}
+	public void setTasks(LinkedHashMap<String, TaskRoutingWrap> tasks) {
+		this.tasks = tasks;
 	}
 }

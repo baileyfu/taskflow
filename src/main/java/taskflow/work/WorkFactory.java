@@ -14,7 +14,7 @@ public class WorkFactory implements BeanFactoryAware {
         WorkFactory.beanFactory = beanFactory;
     }
 
-    public static Work createNewBus(String id) {
+    public static Work createWork(String id) {
         return beanFactory!=null?beanFactory.getBean(id, Work.class):null;
     }
 }

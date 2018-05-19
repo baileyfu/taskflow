@@ -5,7 +5,6 @@ import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.ManagedMap;
@@ -63,9 +62,7 @@ public class WorkDefinitionParser implements BeanDefinitionParser {
     				tasksMap.put(taskRef, new RuntimeBeanReference(taskRef));
     			}
     		}
-        	ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
-			constructorArgumentValues.addIndexedArgumentValue(0, tasksMap);
-			work.setConstructorArgumentValues(constructorArgumentValues);
+			work.getPropertyValues().add("tasks", tasksMap);
         }
         work.getPropertyValues().add("maxTasks", Integer.valueOf(maxTasks));
         
