@@ -4,26 +4,22 @@ import taskflow.work.Work;
 
 /**
  * 反射调用task的方法<br/>
- * 主要用于配置式work
+ * 适用于需自定义Task方法的情况
  * 
  * @author bailey.fu
  * @date 2018年5月16日
  * @version 1.0
  * @description
  */
-public class ReflectedTaskRoutingWrap extends AbstractStationRoutingWrap {
+public class ReflectedTaskRoutingWrap extends AbstractTaskRoutingWrap {
 	private TaskMethodInvoker taskMethodInvoker;
-
-	public String getName() {
-		return this.getClass().getSimpleName();
-	}
 
 	@Override
 	public void invokeTaskMethod(Work work) throws Exception {
 		if (taskMethodInvoker != null && taskMethodInvoker.getTask() != null) {
 			taskMethodInvoker.invokeTask(work);
 		} else {
-			throw new Exception("No task be done!");
+			throw new Exception("TaskMethodInvoker is null,No task be executed !");
 		}
 	}
 

@@ -54,7 +54,7 @@ public class TaskMethodInvoker {
     }
 
     public void invokeTask(Work work) throws Exception {
-        Object[] agrs = WorkerParameterResolve.resolve(parameters, work);
+        Object[] agrs = TaskParameterResolver.resolve(parameters, work);
         doInvoke(agrs);
     }
 

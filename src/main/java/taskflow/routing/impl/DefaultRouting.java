@@ -2,10 +2,10 @@ package taskflow.routing.impl;
 
 import java.util.List;
 
-import taskflow.context.WorkContext;
 import taskflow.routing.Routing;
 import taskflow.routing.RoutingCondition;
 import taskflow.task.TaskRoutingWrap;
+import taskflow.work.context.WorkContext;
 
 /**
  * Created by lizhou on 2017/4/7/007.

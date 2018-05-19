@@ -1,8 +1,8 @@
 package x.demo;
 
-import taskflow.work.DefaultWork;
+import taskflow.work.CustomRouteWork;
 
-public class StatusHolderBus extends DefaultWork {
+public class StatusHolderBus extends CustomRouteWork {
 
 	public static final String STATUS_INIT="INIT";
 	public static final String STATUS_PASSED_ONE="ONE";

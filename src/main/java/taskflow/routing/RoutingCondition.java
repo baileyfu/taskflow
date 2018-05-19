@@ -1,7 +1,7 @@
 package taskflow.routing;
 
-import taskflow.context.WorkContext;
 import taskflow.task.TaskRoutingWrap;
+import taskflow.work.context.WorkContext;
 
 /**
  * 路由条件，现在只支持根据{@link WorkContext}中的routingKey进行路由

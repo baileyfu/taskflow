@@ -2,7 +2,7 @@ package x.demo.station;
 
 import java.util.List;
 
-import taskflow.task.BusParameter;
+import taskflow.task.Taskparam;
 import taskflow.task.CustomMethodTask;
 import taskflow.work.Work;
 
@@ -12,7 +12,7 @@ import taskflow.work.Work;
 public class FindMin extends CustomMethodTask {
     public static final String FindMinKey = "minValue";
 
-    public void doBusiness(List<Integer> intList, @BusParameter(value = "test", require = false) char test, Work bus) {
+    public void doBusiness(List<Integer> intList, @Taskparam(value = "test", require = false) char test, Work bus) {
         if (intList.size() == 0) {
             return;
         }

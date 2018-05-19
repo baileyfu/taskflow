@@ -17,8 +17,9 @@ import org.w3c.dom.Element;
 import taskflow.pattern.PatternType;
 import taskflow.routing.impl.DefaultRouting;
 import taskflow.routing.impl.PatternRoutingCondition;
-import taskflow.task.TaskMethodInvoker;
+import taskflow.task.DefaultTaskRoutingWrap;
 import taskflow.task.ReflectedTaskRoutingWrap;
+import taskflow.task.TaskMethodInvoker;
 import taskflow.task.TaskRoutingWrap;
 
 /**
@@ -31,18 +32,13 @@ public class TaskDefinitionParser implements BeanDefinitionParser {
 		String id = element.getAttribute(ID_ATTRIBUTE);
 		String ref = element.getAttribute("ref");
 		String method = element.getAttribute("method");
-		// 不配置method则默认调用Task.execute
-		method = StringUtils.isBlank(method) ? "execute" : method;
 
-		RootBeanDefinition nodeWrapDefinition = new RootBeanDefinition();
-		nodeWrapDefinition.setBeanClass(ReflectedTaskRoutingWrap.class);
-
-		// 解析ref属性，因为ref引用的也是一个StationRoutingWrap,可能在这里还未注册
+		// 解析ref属性，因为ref引用的也是一个TaskRoutingWrap,可能在这里还未注册
 		// 因此使用RuntimeBeanReference
 		RuntimeBeanReference taskRef = new RuntimeBeanReference(ref);
 
-		// 解析子标签，子标签为一个list,
-		// 这里不能直接用List<BeanDefinition>，而要用ManagedList，运行时去解析BeanDefinition
+		RootBeanDefinition taskRoutingWrapDefinition = new RootBeanDefinition();
+		// 解析routing condition
 		ManagedList<BeanDefinition> routingConditions = new ManagedList<>();
 		int length = element.getChildNodes().getLength();
 		for (int i = 0; i < length; i++) {
@@ -54,25 +50,30 @@ public class TaskDefinitionParser implements BeanDefinitionParser {
 				}
 			}
 		}
-
 		RootBeanDefinition routing = new RootBeanDefinition();
 		routing.setBeanClass(DefaultRouting.class);
 		routing.getPropertyValues().add("routingConditions", routingConditions);
 
-		nodeWrapDefinition.getPropertyValues().add("routing", routing);
+		taskRoutingWrapDefinition.getPropertyValues().add("routing", routing);
+		// 设置了自定义方法
+		if (StringUtils.isNotBlank(method)) {
+			taskRoutingWrapDefinition.setBeanClass(ReflectedTaskRoutingWrap.class);
+			
+			RootBeanDefinition taskMethodInvokerBeanDefinition = new RootBeanDefinition();
+			taskMethodInvokerBeanDefinition.setBeanClass(TaskMethodInvoker.class);
+			ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
+			constructorArgumentValues.addIndexedArgumentValue(0, taskRef);
+			constructorArgumentValues.addIndexedArgumentValue(1, method);
+			taskMethodInvokerBeanDefinition.setConstructorArgumentValues(constructorArgumentValues);
+			taskRoutingWrapDefinition.getPropertyValues().add("taskMethodInvoker", taskMethodInvokerBeanDefinition);
+		} else {
+			taskRoutingWrapDefinition.setBeanClass(DefaultTaskRoutingWrap.class);
+			taskRoutingWrapDefinition.getPropertyValues().add("task", taskRef);
+		}
 
-		// handleMethod
-		RootBeanDefinition taskMethodInvokerBeanDefinition = new RootBeanDefinition();
-		taskMethodInvokerBeanDefinition.setBeanClass(TaskMethodInvoker.class);
-		ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
-		constructorArgumentValues.addIndexedArgumentValue(0, taskRef);
-		constructorArgumentValues.addIndexedArgumentValue(1, method);
-		taskMethodInvokerBeanDefinition.setConstructorArgumentValues(constructorArgumentValues);
-		nodeWrapDefinition.getPropertyValues().add("taskMethodInvoker", taskMethodInvokerBeanDefinition);
-
-		BeanDefinitionHolder holder = new BeanDefinitionHolder(nodeWrapDefinition, id);
+		BeanDefinitionHolder holder = new BeanDefinitionHolder(taskRoutingWrapDefinition, id);
 		BeanDefinitionReaderUtils.registerBeanDefinition(holder, parserContext.getRegistry());
-		return nodeWrapDefinition;
+		return taskRoutingWrapDefinition;
 	}
 
 	private BeanDefinition dealHeadRouting(Element e) {
@@ -89,5 +90,4 @@ public class TaskDefinitionParser implements BeanDefinitionParser {
 
 		return rootBeanDefinition;
 	}
-
 }

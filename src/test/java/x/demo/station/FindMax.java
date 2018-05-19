@@ -2,7 +2,7 @@ package x.demo.station;
 
 import java.util.List;
 
-import taskflow.task.BusParameter;
+import taskflow.task.Taskparam;
 import taskflow.task.CustomMethodTask;
 import taskflow.work.Work;
 
@@ -11,7 +11,7 @@ import taskflow.work.Work;
  */
 public class FindMax extends CustomMethodTask{
     public static final String FindMaxKey = "maxValue";
-    public void doBusiness(@BusParameter("intList") List<Integer> l, Work bus) {
+    public void doBusiness(@Taskparam("intList") List<Integer> l, Work bus) {
         if (l.size() == 0) {
             return;
         }

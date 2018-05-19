@@ -1,22 +1,22 @@
 package taskflow.task;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import taskflow.context.WorkContext;
 import taskflow.work.Work;
-
-import java.util.HashMap;
-import java.util.Map;
+import taskflow.work.context.WorkContext;
 
 /**
  * Created by lizhou on 2017/5/4/004.
  */
 @Component
-public class WorkerParameterResolve {
+public class TaskParameterResolver {
     private static ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
     private static final DefaultValue DEFAULT_VALUE = new DefaultValue();
     private static final Map<?,Object> primitiveDefaultValueMap = new HashMap<Object,Object>() {
@@ -46,23 +46,22 @@ public class WorkerParameterResolve {
             }
             String parameterName = methodParameter.getParameterName();
             boolean requeire = true;
-            if (methodParameter.getParameterAnnotation(BusParameter.class) != null) {
-                String parameterNameTemp = methodParameter.getParameterAnnotation(BusParameter.class).value();
+            if (methodParameter.getParameterAnnotation(Taskparam.class) != null) {
+                String parameterNameTemp = methodParameter.getParameterAnnotation(Taskparam.class).value();
                 if (!StringUtils.isEmpty(parameterNameTemp)) {
                     parameterName = parameterNameTemp;
                 }
-                requeire = methodParameter.getParameterAnnotation(BusParameter.class).require();
+                requeire = methodParameter.getParameterAnnotation(Taskparam.class).require();
             }
-            WorkContext busContext = work.getWorkContext();
-            Object candicate = busContext.getValue(parameterName);
+            Object candicate = work.getContext(parameterName);
             if (candicate == null) {
                 if (requeire) {
                     throw new IllegalArgumentException("can not resolve parameter:" + parameterName);
                 } else {
                     candicate = nullValue(methodParameter.getParameterType());
                 }
-            } else if (candicate.getClass().isAssignableFrom(methodParameter.getParameterType())) {
-                throw new IllegalArgumentException("can not resolve parameter:" + parameterName);
+            } else if (!candicate.getClass().isAssignableFrom(methodParameter.getParameterType())) {
+                throw new IllegalArgumentException("parameter:" + parameterName+"'s type error");
             }
             res[i] = candicate;
         }

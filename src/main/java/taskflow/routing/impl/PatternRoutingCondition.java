@@ -2,10 +2,10 @@ package taskflow.routing.impl;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import taskflow.context.WorkContext;
 import taskflow.pattern.PatternFactory;
 import taskflow.pattern.PatternType;
 import taskflow.pattern.match.PatternMatch;
+import taskflow.work.context.WorkContext;
 
 /**
  * 字符串或正则匹配<br/>
@@ -15,8 +15,8 @@ public class PatternRoutingCondition extends AbstractRoutingCondition {
 	private PatternType pattern;
 	private String condition;
 
-	public boolean matched(WorkContext busContext) {
-		String routingKey = busContext.getRoutingKey();
+	public boolean matched(WorkContext workContext) {
+		String routingKey = workContext.getRoutingKey();
 		PatternMatch patternMatch = PatternFactory.getPatternMatch(pattern);
 		return patternMatch.isMatched(routingKey, condition);
 	}

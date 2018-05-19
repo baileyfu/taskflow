@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:tf="http://www.xteam.org/taskflow"
+       xmlns:xcache="http://www.xteam.org/xcache"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-1.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.xteam.org/xcache http://www.xteam.org/xcache/xcache-1.0.xsd">
+
+    <bean id="taskA" class="x.demo.work.task.TaskA"/>
+    <bean id="taskB" class="x.demo.work.task.TaskB"/>
+    <bean id="taskC" class="x.demo.work.task.TaskC"/>
+    
+    <tf:task id="step1" ref="taskA"/>
+    <tf:task id="step2" ref="taskB"/>
+    <tf:task id="step3" ref="taskC" method="method1"/>
+    <tf:task id="step4" ref="taskC" method="method2"/>
+    <tf:task id="step5" ref="taskC" method="method3"/>
+    <tf:task id="end" ref="taskC" method="methodEnd"/>
+    
+    <tf:work id="sequentialTaskWork" record="true" class="taskflow.work.SequentialRouteWork">
+    	<tf:task-ref value="step3"/>
+    	<tf:task-ref value="step2"/>
+    	<tf:task-ref value="step1"/>
+    	<tf:task-ref value="step5"/>
+    	<tf:task-ref value="end"/>
+    </tf:work>
+</beans>

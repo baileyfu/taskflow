@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface BusParameter {
+public @interface Taskparam {
     String value() default "";
 
     boolean require() default true;

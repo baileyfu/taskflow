@@ -2,9 +2,11 @@
 <xsd:schema xmlns="http://www.xteam.org/taskflow" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:beans="http://www.springframework.org/schema/beans"
             xmlns:tool="http://www.springframework.org/schema/tool"
+            xmlns:util="http://www.springframework.org/schema/util"
             targetNamespace="http://www.xteam.org/taskflow" elementFormDefault="qualified"
             attributeFormDefault="unqualified" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd">
+            xsi:schemaLocation="http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd
+            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
     <xsd:import namespace="http://www.springframework.org/schema/beans"/>
 
     <xsd:element name="task">
@@ -110,24 +112,25 @@
     </xsd:complexType>
 
 
-    <xsd:element name="work" type="workType">
+    <xsd:element name="work">
         <xsd:annotation>
             <xsd:documentation><![CDATA[ The method invoke timeout. ]]></xsd:documentation>
         </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="beans:identifiedType">
+                    <xsd:group ref="workElements"/>
+                    <xsd:attributeGroup ref="workAttributes"/>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
     </xsd:element>
-
-
-    <xsd:complexType name="workType">
-        <xsd:attribute name="id" type="xsd:ID" use="required">
+    <xsd:attributeGroup name="workAttributes">
+        <!-- <xsd:attribute name="id" type="xsd:ID" use="required">
             <xsd:annotation>
-                <!--<xsd:appinfo>-->
-                <!--<tool:annotation kind="ref">-->
-                <!--<tool:expected-type type="java.lang.Object"/>-->
-                <!--</tool:annotation>-->
-                <!--</xsd:appinfo>-->
             </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="start" type="xsd:string" use="required">
+        </xsd:attribute> -->
+        <xsd:attribute name="start" type="xsd:IDREF">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
                 <!--<tool:annotation kind="ref">-->
@@ -136,17 +139,8 @@
                 <!--</xsd:appinfo>-->
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="maxPath" type="xsd:integer" default="100000">
+        <xsd:attribute name="maxTasks" type="xsd:integer" default="100000">
             <![CDATA[ ]]>
-        </xsd:attribute>
-        <xsd:attribute name="exception" type="xsd:IDREF">
-            <xsd:annotation>
-                <!--<xsd:appinfo>-->
-                <!--<tool:annotation kind="ref">-->
-                <!--<tool:expected-type type="java.lang.Object"/>-->
-                <!--</tool:annotation>-->
-                <!--</xsd:appinfo>-->
-            </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="finish" type="xsd:IDREF">
             <xsd:annotation>
@@ -160,11 +154,21 @@
         <xsd:attribute name="record" type="xsd:boolean" default="true">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.DefaultWork">
+        <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.CustomRouteWork">
             <![CDATA[ ]]>
         </xsd:attribute>
-    </xsd:complexType>
-
+    </xsd:attributeGroup>
+	<xsd:group name="workElements">
+        <xsd:sequence>
+            <xsd:element name="task-ref" minOccurs="0" maxOccurs="unbounded">
+            	<xsd:complexType mixed="true">
+		            <xsd:attribute name="value" type="xsd:string">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
+		        </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:group>
 
     <xsd:element name="workFactory">
         <xsd:annotation>

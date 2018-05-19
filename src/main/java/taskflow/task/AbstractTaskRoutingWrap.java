@@ -6,12 +6,14 @@ import taskflow.work.Work;
 /**
  * 仅持有routing
  */
-public abstract class AbstractStationRoutingWrap implements TaskRoutingWrap {
+public abstract class AbstractTaskRoutingWrap implements TaskRoutingWrap {
+	private String name;
 	private Routing routing;
 
 	public void doTask(Work work) {
 		try {
 			work.receive(this);
+			//执行Task的业务方法
 			invokeTaskMethod(work);
 		} catch (Exception e) {
 			work.dealExcpetion(e);
@@ -23,7 +25,14 @@ public abstract class AbstractStationRoutingWrap implements TaskRoutingWrap {
 			}
 		}
 	}
+	@Override
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 	public Routing getRouting() {
 		return routing;
 	}
@@ -37,5 +46,5 @@ public abstract class AbstractStationRoutingWrap implements TaskRoutingWrap {
 	 * 
 	 * @param work
 	 */
-	abstract void invokeTaskMethod(Work work)throws Exception;
+	public abstract void invokeTaskMethod(Work work)throws Exception;
 }

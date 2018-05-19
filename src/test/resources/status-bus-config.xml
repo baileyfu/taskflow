@@ -34,8 +34,4 @@
     </tf:task>
     <tf:task id="end" ref="endStatus" method="over">
     </tf:task>
-    
-    <bean id="localCache" class="xcache.bean.SingleMapCache"/>
-	<xcache:config local="localCache"/>
-	<xcache:autoproxy/>
 </beans>
