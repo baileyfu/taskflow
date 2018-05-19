@@ -22,8 +22,8 @@ public abstract class AbstractWork implements Work{
 	/**
 	 * 最好创建子类覆盖次方法以自定义异常处理
 	 */
-	public void dealExcpetion(Exception e) {
-		System.err.println(e.getMessage());
+	public void dealExcpetion(Exception workException) {
+		System.err.println(workException.getMessage());
 	}
 
 	/**

@@ -21,13 +21,6 @@ public interface Work {
 	WorkContext getWorkContext();
 
 	/**
-	 * 处理Work执行过程中的异常;也包括各Task执行过程中hold的异常
-	 * 
-	 * @param e
-	 */
-	void dealExcpetion(Exception e);
-
-	/**
 	 * 在调用真正的Task业务逻辑之前进行操作
 	 * 
 	 * @param StationRoutingWrap
@@ -57,4 +50,9 @@ public interface Work {
 	 * @return
 	 */
 	WorkContext run();
+	/**
+	 * 处理Work执行过程中的异常;也包括各Task执行过程中hold的异常
+	 * @param workException Work.run时抛出的异常
+	 */
+	void dealExcpetion(Exception workException);
 }
