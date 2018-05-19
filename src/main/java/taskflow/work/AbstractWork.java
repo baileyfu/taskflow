@@ -9,6 +9,7 @@ import taskflow.work.context.TaskTrace;
 import taskflow.work.context.WorkContext;
 
 public abstract class AbstractWork implements Work{
+	protected String name;
 	protected int maxTasks;
 	protected int executedTasks;
 	protected WorkContext workContext;
@@ -16,6 +17,12 @@ public abstract class AbstractWork implements Work{
 	public AbstractWork() {
 		workContext = new MapWorkContext();
 		taskRecords = new ArrayList<TaskTrace>();
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	/**
 	 * 最好创建子类覆盖次方法以自定义异常处理

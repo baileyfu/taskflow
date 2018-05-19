@@ -38,6 +38,7 @@ public class TaskDefinitionParser implements BeanDefinitionParser {
 		RuntimeBeanReference taskRef = new RuntimeBeanReference(ref);
 
 		RootBeanDefinition taskRoutingWrapDefinition = new RootBeanDefinition();
+		taskRoutingWrapDefinition.getPropertyValues().add("name", id);
 		// 解析routing condition
 		ManagedList<BeanDefinition> routingConditions = new ManagedList<>();
 		int length = element.getChildNodes().getLength();

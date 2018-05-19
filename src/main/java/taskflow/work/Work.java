@@ -16,6 +16,7 @@ import taskflow.work.context.WorkContext;
  *              update by bailey.fu
  */
 public interface Work {
+	String getName();
 	/**
 	 * 获取work上下文环境
 	 * 

@@ -30,6 +30,7 @@ public class WorkDefinitionParser implements BeanDefinitionParser {
         String clazz = element.getAttribute("class");
 
         RootBeanDefinition work = new RootBeanDefinition();
+        work.getPropertyValues().add("name", id);
         try {
             Class<?> workClass = Class.forName(clazz);
             work.setBeanClass(workClass);

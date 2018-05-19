@@ -10,7 +10,6 @@ public abstract class AbstractTaskRoutingWrap implements TaskRoutingWrap {
 	private String name;
 	private Routing routing;
 	public AbstractTaskRoutingWrap(){
-		this.name=this.getClass().getSimpleName();
 	}
 	public void doTask(Work work) {
 		try {
