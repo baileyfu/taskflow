@@ -1,10 +1,9 @@
 package x.demo.station1;
 
-import taskflow.task.CustomMethodTask;
 import taskflow.work.Work;
 import x.demo.StatusHolderBus;
 
-public class InitStatus extends CustomMethodTask {
+public class InitStatus {
 
 	public void init(Work bus) {
 		StatusHolderBus sBus = (StatusHolderBus) bus;

@@ -9,7 +9,9 @@ import taskflow.work.Work;
 public abstract class AbstractTaskRoutingWrap implements TaskRoutingWrap {
 	private String name;
 	private Routing routing;
-
+	public AbstractTaskRoutingWrap(){
+		this.name=this.getClass().getSimpleName();
+	}
 	public void doTask(Work work) {
 		try {
 			work.receive(this);

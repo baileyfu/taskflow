@@ -14,11 +14,4 @@ public interface TaskRoutingWrap {
 	 * @param bus
 	 */
 	void doTask(Work bus);
-
-	/**
-	 * 当前Task
-	 * 
-	 * @return
-	 */
-	Task getTask();
 }

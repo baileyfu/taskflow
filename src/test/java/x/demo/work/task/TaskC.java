@@ -2,11 +2,10 @@ package x.demo.work.task;
 
 import java.util.Date;
 
-import taskflow.task.CustomMethodTask;
 import taskflow.task.Taskparam;
 import taskflow.work.Work;
 
-public class TaskC extends CustomMethodTask {
+public class TaskC  {
 
 	public void method1() {
 		System.out.println("TaskC's method1 be invoked");

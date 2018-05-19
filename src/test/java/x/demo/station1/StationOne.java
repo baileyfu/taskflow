@@ -21,9 +21,4 @@ public class StationOne implements Task{
         }
         sBus.setRoutingKey(routingKey);
     }
-
-	@Override
-	public String getName() {
-		return this.getClass().getSimpleName();
-	}
 }

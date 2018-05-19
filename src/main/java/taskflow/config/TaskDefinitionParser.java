@@ -67,6 +67,9 @@ public class TaskDefinitionParser implements BeanDefinitionParser {
 			taskMethodInvokerBeanDefinition.setConstructorArgumentValues(constructorArgumentValues);
 			taskRoutingWrapDefinition.getPropertyValues().add("taskMethodInvoker", taskMethodInvokerBeanDefinition);
 		} else {
+			/**
+			 * 此时taskRef必须是Task接口
+			 * */
 			taskRoutingWrapDefinition.setBeanClass(DefaultTaskRoutingWrap.class);
 			taskRoutingWrapDefinition.getPropertyValues().add("task", taskRef);
 		}

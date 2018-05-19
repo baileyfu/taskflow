@@ -6,10 +6,6 @@ import taskflow.task.Task;
 import taskflow.work.Work;
 
 public class TaskB implements Task{
-	@Override
-	public String getName() {
-		return this.getClass().getSimpleName();
-	}
 
 	@Override
 	public void execute(Work work) {

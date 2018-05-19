@@ -10,11 +10,6 @@ import taskflow.work.Work;
  */
 public interface Task {
 	/**
-	 * 任务名;唯一
-	 * @return
-	 */
-	String getName();
-	/**
 	 * 执行业务逻辑<br/>
 	 * 参数和执行结果均放入work的WorkContext
 	 * 

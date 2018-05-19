@@ -22,10 +22,4 @@ public class StationThree implements Task{
         	sBus.setRoutingKey("break");
         }
     }
-	
-	@Override
-	public String getName() {
-		return "StationThree";
-	}
-
 }

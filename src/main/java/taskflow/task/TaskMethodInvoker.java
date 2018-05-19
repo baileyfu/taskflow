@@ -25,17 +25,18 @@ public class TaskMethodInvoker {
      * Logger that is available to subclasses
      */
     protected final Log logger = LogFactory.getLog(getClass());
-    private final Task task;
+    //不一定是Task接口
+    private final Object bean;
     private final Class<?> beanType;
     private Method method;
     private final Method bridgedMethod;
     private final MethodParameter[] parameters;
 
 
-    public TaskMethodInvoker(Task bean, String methodName) throws NoSuchMethodException {
+    public TaskMethodInvoker(Object bean, String methodName) throws NoSuchMethodException {
         Assert.notNull(bean, "Bean is required");
         Assert.notNull(methodName, "Method name is required");
-        this.task = bean;
+        this.bean = bean;
         this.beanType = ClassUtils.getUserClass(bean);
 //        this.method = station.getClass().getMethod(methodName, parameterTypes);
         for (Method tempMethod : bean.getClass().getMethods()) {
@@ -64,7 +65,7 @@ public class TaskMethodInvoker {
     protected void doInvoke(Object... args) throws Exception {
         ReflectionUtils.makeAccessible(getBridgedMethod());
         try {
-            getBridgedMethod().invoke(task, args);
+            getBridgedMethod().invoke(bean, args);
         } catch (IllegalArgumentException ex) {
             throw new IllegalStateException(ex);
         } catch (InvocationTargetException ex) {
@@ -93,9 +94,6 @@ public class TaskMethodInvoker {
             result[i] = parameter;
         }
         return result;
-    }
-    public Task getTask() {
-        return task;
     }
     /**
      * Returns the method for this handler method.
@@ -190,12 +188,12 @@ public class TaskMethodInvoker {
             return false;
         }
         TaskMethodInvoker otherMethod = (TaskMethodInvoker) other;
-        return (this.task.equals(otherMethod.task) && this.method.equals(otherMethod.method));
+        return (this.bean.equals(otherMethod.bean) && this.method.equals(otherMethod.method));
     }
 
     @Override
     public int hashCode() {
-        return (this.task.hashCode() * 31 + this.method.hashCode());
+        return (this.bean.hashCode() * 31 + this.method.hashCode());
     }
 
     @Override

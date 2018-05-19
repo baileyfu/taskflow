@@ -1,5 +1,6 @@
 package taskflow.task;
 
+import taskflow.exception.TaskFlowException;
 import taskflow.work.Work;
 
 /**
@@ -16,10 +17,10 @@ public class ReflectedTaskRoutingWrap extends AbstractTaskRoutingWrap {
 
 	@Override
 	public void invokeTaskMethod(Work work) throws Exception {
-		if (taskMethodInvoker != null && taskMethodInvoker.getTask() != null) {
+		if (taskMethodInvoker != null) {
 			taskMethodInvoker.invokeTask(work);
 		} else {
-			throw new Exception("TaskMethodInvoker is null,No task be executed !");
+			throw new TaskFlowException("TaskMethodInvoker is null,No task be executed !");
 		}
 	}
 
@@ -29,10 +30,5 @@ public class ReflectedTaskRoutingWrap extends AbstractTaskRoutingWrap {
 
 	public void setTaskMethodInvoker(TaskMethodInvoker taskMethodInvoker) {
 		this.taskMethodInvoker = taskMethodInvoker;
-	}
-
-	@Override
-	public Task getTask() {
-		return taskMethodInvoker != null ? taskMethodInvoker.getTask() : null;
 	}
 }

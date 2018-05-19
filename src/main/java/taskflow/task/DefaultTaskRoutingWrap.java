@@ -17,10 +17,6 @@ public class DefaultTaskRoutingWrap extends AbstractTaskRoutingWrap {
 		this.task = task;
 	}
 	@Override
-	public Task getTask() {
-		return task;
-	}
-	@Override
 	public void invokeTaskMethod(Work work) throws Exception {
 		task.execute(work);
 	}
