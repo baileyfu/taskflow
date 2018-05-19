@@ -2,8 +2,6 @@ package taskflow.work;
 
 import java.util.ArrayList;
 
-import com.alibaba.fastjson.JSON;
-
 import taskflow.exception.TaskFlowException;
 import taskflow.task.TaskRoutingWrap;
 import taskflow.work.context.MapWorkContext;
@@ -33,7 +31,7 @@ public abstract class AbstractWork implements Work{
 		if (maxTasks <= executedTasks++) {
 			throw new TaskFlowException("max tasks is:" + maxTasks);
 		}
-		taskRecords.add(new TaskTrace(stationRoutingWrap.getName(), JSON.toJSONString(getWorkContext())));
+		taskRecords.add(new TaskTrace(stationRoutingWrap.getName(), workContext.toString()));
 	}
 	public ArrayList<TaskTrace> getTaskTrace() {
 		return taskRecords;

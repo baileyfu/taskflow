@@ -62,4 +62,11 @@ public class MapWorkContext implements WorkContext {
 	public <T> T getResult() {
 		return (T) result;
 	}
+
+	@Override
+	public String toString() {
+		return "MapWorkContext [routingKey=" + routingKey + ", context=" + context + ", result=" + result
+				+ ", exceptions=" + exceptions + "]";
+	}
+	
 }

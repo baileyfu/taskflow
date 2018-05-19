@@ -60,7 +60,7 @@ public class TaskParameterResolver {
                 } else {
                     candicate = nullValue(methodParameter.getParameterType());
                 }
-            } else if (!candicate.getClass().isAssignableFrom(methodParameter.getParameterType())) {
+            } else if (!methodParameter.getParameterType().isAssignableFrom(candicate.getClass())) {
                 throw new IllegalArgumentException("parameter:" + parameterName+"'s type error");
             }
             res[i] = candicate;
