@@ -45,7 +45,7 @@ public class TaskParameterResolver {
                 continue;
             }
             String parameterName = methodParameter.getParameterName();
-            boolean requeire = true;
+            boolean requeire = false;
             if (methodParameter.getParameterAnnotation(Taskparam.class) != null) {
                 String parameterNameTemp = methodParameter.getParameterAnnotation(Taskparam.class).value();
                 if (!StringUtils.isEmpty(parameterNameTemp)) {
