@@ -74,11 +74,12 @@ public class TaskParameterResolver {
                 } else {
                     candicate = nullValue(methodParameter.getParameterType());
                 }
-            }
-			Class<?> parameterType = methodParameter.getParameterType();
-			parameterType = parameterType.isPrimitive() ? wrappedTypeMap.get(parameterType) : parameterType;
-			if (!parameterType.isAssignableFrom(candicate.getClass())) {
-				throw new IllegalArgumentException("parameter:" + parameterName + "'s type error");
+			} else {
+				Class<?> parameterType = methodParameter.getParameterType();
+				parameterType = parameterType.isPrimitive() ? wrappedTypeMap.get(parameterType) : parameterType;
+				if (!parameterType.isAssignableFrom(candicate.getClass())) {
+					throw new IllegalArgumentException("parameter:" + parameterName + "'s type error");
+				}
 			}
             res[i] = candicate;
         }
