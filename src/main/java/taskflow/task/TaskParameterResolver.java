@@ -14,6 +14,7 @@ import taskflow.work.context.WorkContext;
 
 /**
  * Created by lizhou on 2017/5/4/004.
+ * Updated by baileyfu on 2018/6/17
  */
 @Component
 public class TaskParameterResolver {
@@ -31,6 +32,19 @@ public class TaskParameterResolver {
         put(long.class, DEFAULT_VALUE.defaultLong);
         put(short.class, DEFAULT_VALUE.defaultShort);
     }};
+    private static final Map<Class<?>,Class<?>> wrappedTypeMap=new HashMap<Class<?>,Class<?>>() {
+		private static final long serialVersionUID = 1L;
+		{
+			put(boolean.class, Boolean.class);
+	        put(byte.class, Byte.class);
+	        put(char.class, Character.class);
+	        put(double.class, Double.class);
+	        put(float.class, Float.class);
+	        put(int.class, Integer.class);
+	        put(long.class, Long.class);
+	        put(short.class, Short.class);
+		}
+    };
 
     public static Object[] resolve(MethodParameter[] parameters, Work work) {
         Object[] res = new Object[parameters.length];
@@ -60,9 +74,12 @@ public class TaskParameterResolver {
                 } else {
                     candicate = nullValue(methodParameter.getParameterType());
                 }
-            } else if (!methodParameter.getParameterType().isAssignableFrom(candicate.getClass())) {
-                throw new IllegalArgumentException("parameter:" + parameterName+"'s type error");
             }
+			Class<?> parameterType = methodParameter.getParameterType();
+			parameterType = parameterType.isPrimitive() ? wrappedTypeMap.get(parameterType) : parameterType;
+			if (!parameterType.isAssignableFrom(candicate.getClass())) {
+				throw new IllegalArgumentException("parameter:" + parameterName + "'s type error");
+			}
             res[i] = candicate;
         }
         return res;
