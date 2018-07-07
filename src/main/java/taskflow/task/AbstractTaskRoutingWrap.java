@@ -47,5 +47,5 @@ public abstract class AbstractTaskRoutingWrap implements TaskRoutingWrap {
 	 * 
 	 * @param work
 	 */
-	public abstract void invokeTaskMethod(Work work)throws Exception;
+	protected abstract void invokeTaskMethod(Work work)throws Exception;
 }

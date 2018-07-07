@@ -16,7 +16,7 @@ public class ReflectedTaskRoutingWrap extends AbstractTaskRoutingWrap {
 	private TaskMethodInvoker taskMethodInvoker;
 
 	@Override
-	public void invokeTaskMethod(Work work) throws Exception {
+	protected void invokeTaskMethod(Work work) throws Exception {
 		if (taskMethodInvoker != null) {
 			taskMethodInvoker.invokeTask(work);
 		} else {

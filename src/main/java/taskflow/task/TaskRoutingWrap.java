@@ -11,7 +11,7 @@ public interface TaskRoutingWrap {
 	/**
 	 * 执行当前task并路由到下一个
 	 * 
-	 * @param bus
+	 * @param work
 	 */
-	void doTask(Work bus);
+	void doTask(Work work);
 }

@@ -1,6 +1,12 @@
 package taskflow.config;
 
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.CLASS_ATTRIBUTE;
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.ID_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.NAME_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.VALUE_ATTRIBUTE;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -26,51 +32,52 @@ import taskflow.work.SequentialRouteWork;
 public class WorkDefinitionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String id = element.getAttribute(ID_ATTRIBUTE);
-        String maxTasks = element.getAttribute("maxTasks");
-        String clazz = element.getAttribute("class");
+        String maxTasks = element.getAttribute(TagAttribute.MAX_TASKS.NAME);
+        String clazz = element.getAttribute(CLASS_ATTRIBUTE);
 
         RootBeanDefinition work = new RootBeanDefinition();
-        work.getPropertyValues().add("name", id);
+        work.getPropertyValues().add(NAME_ATTRIBUTE, id);
         try {
             Class<?> workClass = Class.forName(clazz);
             work.setBeanClass(workClass);
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("not found work class:" + clazz);
         }
-        //保证每次获取的都是新的对象
         work.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
-
         if(CustomRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有CustomRouteWork才解析start和finish
-        	String start = element.getAttribute("start");
-            String finish = element.getAttribute("finish");
+        	String start = element.getAttribute(TagAttribute.START.NAME);
+            String finish = element.getAttribute(TagAttribute.FINISH.NAME);
         	
         	RuntimeBeanReference startBean = new RuntimeBeanReference(start);
-            work.getPropertyValues().add("start", startBean);
+            work.getPropertyValues().add(TagAttribute.START.NAME, startBean);
             if (!StringUtils.isEmpty(finish)) {
                 RuntimeBeanReference finishBean = new RuntimeBeanReference(finish);
-                work.getPropertyValues().add("finish", finishBean);
+                work.getPropertyValues().add(TagAttribute.FINISH.NAME, finishBean);
             }
         }else if(SequentialRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有SerialRouteWork才解析sequence
+        	Map<String, String> extraMap = new HashMap<>();
         	ManagedMap<String, RuntimeBeanReference> tasksMap=new ManagedMap<>();
         	int length = element.getChildNodes().getLength();
     		for (int i = 0; i < length; i++) {
     			org.w3c.dom.Node node = element.getChildNodes().item(i);
     			if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-    				String taskRef=((Element) node).getAttribute("value");
+					Element elm = (Element) node;
+    				String taskRef=elm.getAttribute(VALUE_ATTRIBUTE);
     				if(StringUtils.isEmpty(taskRef)) {
     					throw new NullPointerException("task-ref can not be empty");
     				}
     				tasksMap.put(taskRef, new RuntimeBeanReference(taskRef));
+					String extra = elm.getAttribute(TagAttribute.EXTRA.NAME);
+					extraMap.put(taskRef, extra);
     			}
     		}
-			work.getPropertyValues().add("tasks", tasksMap);
+			work.getPropertyValues().add(TagAttribute.TASKS.NAME, tasksMap);
+			work.getPropertyValues().add("extraMap", extraMap);
         }
-        work.getPropertyValues().add("maxTasks", Integer.valueOf(maxTasks));
+        work.getPropertyValues().add(TagAttribute.MAX_TASKS.NAME, Integer.valueOf(maxTasks));
         
         BeanDefinitionHolder holder = new BeanDefinitionHolder(work, id);
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, parserContext.getRegistry());
         return work;
     }
-
-
 }

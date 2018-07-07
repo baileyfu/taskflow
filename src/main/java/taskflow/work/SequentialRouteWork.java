@@ -1,6 +1,7 @@
 package taskflow.work;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import taskflow.task.AbstractTaskRoutingWrap;
 import taskflow.task.TaskRoutingWrap;
@@ -16,6 +17,8 @@ import taskflow.work.context.WorkContext;
  */
 public class SequentialRouteWork extends AbstractWork {
 	private boolean executed=false;
+	private String currentTask;
+	private Map<String,String> extraMap;
 	private LinkedHashMap<String, TaskRoutingWrap> tasks;
 
 	public SequentialRouteWork() {
@@ -29,11 +32,13 @@ public class SequentialRouteWork extends AbstractWork {
 		if(!executed) {
 			executed=true;
 			try {
-				if (tasks!=null&&tasks.size()>0) {
-					for(TaskRoutingWrap task:tasks.values()) {
-						receive(task);
-						((AbstractTaskRoutingWrap)task).invokeTaskMethod(this);
-					}
+				if (tasks != null && tasks.size() > 0) {
+					tasks.values().stream().forEach((task) -> {
+						AbstractTaskRoutingWrap absTask = (AbstractTaskRoutingWrap) task;
+						currentTask = absTask.getName();
+						absTask.setRouting(null);
+						task.doTask(this);
+					});
 				}
 			} catch (Exception e) {
 				dealExcpetion(e);
@@ -43,5 +48,12 @@ public class SequentialRouteWork extends AbstractWork {
 	}
 	public void setTasks(LinkedHashMap<String, TaskRoutingWrap> tasks) {
 		this.tasks = tasks;
+	}
+
+	public void setExtraMap(Map<String, String> extraMap) {
+		this.extraMap = extraMap;
+	}
+	public String getExtra() {
+		return extraMap == null ? null : extraMap.get(currentTask);
 	}
 }

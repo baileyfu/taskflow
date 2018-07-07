@@ -1,6 +1,9 @@
 package taskflow.config;
 
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.ID_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.REF_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.NAME_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.VALUE_ATTRIBUTE;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -30,15 +33,15 @@ import taskflow.task.TaskRoutingWrap;
 public class TaskDefinitionParser implements BeanDefinitionParser {
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
 		String id = element.getAttribute(ID_ATTRIBUTE);
-		String ref = element.getAttribute("ref");
-		String method = element.getAttribute("method");
+		String ref = element.getAttribute(REF_ATTRIBUTE);
+		String method = element.getAttribute(TagAttribute.METHOD.NAME);
 
 		// 解析ref属性，因为ref引用的也是一个TaskRoutingWrap,可能在这里还未注册
 		// 因此使用RuntimeBeanReference
 		RuntimeBeanReference taskRef = new RuntimeBeanReference(ref);
 
 		RootBeanDefinition taskRoutingWrapDefinition = new RootBeanDefinition();
-		taskRoutingWrapDefinition.getPropertyValues().add("name", id);
+		taskRoutingWrapDefinition.getPropertyValues().add(NAME_ATTRIBUTE, id);
 		// 解析routing condition
 		ManagedList<BeanDefinition> routingConditions = new ManagedList<>();
 		int length = element.getChildNodes().getLength();
@@ -53,9 +56,9 @@ public class TaskDefinitionParser implements BeanDefinitionParser {
 		}
 		RootBeanDefinition routing = new RootBeanDefinition();
 		routing.setBeanClass(DefaultRouting.class);
-		routing.getPropertyValues().add("routingConditions", routingConditions);
+		routing.getPropertyValues().add(TagAttribute.ROUTING_CONDITIONS.NAME, routingConditions);
 
-		taskRoutingWrapDefinition.getPropertyValues().add("routing", routing);
+		taskRoutingWrapDefinition.getPropertyValues().add(TagAttribute.ROUTING.NAME, routing);
 		// 设置了自定义方法
 		if (StringUtils.isNotBlank(method)) {
 			taskRoutingWrapDefinition.setBeanClass(ReflectedTaskRoutingWrap.class);
@@ -81,7 +84,7 @@ public class TaskDefinitionParser implements BeanDefinitionParser {
 	}
 
 	private BeanDefinition dealHeadRouting(Element e) {
-		String value = e.getAttribute("value");
+		String value = e.getAttribute(VALUE_ATTRIBUTE);
 		String to = e.getAttribute("to");
 		// 默认是string
 		String patten = e.getAttribute("patten");

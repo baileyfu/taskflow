@@ -15,7 +15,7 @@ public class DemoApplication {
 		testBus.run();
 
 		Thread.sleep(1000l);
-		System.out.println("------------");
+		System.out.println("+++++++++++++");
 		testBus = (SequentialRouteWork)context.getBean("sequentialTaskWork");
 		Object result = testBus.run().getResult();
 		System.out.println(result);

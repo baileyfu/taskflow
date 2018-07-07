@@ -165,6 +165,9 @@
 		            <xsd:attribute name="value" type="xsd:string">
 			            <![CDATA[ ]]>
 			        </xsd:attribute>
+			        <xsd:attribute name="extra" type="xsd:string">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
 		        </xsd:complexType>
             </xsd:element>
         </xsd:sequence>
