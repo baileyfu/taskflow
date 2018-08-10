@@ -53,6 +53,10 @@ public class SequentialRouteWork extends AbstractWork {
 	public void setExtraMap(Map<String, String> extraMap) {
 		this.extraMap = extraMap;
 	}
+
+	public Map<String, String> getExtraMap() {
+		return this.extraMap;
+	}
 	public String getExtra() {
 		return extraMap == null ? null : extraMap.get(currentTask);
 	}
