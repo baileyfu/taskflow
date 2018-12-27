@@ -50,4 +50,12 @@
       </plugin>
     </plugins>
   </build>
+  
+    <!-- <distributionManagement>
+		<repository>
+			<id>release-repository</id>
+			<name>Release Repository</name>
+			<url>http://nexus.ldxinyong.com/nexus/content/repositories/releases</url>
+		</repository>
+	</distributionManagement> -->
 </project>
