@@ -1,12 +1,11 @@
 package x.demo.station1;
 
-import taskflow.bus.Bus;
-import taskflow.task.Task;
+import taskflow.work.Work;
 import x.demo.StatusHolderBus;
 
-public class InitStatus implements Task {
+public class InitStatus {
 
-	public void init(Bus bus) {
+	public void init(Work bus) {
 		StatusHolderBus sBus = (StatusHolderBus) bus;
 		if (sBus.getStatus().equals(StatusHolderBus.STATUS_INIT)) {
 			sBus.setRoutingKey("oneStop");
@@ -21,10 +20,4 @@ public class InitStatus implements Task {
 			}
 		}
 	}
-
-	@Override
-	public String getName() {
-		return "InitStatus";
-	}
-
 }

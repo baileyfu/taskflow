@@ -1,12 +1,12 @@
 package x.demo.station1;
 
-import taskflow.bus.Bus;
 import taskflow.task.Task;
+import taskflow.work.Work;
 import x.demo.StatusHolderBus;
 
 public class StationOne implements Task{
-
-	public void doBusiness(Bus bus) {
+	@Override
+	public void execute(Work bus) {
 		StatusHolderBus sBus=(StatusHolderBus)bus;
 		String routingKey="twoStop";
         try {
@@ -21,10 +21,4 @@ public class StationOne implements Task{
         }
         sBus.setRoutingKey(routingKey);
     }
-	
-	@Override
-	public String getName() {
-		return "StationOne";
-	}
-
 }

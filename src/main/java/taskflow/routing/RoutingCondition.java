@@ -1,20 +1,22 @@
 package taskflow.routing;
 
-import taskflow.context.BusContext;
-import taskflow.task.StationRoutingWrap;
+import taskflow.task.TaskRoutingWrap;
+import taskflow.work.context.WorkContext;
 
 /**
- * 路由条件，现在只支持根据{@link BusContext}中的routingKey进行路由
+ * 路由条件，现在只支持根据{@link WorkContext}中的routingKey进行路由
  * Created by lizhou on 2017/4/7/007.
  */
 public interface RoutingCondition {
-    boolean matched(BusContext busContext);
-
-    StationRoutingWrap getStationRoutingWrap();
-
+	/**
+	 * 是否匹配workContext中指定的routing
+	 * @param workContext
+	 * @return
+	 */
+    boolean matched(WorkContext workContext);
     /**
-     * 如果返回true，则默认匹配成功
+     * 当前路由对应的taskWrap
      * @return
      */
-    boolean isDefaultMatch();
+    TaskRoutingWrap getTaskRoutingWrap();
 }
