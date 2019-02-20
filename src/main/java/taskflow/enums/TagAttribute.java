@@ -4,7 +4,7 @@ public enum TagAttribute {
 	TASK_METHOD("method"),
 	
 	TASK_ROUTING("routing"),
-	TASK_ROUTING_TO("to"),
+	TASK_ROUTING_TO_TASK("toTask"),
 	TASK_ROUTING_PATTEN("patten"),
 	
 	WORK_START("start"),

@@ -1,6 +1,7 @@
 package taskflow.task;
 
 import taskflow.routing.Routing;
+import taskflow.work.AbstractWork;
 import taskflow.work.Work;
 
 /**
@@ -13,7 +14,7 @@ public abstract class AbstractTaskRoutingWrap implements TaskRoutingWrap {
 	}
 	public void doTask(Work work) {
 		try {
-			work.receive(this);
+			((AbstractWork)work).receive(this);
 			//执行Task的业务方法
 			invokeTaskMethod(work);
 		} catch (Exception e) {

@@ -60,7 +60,7 @@ public class TaskDefinition {
 	}
 	public static class RouteDefinition{
 		private String value;
-		private String to;
+		private String toTask;
 		private String patten;
 		public String getValue() {
 			return value;
@@ -68,11 +68,11 @@ public class TaskDefinition {
 		public void setValue(String value) {
 			this.value = value;
 		}
-		public String getTo() {
-			return to;
+		public String getToTask() {
+			return toTask;
 		}
-		public void setTo(String to) {
-			this.to = to;
+		public void setToTask(String toTask) {
+			this.toTask = toTask;
 		}
 		public String getPatten() {
 			return patten;

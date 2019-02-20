@@ -2,6 +2,8 @@ package taskflow.work.context;
 
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * work的task工作的上下文;持有各task工作的输入/输出参数
  * 
@@ -23,6 +25,18 @@ public interface WorkContext {
      * @param value
      */
     void put(String key, Object value);
+    
+    /**
+     * 当前Task执行所需的额外配置参数
+     * @return
+     */
+    String getExtraArgs();
+    /**
+     * 当前Task执行所需的额外配置参数JSON格式</p>
+     * null返回空JSONObject对象
+     * @return
+     */
+    JSONObject getExtraArgsJSON();
     /**
      * 获取要返回的结果
      * @return
@@ -33,6 +47,10 @@ public interface WorkContext {
      * @param result
      */
     void setResult(Object result);
+    /**
+     * 设置路由
+     * @param key
+     */
     void setRoutingKey(String key);
     /**
      * 获取路由信息

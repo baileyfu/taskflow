@@ -41,7 +41,7 @@ public interface TaskRegister {
 				routingCondition.setBeanClass(PatternRoutingCondition.class);
 				routingCondition.getPropertyValues().add(RoutingConditionPropName.CONDITION, routeDefinition.getValue());
 				routingCondition.getPropertyValues().add(RoutingConditionPropName.PATTERN, PatternType.valueOf(routeDefinition.getPatten()));
-				routingCondition.getPropertyValues().add(RoutingConditionPropName.TASK_ROUTING_WRAP, new RuntimeBeanReference(routeDefinition.getTo()));
+				routingCondition.getPropertyValues().add(RoutingConditionPropName.TASK_ROUTING_WRAP, new RuntimeBeanReference(routeDefinition.getToTask()));
 				routingConditions.add(routingCondition);
 			}
 		}

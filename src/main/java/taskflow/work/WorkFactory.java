@@ -11,10 +11,9 @@ public class WorkFactory implements BeanFactoryAware {
     private static BeanFactory beanFactory;
 
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        WorkFactory.beanFactory = beanFactory;
+    	WorkFactory.beanFactory = beanFactory;
     }
-
-    public static Work createWork(String id) {
-        return beanFactory!=null?beanFactory.getBean(id, Work.class):null;
+    public static Work createWork(String workId) {
+    	return beanFactory!=null?beanFactory.getBean(workId, Work.class):null;
     }
 }

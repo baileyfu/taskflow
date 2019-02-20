@@ -1,9 +1,11 @@
 package taskflow.work;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import taskflow.exception.TaskFlowException;
 import taskflow.task.TaskRoutingWrap;
+import taskflow.work.context.AbstractWorkContext;
 import taskflow.work.context.MapWorkContext;
 import taskflow.work.context.TaskTrace;
 import taskflow.work.context.WorkContext;
@@ -14,8 +16,14 @@ public abstract class AbstractWork implements Work{
 	protected int executedTasks;
 	protected WorkContext workContext;
 	protected ArrayList<TaskTrace> taskRecords;
+	protected boolean recordTrace;
 	public AbstractWork() {
 		workContext = new MapWorkContext();
+		taskRecords = new ArrayList<TaskTrace>();
+	}
+	public AbstractWork(Map<String,String> extraArgsMap) {
+		workContext = new MapWorkContext();
+		((MapWorkContext) workContext).setExtraArgsMap(extraArgsMap);
 		taskRecords = new ArrayList<TaskTrace>();
 	}
 	public String getName() {
@@ -28,6 +36,7 @@ public abstract class AbstractWork implements Work{
 	 * 最好创建子类覆盖次方法以自定义异常处理
 	 */
 	public void dealExcpetion(Exception workException) {
+		workContext.holderException(((AbstractWorkContext)workContext).getCurrentTask(), workException);
 		System.err.println(workException.getMessage());
 	}
 
@@ -35,10 +44,13 @@ public abstract class AbstractWork implements Work{
 	 * 记录任务调用轨迹,并检查任务调用次数上限
 	 */
 	public void receive(TaskRoutingWrap stationRoutingWrap) throws Exception {
+		((AbstractWorkContext)workContext).setCurrentTask(stationRoutingWrap.getName());
 		if (maxTasks <= executedTasks++) {
 			throw new TaskFlowException("max tasks is:" + maxTasks);
 		}
-		taskRecords.add(new TaskTrace(stationRoutingWrap.getName(), workContext.toString()));
+		if (recordTrace) {
+			taskRecords.add(new TaskTrace(stationRoutingWrap.getName(), workContext.toString()));
+		}
 	}
 	public ArrayList<TaskTrace> getTaskTrace() {
 		return taskRecords;

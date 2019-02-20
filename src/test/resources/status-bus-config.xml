@@ -5,7 +5,7 @@
        xmlns:xcache="http://www.xteam.org/xcache"
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-1.0.xsd
+        http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-2.0.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
         http://www.xteam.org/xcache http://www.xteam.org/xcache/xcache-1.0.xsd">
 
@@ -20,15 +20,15 @@
     <tf:work id="testStatusBus" start="initStatusStop" record="true" finish="end" class="x.demo.StatusHolderBus"/>
 
     <tf:task id="initStatusStop" ref="initStatus" method="init">
-        <tf:routing value="oneStop" to="oneStop"/>
-        <tf:routing value="twoStop" to="twoStop"/>
-        <tf:routing value="threeStop" to="threeStop"/>
+        <tf:routing value="oneStop" toTask="oneStop"/>
+        <tf:routing value="twoStop" toTask="twoStop"/>
+        <tf:routing value="threeStop" toTask="threeStop"/>
     </tf:task>
     <tf:task id="oneStop" ref="oneStatus">
-        <tf:routing value="twoStop" to="twoStop"/>
+        <tf:routing value="twoStop" toTask="twoStop"/>
     </tf:task>
     <tf:task id="twoStop" ref="twoStatus">
-        <tf:routing value="threeStop" to="threeStop"/>
+        <tf:routing value="threeStop" toTask="threeStop"/>
     </tf:task>
     <tf:task id="threeStop" ref="threeStatus">
     </tf:task>

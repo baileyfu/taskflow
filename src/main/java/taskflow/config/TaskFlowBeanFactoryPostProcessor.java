@@ -18,6 +18,7 @@ import taskflow.config.bean.WorkDefinition;
 import taskflow.config.register.TaskBeanRegister;
 import taskflow.config.register.TaskRegister;
 import taskflow.config.register.WorkRegister;
+import taskflow.work.WorkFactory;
 
 /**
  * 容器初始化完成后注册TaskFlow的Bean
@@ -57,6 +58,7 @@ public class TaskFlowBeanFactoryPostProcessor implements BeanFactoryAware,
 						}
 						//注册WorkFactory
 						registerWorkFactory(beanFactory);
+						beanFactory.getBean(WorkFactory.class);
 					}
 				}
 			}

@@ -17,12 +17,12 @@ public class CustomRouteWork extends AbstractWork {
 			if (!(start instanceof TaskRoutingWrap)) {
 				throw new IllegalArgumentException("Task type error");
 			}
-			((TaskRoutingWrap) start).doTask(this);
+			start.doTask(this);
 		} catch (Exception e) {
 			dealExcpetion(e);
 		} finally {
-			if (finish != null && finish instanceof TaskRoutingWrap) {
-				((TaskRoutingWrap) finish).doTask(this);
+			if (finish != null) {
+				finish.doTask(this);
 			}
 		}
 		return workContext;

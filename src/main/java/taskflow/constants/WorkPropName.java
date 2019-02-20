@@ -9,6 +9,4 @@ public class WorkPropName {
 	public static final String FINISH="finish";
 	
 	public static final String TASKS="tasks";
-	public static final String EXTRA_MAP="extraMap";
-	
 }

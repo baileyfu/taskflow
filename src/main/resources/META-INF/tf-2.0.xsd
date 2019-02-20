@@ -82,7 +82,7 @@
         <xsd:attribute name="value" type="xsd:string" default="@default">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="to" type="xsd:IDREF" use="required">
+        <xsd:attribute name="toTask" type="xsd:IDREF" use="required">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
                 <!--<tool:annotation kind="ref">-->

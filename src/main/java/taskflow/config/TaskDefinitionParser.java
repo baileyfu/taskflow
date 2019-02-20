@@ -43,7 +43,7 @@ public class TaskDefinitionParser implements BeanDefinitionParser,TaskRegister {
 				if (Tag.ROUTING.getTagName().equals(e.getTagName())) {
 					RouteDefinition routeDefinition=new RouteDefinition();
 					routeDefinition.setValue(e.getAttribute(VALUE_ATTRIBUTE));
-					routeDefinition.setTo(e.getAttribute(TagAttribute.TASK_ROUTING_TO.NAME));
+					routeDefinition.setToTask(e.getAttribute(TagAttribute.TASK_ROUTING_TO_TASK.NAME));
 					routeDefinition.setPatten(e.getAttribute(TagAttribute.TASK_ROUTING_PATTEN.NAME));
 					routeDefinitions.add(routeDefinition);
 				}
