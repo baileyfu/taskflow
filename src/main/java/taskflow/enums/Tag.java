@@ -1,4 +1,4 @@
-package taskflow.config;
+package taskflow.enums;
 
 /**
  * xsd自定义的标签

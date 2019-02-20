@@ -6,9 +6,9 @@ import java.util.Map;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ParameterNameDiscoverer;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import taskflow.annotation.Taskparam;
 import taskflow.work.Work;
 import taskflow.work.context.WorkContext;
 
@@ -16,7 +16,6 @@ import taskflow.work.context.WorkContext;
  * Created by lizhou on 2017/5/4/004.
  * Updated by baileyfu on 2018/6/17
  */
-@Component
 public class TaskParameterResolver {
     private static ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
     private static final DefaultValue DEFAULT_VALUE = new DefaultValue();
@@ -104,6 +103,4 @@ public class TaskParameterResolver {
         private long defaultLong;
         private short defaultShort;
     }
-
-
 }

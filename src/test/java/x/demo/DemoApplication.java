@@ -2,11 +2,13 @@ package x.demo;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import taskflow.script.AppGroovy;
 import taskflow.work.SequentialRouteWork;
 
 public class DemoApplication {
 
 	public static void main(String[] args) throws Exception {
+		AppGroovy.main();
 		String file="classpath:status-bus-config.xml";
 		file="classpath:serial-task-config.xml";
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(file);
