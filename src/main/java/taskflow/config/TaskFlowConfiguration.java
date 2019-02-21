@@ -8,7 +8,8 @@ import taskflow.config.bean.TaskflowConfiguration;
 
 /**
  * TaskFlow配置器</p>
- * 使用方必须注入TaskflowConfiguration对象
+ * 使用方必须注入TaskflowConfiguration对象</p>
+ * 注解装配优先级低于XML配置形式
  */
 @Configuration
 public class TaskFlowConfiguration {

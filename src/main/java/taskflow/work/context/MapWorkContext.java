@@ -3,13 +3,16 @@ package taskflow.work.context;
 import java.util.HashMap;
 import java.util.Map;
 
+import taskflow.work.Work;
+
 /**
  * Created by lizhou on 2017/3/14/014.
  */
 public class MapWorkContext extends AbstractWorkContext {
 	private Map<String, Object> context;
 
-	public MapWorkContext() {
+	public MapWorkContext(Class<? extends Work> workClazz) {
+		super(workClazz);
 		context = new HashMap<String, Object>();
 	}
 

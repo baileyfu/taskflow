@@ -1,6 +1,7 @@
 package taskflow.config.register;
 
 import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -21,12 +22,13 @@ import taskflow.routing.match.PatternType;
 import taskflow.task.DefaultTaskRoutingWrap;
 import taskflow.task.ReflectedTaskRoutingWrap;
 import taskflow.task.TaskMethodInvoker;
-
+import taskflow.work.context.ExtraArgsHolder;
+//先注册的Bean优先级高
 public interface TaskRegister {
 
 	default BeanDefinition registerTask(BeanDefinitionRegistry registry, TaskDefinition taskDefinition) {
-		// 解析ref属性，因为ref引用的也是一个TaskRoutingWrap,可能在这里还未注册
-		// 因此使用RuntimeBeanReference
+		if (registry.containsBeanDefinition(taskDefinition.getTaskId())) 
+			return registry.getBeanDefinition(taskDefinition.getTaskId());
 		RuntimeBeanReference taskRef = new RuntimeBeanReference(taskDefinition.getTaskBeanId());
 
 		RootBeanDefinition taskRoutingWrapDefinition = new RootBeanDefinition();
@@ -43,6 +45,8 @@ public interface TaskRegister {
 				routingCondition.getPropertyValues().add(RoutingConditionPropName.PATTERN, PatternType.valueOf(routeDefinition.getPatten()));
 				routingCondition.getPropertyValues().add(RoutingConditionPropName.TASK_ROUTING_WRAP, new RuntimeBeanReference(routeDefinition.getToTask()));
 				routingConditions.add(routingCondition);
+				//保留task.routing.extra参数
+				ExtraArgsHolder.putTaskRoutingExtra(taskDefinition.getTaskId(), routeDefinition.getToTask(), routeDefinition.getExtra());
 			}
 		}
 		RootBeanDefinition routing = new RootBeanDefinition();
@@ -68,9 +72,10 @@ public interface TaskRegister {
 			taskRoutingWrapDefinition.setBeanClass(DefaultTaskRoutingWrap.class);
 			taskRoutingWrapDefinition.getPropertyValues().add(TaskRoutingPropName.TASK, taskRef);
 		}
-
 		BeanDefinitionHolder holder = new BeanDefinitionHolder(taskRoutingWrapDefinition, taskDefinition.getTaskId());
 		BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+		//保留task.extra参数
+		ExtraArgsHolder.putTaskExtra(taskDefinition.getTaskId(), taskDefinition.getExtra());
 		return taskRoutingWrapDefinition;
 	}
 	

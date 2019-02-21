@@ -9,6 +9,6 @@ public class TaskA implements Task{
 	public void execute(Work work) {
 		work.putContext("name","Jack");
 		System.out.println("TaskA's method execute be invoked !!!");
-		System.out.println(work.getWorkContext().getExtraArgsJSON());
+		System.out.println(work.getWorkContext().getRuntimeArgs());
 	}
 }

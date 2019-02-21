@@ -17,17 +17,17 @@
     <bean id="threeStatus" class="x.demo.station1.StationThree"/>
     <bean id="endStatus" class="x.demo.station1.EndStation"/>
     
-    <tf:work id="testStatusBus" start="initStatusStop" record="true" finish="end" class="x.demo.StatusHolderBus"/>
+    <tf:work id="testStatusBus" start="initStatusStop" traceable="true" finish="end" class="x.demo.StatusHolderBus"/>
 
-    <tf:task id="initStatusStop" ref="initStatus" method="init">
+    <tf:task id="initStatusStop" ref="initStatus" method="init" extra="{A:'B'}">
         <tf:routing value="oneStop" toTask="oneStop"/>
-        <tf:routing value="twoStop" toTask="twoStop"/>
+        <tf:routing value="twoStop" toTask="twoStop" extra="{C:'D'}"/>
         <tf:routing value="threeStop" toTask="threeStop"/>
     </tf:task>
     <tf:task id="oneStop" ref="oneStatus">
-        <tf:routing value="twoStop" toTask="twoStop"/>
+        <tf:routing value="twoStop" toTask="twoStop" extra="{E:'F'}"/>
     </tf:task>
-    <tf:task id="twoStop" ref="twoStatus">
+    <tf:task id="twoStop" ref="twoStatus" extra="{CCC:'DDD'}">
         <tf:routing value="threeStop" toTask="threeStop"/>
     </tf:task>
     <tf:task id="threeStop" ref="threeStatus">

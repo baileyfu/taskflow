@@ -15,8 +15,8 @@ public class TaskC  {
 		System.out.println("TaskC's method2 be invoked");
 	}
 	
-	public void method3(Work work, @Taskparam("name") String x, @Taskparam(require = true) Date birth) {
-		System.out.println("TaskC's method3 be invoked====>"+x+"-->"+birth);
+	public void method3(Work work, @Taskparam("name") String x, @Taskparam(require = false) Date birth) {
+		System.out.println("TaskC's method3 be invoked====>"+x+"-->"+birth+" , extra : "+work.getWorkContext().getRuntimeArgs());
 		work.getWorkContext().setResult("RESULT");
 	}
 

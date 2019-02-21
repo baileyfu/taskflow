@@ -9,6 +9,7 @@ public class TaskDefinition {
 	private String taskId;
 	private String taskBeanId;
 	private String method;
+	private String extra;
 	//同一路由只允许定义一次
 	private Set<RouteDefinition> routeDefinitions;
 	public String getTaskId() {
@@ -28,6 +29,12 @@ public class TaskDefinition {
 	}
 	public void setMethod(String method) {
 		this.method = method;
+	}
+	public String getExtra() {
+		return extra;
+	}
+	public void setExtra(String extra) {
+		this.extra = extra;
 	}
 	public Set<RouteDefinition> getRouteDefinitions() {
 		return routeDefinitions;
@@ -62,6 +69,7 @@ public class TaskDefinition {
 		private String value;
 		private String toTask;
 		private String patten;
+		private String extra;
 		public String getValue() {
 			return value;
 		}
@@ -79,6 +87,12 @@ public class TaskDefinition {
 		}
 		public void setPatten(String patten) {
 			this.patten = patten;
+		}
+		public String getExtra() {
+			return extra;
+		}
+		public void setExtra(String extra) {
+			this.extra = extra;
 		}
 		@Override
 		public int hashCode() {

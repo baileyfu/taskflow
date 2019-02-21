@@ -8,32 +8,61 @@ import org.apache.commons.lang3.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-public abstract class AbstractWorkContext implements WorkContext {
+import taskflow.work.CustomRouteWork;
+import taskflow.work.SequentialRouteWork;
+import taskflow.work.Work;
+
+public abstract class AbstractWorkContext extends ExtraArgsHolder implements WorkContext {
+	private String previousTask;
 	private String currentTask;
 	private String routingKey;
 	// finish task执行完后设置此值,保存需要返回的数据
 	private Object result;
-	private Map<String,String> extraArgsMap;
+	//task-ref定义的运行时参数
+	private Map<String,String> taskRefExtraMap;
 	// 保存Task运行期间的异常
 	private Map<String, Exception> exceptions;
+	//持有当前WorkContext的Work类型
+	private Class<? extends Work> workClazz;
+	
+	public AbstractWorkContext(Class<? extends Work> workClazz) {
+		this.workClazz = workClazz;
+	}
 	
 	public void setCurrentTask(String currentTask) {
+		this.previousTask = currentTask;
 		this.currentTask = currentTask;
 	}
 	public String getCurrentTask() {
 		return currentTask;
 	}
-	public void setExtraArgsMap(Map<String, String> extraArgsMap) {
-		this.extraArgsMap = extraArgsMap;
+	public void setTaskRefExtraMap(Map<String, String> taskRefExtraMap) {
+		this.taskRefExtraMap = taskRefExtraMap;
 	}
 
 	@Override
-	public String getExtraArgs() {
-		return extraArgsMap == null || currentTask == null ? null : extraArgsMap.get(currentTask);
+	public String getRuntimeArgs() {
+		if(currentTask==null) 
+			return null;
+		String runtimeArgs = null;
+		System.out.println("--------->"+workClazz+" : "+workClazz.isAssignableFrom(SequentialRouteWork.class));
+		if (workClazz.isAssignableFrom(SequentialRouteWork.class)) {
+			if (taskRefExtraMap != null) {
+				runtimeArgs = taskRefExtraMap.get(currentTask);
+			}
+		} else if (workClazz.isAssignableFrom(CustomRouteWork.class)) {
+			if (previousTask != null) {
+				runtimeArgs = getTaskRoutingExtra(previousTask, currentTask);
+			}
+		}
+		if (runtimeArgs == null) {
+			runtimeArgs = getTaskExtra(currentTask);
+		}
+		return runtimeArgs;
 	}
 	@Override
-	public JSONObject getExtraArgsJSON() {
-		String extraArgs = getExtraArgs();
+	public JSONObject getRuntimeArgsJSON() {
+		String extraArgs = getRuntimeArgs();
 		return StringUtils.isBlank(extraArgs) ? new JSONObject() : JSON.parseObject(extraArgs);
 	}
 	public String getRoutingKey() {
@@ -66,7 +95,9 @@ public abstract class AbstractWorkContext implements WorkContext {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkContext [currentTask=" + currentTask + ", routingKey=" + routingKey + ", result=" + result
-				+ ", extraArgsMap=" + extraArgsMap + ", exceptions=" + exceptions + "]";
+		return "AbstractWorkContext [currentTask=" + currentTask + ", routingKey=" + routingKey + ", result=" + result 
+				+ ", exceptions=" + exceptions 
+				+ ", taskRefExtraMap=" + taskRefExtraMap
+				+ ", " + super.toString() + "]";
 	}
 }

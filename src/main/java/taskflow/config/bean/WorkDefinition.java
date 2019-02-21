@@ -12,14 +12,14 @@ public class WorkDefinition {
 	private String start;
 	private String finish;
 	private int maxTasks;
-	private boolean record;
+	private boolean traceable;
 	private Class<? extends Work> workClazz;
 	//支持同一Task执行多次
 	private ArrayList<TaskRef> taskRefs;
 
 	public WorkDefinition() {
 		maxTasks = 10000;
-		record = false;
+		traceable = false;
 	}
 	public String getWorkId() {
 		return workId;
@@ -45,11 +45,11 @@ public class WorkDefinition {
 	public void setMaxTasks(int maxTasks) {
 		this.maxTasks = maxTasks < 1 ? 1 : maxTasks;
 	}
-	public boolean isRecord() {
-		return record;
+	public boolean isTraceable() {
+		return traceable;
 	}
-	public void setRecord(boolean record) {
-		this.record = record;
+	public void setTraceable(boolean traceable) {
+		this.traceable = traceable;
 	}
 	public Class<? extends Work> getWorkClazz() {
 		return workClazz;

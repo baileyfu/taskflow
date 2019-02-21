@@ -57,6 +57,10 @@
             <xsd:annotation>
             </xsd:annotation>
         </xsd:attribute>
+        <xsd:attribute name="extra" type="xsd:string" use="optional">
+            <xsd:annotation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:attributeGroup>
 
 
@@ -151,7 +155,7 @@
                 </xsd:appinfo>
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="record" type="xsd:boolean" default="true">
+        <xsd:attribute name="traceable" type="xsd:boolean" default="false">
             <![CDATA[ ]]>
         </xsd:attribute>
         <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.CustomRouteWork">

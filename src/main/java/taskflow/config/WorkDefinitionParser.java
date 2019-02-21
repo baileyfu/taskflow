@@ -32,22 +32,22 @@ public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
         String id = element.getAttribute(ID_ATTRIBUTE);
         String maxTasks = element.getAttribute(TagAttribute.WORK_MAX_TASKS.NAME);
         String clazz = element.getAttribute(CLASS_ATTRIBUTE);
-		String record = element.getAttribute(TagAttribute.WORK_RECORD.NAME);
+		String traceable = element.getAttribute(TagAttribute.WORK_TRACEABLE.NAME);
 
         WorkDefinition workDefinition=new WorkDefinition();
         workDefinition.setWorkId(id);
-		Class<?> clazzz = null;
+		Class<?> workClazz = null;
 		try {
-			clazzz = Class.forName(clazz);
+			workClazz = Class.forName(clazz);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-		Assert.isTrue(clazzz.isAssignableFrom(Work.class));
-        workDefinition.setWorkClazz((Class<Work>)clazzz);
+		Assert.isTrue(workClazz.isAssignableFrom(Work.class),"tf:work must has a class of type of Work");
+        workDefinition.setWorkClazz((Class<Work>)workClazz);
         workDefinition.setStart(element.getAttribute(TagAttribute.WORK_START.NAME));
         workDefinition.setFinish(element.getAttribute(TagAttribute.WORK_FINISH.NAME));
         workDefinition.setMaxTasks(NumberUtils.toInt(maxTasks,0));
-        workDefinition.setRecord(BooleanUtils.toBoolean(record));
+        workDefinition.setTraceable(BooleanUtils.toBoolean(traceable));
         ArrayList<TaskRef> taskRefs=new ArrayList<>();
         int length = element.getChildNodes().getLength();
 		for (int i = 0; i < length; i++) {
@@ -56,7 +56,7 @@ public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
 				Element elm = (Element) node;
 				TaskRef taskRef=new TaskRef();
 				taskRef.setTaskId(elm.getAttribute(VALUE_ATTRIBUTE));
-				taskRef.setExtra(elm.getAttribute(TagAttribute.EXTRA.NAME));
+				taskRef.setExtra(elm.getAttribute(TagAttribute.TASK_EXTRA.NAME));
 				taskRefs.add(taskRef);
 			}
 		}

@@ -45,21 +45,25 @@ public class DemoApplication {
 		TaskDefinition taskDefinition=new TaskDefinition();
 		taskDefinition.setTaskId("Task1");
 		taskDefinition.setTaskBeanId("TaskABean");
+		taskDefinition.setExtra("{EEE:'FFF'}");
 		taskDefinitions.add(taskDefinition);
 		taskDefinition=new TaskDefinition();
 		taskDefinition.setTaskId("Task2");
 		taskDefinition.setTaskBeanId("TaskCBean");
 		taskDefinition.setMethod("method1");
+		taskDefinition.setExtra("{AAA:'BBB'}");
 		taskDefinitions.add(taskDefinition);
 		taskDefinition=new TaskDefinition();
 		taskDefinition.setTaskId("Task3");
 		taskDefinition.setTaskBeanId("TaskCBean");
 		taskDefinition.setMethod("method3");
+//		taskDefinition.setExtra("{BBB:'DDD'}");
 		taskDefinitions.add(taskDefinition);
 		Set<WorkDefinition> workDefinitions = new HashSet<>();
 		WorkDefinition workDefinition=new WorkDefinition();
 		workDefinition.setWorkId("Work1");
 		workDefinition.setWorkClazz(SequentialRouteWork.class);
+		workDefinition.setTraceable(true);
 		ArrayList<TaskRef> taskRefs=new ArrayList<>();
 		TaskRef taskRef=new TaskRef();
 		taskRef.setTaskId("Task1");
@@ -83,10 +87,15 @@ public class DemoApplication {
 	@RequestMapping("/")
 	public String index() {
 		Work Work1 = WorkFactory.createWork("Work1");
+		Object result=Work1.run();
 		for(TaskTrace tt:Work1.getTaskTrace()) {
-			System.out.println(tt);
+			System.out.println("TRACE--->"+tt);
 		}
-		return "Run result===>"+Work1.run();
+		return "Run result===>"+result;
+	}
+	@RequestMapping("/change")
+	public String change() {
+		return "SUCCESS";
 	}
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(DemoApplication.class, args);

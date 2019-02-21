@@ -15,22 +15,14 @@ public abstract class AbstractWork implements Work{
 	protected int maxTasks;
 	protected int executedTasks;
 	protected WorkContext workContext;
-	protected ArrayList<TaskTrace> taskRecords;
-	protected boolean recordTrace;
+	protected ArrayList<TaskTrace> taskTraces;
+	protected boolean traceable;
 	public AbstractWork() {
-		workContext = new MapWorkContext();
-		taskRecords = new ArrayList<TaskTrace>();
+		workContext = new MapWorkContext(this.getClass());
 	}
-	public AbstractWork(Map<String,String> extraArgsMap) {
-		workContext = new MapWorkContext();
-		((MapWorkContext) workContext).setExtraArgsMap(extraArgsMap);
-		taskRecords = new ArrayList<TaskTrace>();
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
+	public AbstractWork(Map<String,String> taskRefExtraMap) {
+		workContext = new MapWorkContext(this.getClass());
+		((MapWorkContext) workContext).setTaskRefExtraMap(taskRefExtraMap);
 	}
 	/**
 	 * 最好创建子类覆盖次方法以自定义异常处理
@@ -48,17 +40,31 @@ public abstract class AbstractWork implements Work{
 		if (maxTasks <= executedTasks++) {
 			throw new TaskFlowException("max tasks is:" + maxTasks);
 		}
-		if (recordTrace) {
-			taskRecords.add(new TaskTrace(stationRoutingWrap.getName(), workContext.toString()));
+		if (traceable) {
+			if (taskTraces == null) {
+				taskTraces = new ArrayList<TaskTrace>();
+			}
+			taskTraces.add(new TaskTrace(stationRoutingWrap.getName(), workContext.toString()));
 		}
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public boolean isTraceable() {
+		return traceable;
+	}
+	public void setTraceable(boolean traceable) {
+		this.traceable = traceable;
+	}
 	public ArrayList<TaskTrace> getTaskTrace() {
-		return taskRecords;
+		return taskTraces;
 	}
 	public WorkContext getWorkContext() {
 		return workContext;
 	}
-
 	public int getMaxTasks() {
 		return maxTasks;
 	}
