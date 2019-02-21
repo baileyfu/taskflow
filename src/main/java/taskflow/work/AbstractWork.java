@@ -59,7 +59,7 @@ public abstract class AbstractWork implements Work{
 	public void setTraceable(boolean traceable) {
 		this.traceable = traceable;
 	}
-	public ArrayList<TaskTrace> getTaskTrace() {
+	public ArrayList<TaskTrace> getTaskTraces() {
 		return taskTraces;
 	}
 	public WorkContext getWorkContext() {

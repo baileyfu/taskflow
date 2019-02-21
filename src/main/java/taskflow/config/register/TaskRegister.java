@@ -23,14 +23,14 @@ import taskflow.task.DefaultTaskRoutingWrap;
 import taskflow.task.ReflectedTaskRoutingWrap;
 import taskflow.task.TaskMethodInvoker;
 import taskflow.work.context.ExtraArgsHolder;
-//先注册的Bean优先级高
+//后注册的Bean优先级高
 public interface TaskRegister {
 
 	default BeanDefinition registerTask(BeanDefinitionRegistry registry, TaskDefinition taskDefinition) {
 		if (registry.containsBeanDefinition(taskDefinition.getTaskId())) 
-			return registry.getBeanDefinition(taskDefinition.getTaskId());
+			registry.removeBeanDefinition(taskDefinition.getTaskId());
+		
 		RuntimeBeanReference taskRef = new RuntimeBeanReference(taskDefinition.getTaskBeanId());
-
 		RootBeanDefinition taskRoutingWrapDefinition = new RootBeanDefinition();
 		taskRoutingWrapDefinition.getPropertyValues().add(TaskRoutingPropName.NAME, taskDefinition.getTaskId());
 		// 解析routing condition

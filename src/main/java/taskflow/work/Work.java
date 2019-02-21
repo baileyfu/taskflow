@@ -28,7 +28,7 @@ public interface Work {
 	 * 
 	 * @return
 	 */
-	ArrayList<TaskTrace> getTaskTrace();
+	ArrayList<TaskTrace> getTaskTraces();
 
 	/**
 	 * 加入上下文环境

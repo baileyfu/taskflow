@@ -57,13 +57,13 @@ public class DemoApplication {
 		taskDefinition.setTaskId("Task3");
 		taskDefinition.setTaskBeanId("TaskCBean");
 		taskDefinition.setMethod("method3");
-//		taskDefinition.setExtra("{BBB:'DDD'}");
+		taskDefinition.setExtra("{BBB:'DDD'}");
 		taskDefinitions.add(taskDefinition);
 		Set<WorkDefinition> workDefinitions = new HashSet<>();
 		WorkDefinition workDefinition=new WorkDefinition();
 		workDefinition.setWorkId("Work1");
 		workDefinition.setWorkClazz(SequentialRouteWork.class);
-		workDefinition.setTraceable(true);
+		workDefinition.setTraceable(false);
 		ArrayList<TaskRef> taskRefs=new ArrayList<>();
 		TaskRef taskRef=new TaskRef();
 		taskRef.setTaskId("Task1");
@@ -88,8 +88,11 @@ public class DemoApplication {
 	public String index() {
 		Work Work1 = WorkFactory.createWork("Work1");
 		Object result=Work1.run();
-		for(TaskTrace tt:Work1.getTaskTrace()) {
-			System.out.println("TRACE--->"+tt);
+		ArrayList<TaskTrace> taskTraces=Work1.getTaskTraces();
+		if (taskTraces != null) {
+			for (TaskTrace tt : taskTraces) {
+				System.out.println("TRACE--->" + tt);
+			}
 		}
 		return "Run result===>"+result;
 	}

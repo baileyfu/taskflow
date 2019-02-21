@@ -23,12 +23,13 @@ import taskflow.work.CustomRouteWork;
 import taskflow.work.SequentialRouteWork;
 import taskflow.work.WorkFactory;
 
-//先注册的Bean优先级高
+//后注册的Bean优先级高
 public interface WorkRegister {
 
-	default BeanDefinition registerWork(BeanDefinitionRegistry registry,WorkDefinition workDefinition) {
-		if (registry.containsBeanDefinition(workDefinition.getWorkId())) 
-			return registry.getBeanDefinition(workDefinition.getWorkId());
+	default BeanDefinition registerWork(BeanDefinitionRegistry registry, WorkDefinition workDefinition) {
+		if (registry.containsBeanDefinition(workDefinition.getWorkId()))
+			registry.removeBeanDefinition(workDefinition.getWorkId());
+		
 		RootBeanDefinition work = new RootBeanDefinition();
         work.setBeanClass(workDefinition.getWorkClazz());
         work.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
