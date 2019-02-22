@@ -25,17 +25,21 @@ public interface WorkContext {
      * @param value
      */
     void put(String key, Object value);
-    
     /**
-     * 当前Task执行所需的额外配置参数</p>
-     * 优先级：</p>
+          * 当前所有Task的额外配置参数
+     * @return
+     */
+    Map<String, String> getAllRuntimeArgs();
+    /**
+          * 当前Task执行所需的额外配置参数</p>
+          * 优先级：</p>
      * work.task-ref.extra > task.extra<br/>
      * task.routing.extra > task.extra</p>
      * @return
      */
     String getRuntimeArgs();
     /**
-     * 当前Task执行所需的额外配置参数JSON格式</p>
+          * 当前Task执行所需的额外配置参数JSON格式</p>
      * null返回空JSONObject对象
      * @return
      */

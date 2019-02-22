@@ -9,6 +9,17 @@ public class ExtraArgsHolder {
 	//task.routing定义的运行时参数;key格式：previousTask_currentTask
 	private static Map<String, String> TASK_ROUTING_EXTRA_MAP;
 	
+	protected Map<String, String> takeAllExtra() {
+		Map<String, String> all = new HashMap<>();
+		if (TASK_EXTRA_MAP != null) {
+			all.putAll(TASK_EXTRA_MAP);
+		}
+		if (TASK_ROUTING_EXTRA_MAP != null) {
+			all.putAll(TASK_ROUTING_EXTRA_MAP);
+		}
+		return all;
+	}
+	
 	protected String getTaskRoutingExtra(String taskId, String toTask) {
 		if (TASK_ROUTING_EXTRA_MAP != null) {
 			return TASK_ROUTING_EXTRA_MAP.get(taskId + "_" + toTask);

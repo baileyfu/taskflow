@@ -39,7 +39,16 @@ public abstract class AbstractWorkContext extends ExtraArgsHolder implements Wor
 	public void setTaskRefExtraMap(Map<String, String> taskRefExtraMap) {
 		this.taskRefExtraMap = taskRefExtraMap;
 	}
-
+	@Override
+	public Map<String, String> getAllRuntimeArgs() {
+		Map<String, String> argsMap = takeAllExtra();
+		if (SequentialRouteWork.class.isAssignableFrom(workClazz)) {
+			if (taskRefExtraMap != null) {
+				argsMap.putAll(taskRefExtraMap);
+			}
+		}
+		return argsMap;
+	}
 	@Override
 	public String getRuntimeArgs() {
 		if(currentTask==null) 
