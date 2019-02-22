@@ -27,9 +27,6 @@ import taskflow.work.context.ExtraArgsHolder;
 public interface TaskRegister {
 
 	default BeanDefinition registerTask(BeanDefinitionRegistry registry, TaskDefinition taskDefinition) {
-		if (registry.containsBeanDefinition(taskDefinition.getTaskId())) 
-			registry.removeBeanDefinition(taskDefinition.getTaskId());
-		
 		RuntimeBeanReference taskRef = new RuntimeBeanReference(taskDefinition.getTaskBeanId());
 		RootBeanDefinition taskRoutingWrapDefinition = new RootBeanDefinition();
 		taskRoutingWrapDefinition.getPropertyValues().add(TaskRoutingPropName.NAME, taskDefinition.getTaskId());
@@ -41,7 +38,7 @@ public interface TaskRegister {
 				RootBeanDefinition routingCondition = new RootBeanDefinition();
 				// 使用Pattern匹配路由
 				routingCondition.setBeanClass(PatternRoutingCondition.class);
-				routingCondition.getPropertyValues().add(RoutingConditionPropName.CONDITION, routeDefinition.getValue());
+				routingCondition.getPropertyValues().add(RoutingConditionPropName.CONDITION, routeDefinition.getKey());
 				routingCondition.getPropertyValues().add(RoutingConditionPropName.PATTERN, PatternType.valueOf(routeDefinition.getPatten()));
 				routingCondition.getPropertyValues().add(RoutingConditionPropName.TASK_ROUTING_WRAP, new RuntimeBeanReference(routeDefinition.getToTask()));
 				routingConditions.add(routingCondition);
@@ -72,8 +69,10 @@ public interface TaskRegister {
 			taskRoutingWrapDefinition.setBeanClass(DefaultTaskRoutingWrap.class);
 			taskRoutingWrapDefinition.getPropertyValues().add(TaskRoutingPropName.TASK, taskRef);
 		}
-		BeanDefinitionHolder holder = new BeanDefinitionHolder(taskRoutingWrapDefinition, taskDefinition.getTaskId());
-		BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+		if (registry.containsBeanDefinition(taskDefinition.getTaskId())) 
+			registry.removeBeanDefinition(taskDefinition.getTaskId());
+		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(taskRoutingWrapDefinition, taskDefinition.getTaskId()), registry);
+		
 		//保留task.extra参数
 		ExtraArgsHolder.putTaskExtra(taskDefinition.getTaskId(), taskDefinition.getExtra());
 		return taskRoutingWrapDefinition;

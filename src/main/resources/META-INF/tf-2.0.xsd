@@ -83,7 +83,7 @@
     <!--</xsd:element>-->
 
     <xsd:attributeGroup name="routingAttributes">
-        <xsd:attribute name="value" type="xsd:string" default="@default">
+        <xsd:attribute name="key" type="xsd:string" default="@default">
             <![CDATA[ ]]>
         </xsd:attribute>
         <xsd:attribute name="toTask" type="xsd:IDREF" use="required">
@@ -95,7 +95,10 @@
                 <!--</xsd:appinfo>-->
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="patten" type="xsd:string" default="string">
+        <xsd:attribute name="patten" type="xsd:string" default="string"><!-- string or regex -->
+            <![CDATA[ ]]>
+        </xsd:attribute>
+        <xsd:attribute name="extra" type="xsd:string" use="optional">
             <![CDATA[ ]]>
         </xsd:attribute>
     </xsd:attributeGroup>

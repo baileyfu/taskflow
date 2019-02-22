@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -13,16 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import taskflow.annotation.EnableTaskFlow;
+import taskflow.config.TaskFlowBeanReloadProcessor;
 import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
 import taskflow.config.bean.TaskflowConfiguration;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.TaskRef;
+import taskflow.work.CustomRouteWork;
 import taskflow.work.SequentialRouteWork;
 import taskflow.work.Work;
 import taskflow.work.WorkFactory;
 import taskflow.work.context.TaskTrace;
 import x.demo.work.task.TaskA;
+import x.demo.work.task.TaskB;
 import x.demo.work.task.TaskC;
 
 @EnableTaskFlow
@@ -84,6 +88,8 @@ public class DemoApplication {
 		taskflowConfiguration.setWorkDefinitions(workDefinitions);
 		return taskflowConfiguration;
 	}
+	@Autowired
+	TaskFlowBeanReloadProcessor taskFlowBeanReloadProcessor;
 	@RequestMapping("/")
 	public String index() {
 		Work Work1 = WorkFactory.createWork("Work1");
@@ -98,24 +104,50 @@ public class DemoApplication {
 	}
 	@RequestMapping("/change")
 	public String change() {
+		TaskBeanDefinition taskBeanDefinition=new TaskBeanDefinition();
+		taskBeanDefinition.setBeanId("TaskBBean");
+		taskBeanDefinition.setBeanClazz(TaskB.class);
+		
+		TaskDefinition td = new TaskDefinition();
+		td.setTaskBeanId("TaskBBean");
+		td.setExtra("EXTRA");
+		td.setTaskId("TaskB");
+		
+		WorkDefinition workDefinition=new WorkDefinition();
+		workDefinition.setWorkId("Work1");
+		workDefinition.setWorkClazz(SequentialRouteWork.class);
+		workDefinition.setTraceable(false);
+		ArrayList<TaskRef> taskRefs=new ArrayList<>();
+		TaskRef taskRef=new TaskRef();
+		taskRef.setTaskId("Task1");
+		taskRef.setExtra("{AA:'BB'}");
+		taskRefs.add(taskRef);
+		taskRef=new TaskRef();
+		taskRef.setTaskId("TaskB");
+		taskRefs.add(taskRef);
+		taskRef=new TaskRef();
+		taskRef.setTaskId("Task3");
+		taskRefs.add(taskRef);
+		workDefinition.setTaskRefs(taskRefs);
+		taskFlowBeanReloadProcessor.reload(taskBeanDefinition, td, workDefinition);
 		return "SUCCESS";
 	}
-	public static void main(String[] args) throws Exception {
+	public static void mainx(String[] args) throws Exception {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 	
-	public static void mains(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 //		AppGroovy.main();
 		String file="classpath:status-bus-config.xml";
-		file="classpath:serial-task-config.xml";
+//		file="classpath:serial-task-config.xml";
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(file);
 
-		SequentialRouteWork testBus = (SequentialRouteWork)context.getBean("sequentialTaskWork");
+		Work testBus=WorkFactory.createWork("testStatusBus");
 		testBus.run();
 
 		Thread.sleep(1000l);
 		System.out.println("+++++++++++++");
-		testBus = (SequentialRouteWork)context.getBean("sequentialTaskWork");
+		testBus = (CustomRouteWork)context.getBean("testStatusBus");
 		Object result = testBus.run().getResult();
 		System.out.println(result);
 		context.close();

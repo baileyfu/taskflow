@@ -89,7 +89,4 @@ public abstract class AbstractWork implements Work{
 	public void setWorkContext(WorkContext workContext) {
 		this.workContext = workContext;
 	}
-	public void setRoutingKey(String key) {
-		workContext.setRoutingKey(key);
-	}
 }

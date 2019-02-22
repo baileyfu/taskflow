@@ -2,7 +2,6 @@ package taskflow.config;
 
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.ID_ATTRIBUTE;
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.REF_ATTRIBUTE;
-import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.VALUE_ATTRIBUTE;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,11 +28,13 @@ public class TaskDefinitionParser implements BeanDefinitionParser,TaskRegister {
 		String id = element.getAttribute(ID_ATTRIBUTE);
 		String ref = element.getAttribute(REF_ATTRIBUTE);
 		String method = element.getAttribute(TagAttribute.TASK_METHOD.NAME);
+		String extra = element.getAttribute(TagAttribute.TASK_EXTRA.NAME);
 		
 		TaskDefinition taskDefinition=new TaskDefinition();
 		taskDefinition.setTaskId(id);
 		taskDefinition.setTaskBeanId(ref);
 		taskDefinition.setMethod(method);
+		taskDefinition.setExtra(extra);
 		Set<RouteDefinition> routeDefinitions=new HashSet<>();
 		int length = element.getChildNodes().getLength();
 		for (int i = 0; i < length; i++) {
@@ -42,9 +43,10 @@ public class TaskDefinitionParser implements BeanDefinitionParser,TaskRegister {
 				Element e = (Element) node;
 				if (Tag.ROUTING.getTagName().equals(e.getTagName())) {
 					RouteDefinition routeDefinition=new RouteDefinition();
-					routeDefinition.setValue(e.getAttribute(VALUE_ATTRIBUTE));
+					routeDefinition.setKey(e.getAttribute(TagAttribute.TASK_ROUTING_KEY.NAME));
 					routeDefinition.setToTask(e.getAttribute(TagAttribute.TASK_ROUTING_TO_TASK.NAME));
 					routeDefinition.setPatten(e.getAttribute(TagAttribute.TASK_ROUTING_PATTEN.NAME));
+					routeDefinition.setExtra(e.getAttribute(TagAttribute.TASK_ROUTING_EXTRA.NAME));
 					routeDefinitions.add(routeDefinition);
 				}
 			}

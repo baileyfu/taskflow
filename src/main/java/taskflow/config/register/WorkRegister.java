@@ -27,16 +27,12 @@ import taskflow.work.WorkFactory;
 public interface WorkRegister {
 
 	default BeanDefinition registerWork(BeanDefinitionRegistry registry, WorkDefinition workDefinition) {
-		if (registry.containsBeanDefinition(workDefinition.getWorkId()))
-			registry.removeBeanDefinition(workDefinition.getWorkId());
-		
 		RootBeanDefinition work = new RootBeanDefinition();
         work.setBeanClass(workDefinition.getWorkClazz());
         work.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
         work.getPropertyValues().add(WorkPropName.NAME, workDefinition.getWorkId());
         work.getPropertyValues().add(WorkPropName.TRACEABLE, workDefinition.isTraceable());
         
-        //TODO CustomRouteWork支持extraArgs
         if(CustomRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有CustomRouteWork才解析start和finish
         	String start = workDefinition.getStart();
 			Assert.isTrue(!StringUtils.isEmpty(start), "Work's start can not be empty");
@@ -70,9 +66,9 @@ public interface WorkRegister {
 			}
         }
         work.getPropertyValues().add(WorkPropName.MAX_TASKS, Integer.valueOf(workDefinition.getMaxTasks()));
-        
-        BeanDefinitionHolder holder = new BeanDefinitionHolder(work, workDefinition.getWorkId());
-        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+		if (registry.containsBeanDefinition(workDefinition.getWorkId()))
+			registry.removeBeanDefinition(workDefinition.getWorkId());
+		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(work, workDefinition.getWorkId()), registry);
         return work;
 	}
 	
@@ -82,8 +78,7 @@ public interface WorkRegister {
 			return registry.getBeanDefinition(beanName);
 		RootBeanDefinition workerFactory = new RootBeanDefinition();
 		workerFactory.setBeanClass(WorkFactory.class);
-		BeanDefinitionHolder holder = new BeanDefinitionHolder(workerFactory, beanName);
-		BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(workerFactory, beanName), registry);
 		return workerFactory;
 	}
 }

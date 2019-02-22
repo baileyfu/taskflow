@@ -17,4 +17,9 @@ public class TaskFlowConfiguration {
 	public TaskFlowBeanFactoryPostProcessor taskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration,ConfigurableEnvironment environment) {
 		return new TaskFlowBeanFactoryPostProcessor(taskflowConfiguration);
 	}
+	@Bean
+	public TaskFlowBeanReloadProcessor taskFlowBeanReloadProcessor(ConfigurableEnvironment environment) {
+		boolean reloadable = environment.getProperty("taskflow.reload.enable", Boolean.class, true);
+		return new TaskFlowBeanReloadProcessor(reloadable);
+	}
 }

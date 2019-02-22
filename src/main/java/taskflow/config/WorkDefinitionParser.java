@@ -42,7 +42,7 @@ public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-		Assert.isTrue(workClazz.isAssignableFrom(Work.class),"tf:work must has a class of type of Work");
+		Assert.isTrue(Work.class.isAssignableFrom(workClazz),"tf:work must has a class of type of Work");
         workDefinition.setWorkClazz((Class<Work>)workClazz);
         workDefinition.setStart(element.getAttribute(TagAttribute.WORK_START.NAME));
         workDefinition.setFinish(element.getAttribute(TagAttribute.WORK_FINISH.NAME));

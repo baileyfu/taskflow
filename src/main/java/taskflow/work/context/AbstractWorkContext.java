@@ -30,7 +30,7 @@ public abstract class AbstractWorkContext extends ExtraArgsHolder implements Wor
 	}
 	
 	public void setCurrentTask(String currentTask) {
-		this.previousTask = currentTask;
+		this.previousTask = this.currentTask;
 		this.currentTask = currentTask;
 	}
 	public String getCurrentTask() {
@@ -45,12 +45,11 @@ public abstract class AbstractWorkContext extends ExtraArgsHolder implements Wor
 		if(currentTask==null) 
 			return null;
 		String runtimeArgs = null;
-		System.out.println("--------->"+workClazz+" : "+workClazz.isAssignableFrom(SequentialRouteWork.class));
-		if (workClazz.isAssignableFrom(SequentialRouteWork.class)) {
+		if (SequentialRouteWork.class.isAssignableFrom(workClazz)) {
 			if (taskRefExtraMap != null) {
 				runtimeArgs = taskRefExtraMap.get(currentTask);
 			}
-		} else if (workClazz.isAssignableFrom(CustomRouteWork.class)) {
+		} else if (CustomRouteWork.class.isAssignableFrom(workClazz)) {
 			if (previousTask != null) {
 				runtimeArgs = getTaskRoutingExtra(previousTask, currentTask);
 			}

@@ -2,30 +2,20 @@ package taskflow.config;
 
 import java.util.Set;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.Ordered;
-import org.springframework.util.Assert;
 
 import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
 import taskflow.config.bean.TaskflowConfiguration;
 import taskflow.config.bean.WorkDefinition;
-import taskflow.config.register.TaskBeanRegister;
-import taskflow.config.register.TaskRegister;
-import taskflow.config.register.WorkRegister;
 import taskflow.work.WorkFactory;
 
 /**
  * 容器初始化完成后注册TaskFlow的Bean
  */
-public class TaskFlowBeanFactoryPostProcessor implements BeanFactoryAware,
-		ApplicationListener<ContextRefreshedEvent>, Ordered, TaskBeanRegister, TaskRegister, WorkRegister {
-	private DefaultListableBeanFactory beanFactory;
+public class TaskFlowBeanFactoryPostProcessor extends TaskFlowRegister implements ApplicationListener<ContextRefreshedEvent>, Ordered {
 	private TaskflowConfiguration taskflowConfiguration;
 	public TaskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration) {
 		this.taskflowConfiguration=taskflowConfiguration;
@@ -67,10 +57,5 @@ public class TaskFlowBeanFactoryPostProcessor implements BeanFactoryAware,
 	@Override
 	public int getOrder() {
 		return Ordered.LOWEST_PRECEDENCE;
-	}
-	@Override
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		Assert.isTrue(beanFactory instanceof DefaultListableBeanFactory,"the TaskFlow requires DefaultListableBeanFactory");
-		this.beanFactory = (DefaultListableBeanFactory) beanFactory;
 	}
 }

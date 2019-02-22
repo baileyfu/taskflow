@@ -10,6 +10,6 @@ public class TaskB implements Task{
 	@Override
 	public void execute(Work work) {
 		work.putContext("birth", new Date());
-		System.out.println("TaskB's method execute be invoked!");
+		System.out.println("TaskB's method execute be invoked!"+"--->"+work.getWorkContext().getRuntimeArgs());
 	}
 }

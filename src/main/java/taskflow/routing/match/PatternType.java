@@ -7,13 +7,13 @@ public enum PatternType {
     regex(RegexPatternMatch.class),
     string(StringPatternMatch.class);
 
-    private Class clazz;
+    private Class<? extends PatternMatch> clazz;
 
-    PatternType(Class<?> clazz) {
+    PatternType(Class<? extends PatternMatch> clazz) {
         this.clazz = clazz;
     }
 
-    public Class getClazz() {
+    public Class<? extends PatternMatch> getClazz() {
         return clazz;
     }
 }
