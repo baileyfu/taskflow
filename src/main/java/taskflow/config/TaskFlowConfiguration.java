@@ -1,10 +1,13 @@
 package taskflow.config;
 
+import java.util.Set;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 import taskflow.config.bean.TaskflowConfiguration;
+import taskflow.config.bean.WorkDefinition;
 
 /**
  * TaskFlow配置器</p>
@@ -15,6 +18,15 @@ import taskflow.config.bean.TaskflowConfiguration;
 public class TaskFlowConfiguration {
 	@Bean
 	public TaskFlowBeanFactoryPostProcessor taskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration,ConfigurableEnvironment environment) {
+		boolean traceable = environment.getProperty("taskflow.work.traceable", Boolean.class, false);
+		Set<WorkDefinition> workDefinitions=taskflowConfiguration.getWorkDefinitions();
+		if (workDefinitions != null && workDefinitions.size() > 0) {
+			for (WorkDefinition wd : workDefinitions) {
+				if(wd.getTraceable()==null) {
+					wd.setTraceable(traceable);
+				}
+			}
+		}
 		return new TaskFlowBeanFactoryPostProcessor(taskflowConfiguration);
 	}
 	@Bean

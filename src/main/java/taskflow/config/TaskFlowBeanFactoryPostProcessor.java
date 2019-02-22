@@ -28,29 +28,29 @@ public class TaskFlowBeanFactoryPostProcessor extends TaskFlowRegister implement
 			initialized = true;
 			Set<TaskBeanDefinition> taskBeanDefinitions = taskflowConfiguration.getTaskBeanDefinitions();
 			if (taskBeanDefinitions != null && taskBeanDefinitions.size() > 0) {
+				//注册TaskBean
+				for (TaskBeanDefinition taskBeanDefinition : taskBeanDefinitions) {
+					registerTaskBean(beanFactory, taskBeanDefinition);
+				}
 				Set<TaskDefinition> taskDefinitions = taskflowConfiguration.getTaskDefinitions();
 				if (taskDefinitions != null && taskDefinitions.size() > 0) {
+					//注册Task
+					for (TaskDefinition taskDefinition : taskDefinitions) {
+						registerTask(beanFactory, taskDefinition);
+						//创建Task实例
+						beanFactory.getBean(taskDefinition.getTaskId());
+					}
 					Set<WorkDefinition> workDefinitions=taskflowConfiguration.getWorkDefinitions();
 					if (workDefinitions != null && workDefinitions.size() > 0) {
-						//注册TaskBean
-						for (TaskBeanDefinition taskBeanDefinition : taskBeanDefinitions) {
-							registerTaskBean(beanFactory, taskBeanDefinition);
-						}
-						//注册Task
-						for (TaskDefinition taskDefinition : taskDefinitions) {
-							registerTask(beanFactory, taskDefinition);
-							//创建Task实例
-							beanFactory.getBean(taskDefinition.getTaskId());
-						}
 						//注册Work
 						for (WorkDefinition workDefinition : workDefinitions) {
 							registerWork(beanFactory, workDefinition);
 						}
-						//注册WorkFactory
-						registerWorkFactory(beanFactory);
-						beanFactory.getBean(WorkFactory.class);
 					}
 				}
+				//注册WorkFactory
+				registerWorkFactory(beanFactory);
+				beanFactory.getBean(WorkFactory.class);
 			}
 		}
 	}

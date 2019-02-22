@@ -31,7 +31,7 @@ public interface WorkRegister {
         work.setBeanClass(workDefinition.getWorkClazz());
         work.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
         work.getPropertyValues().add(WorkPropName.NAME, workDefinition.getWorkId());
-        work.getPropertyValues().add(WorkPropName.TRACEABLE, workDefinition.isTraceable());
+        work.getPropertyValues().add(WorkPropName.TRACEABLE, workDefinition.getTraceable());
         
         if(CustomRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有CustomRouteWork才解析start和finish
         	String start = workDefinition.getStart();
