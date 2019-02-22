@@ -6,17 +6,17 @@ package taskflow.config.bean;
  */
 public class TaskBeanDefinition {
 	private String beanId;
-	private Class<?> beanClazz;
+	private String beanClazz;
 	public String getBeanId() {
 		return beanId;
 	}
 	public void setBeanId(String beanId) {
 		this.beanId = beanId;
 	}
-	public Class<?> getBeanClazz() {
+	public String getBeanClazz() {
 		return beanClazz;
 	}
-	public void setBeanClazz(Class<?> beanClazz) {
+	public void setBeanClazz(String beanClazz) {
 		this.beanClazz = beanClazz;
 	}
 	@Override

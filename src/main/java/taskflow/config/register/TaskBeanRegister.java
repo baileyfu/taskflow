@@ -10,8 +10,14 @@ import taskflow.config.bean.TaskBeanDefinition;
 //后注册的Bean优先级高
 public interface TaskBeanRegister {
 	default void registerTaskBean(BeanDefinitionRegistry registry, TaskBeanDefinition taskBeanDefinition) {
+		Class<?> beanClazz = null;
+		try {
+			beanClazz = Class.forName(taskBeanDefinition.getBeanClazz());
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 		RootBeanDefinition taskBean = new RootBeanDefinition();
-		taskBean.setBeanClass(taskBeanDefinition.getBeanClazz());
+		taskBean.setBeanClass(beanClazz);
 
 		if (registry.containsBeanDefinition(taskBeanDefinition.getBeanId())) 
 			registry.removeBeanDefinition(taskBeanDefinition.getBeanId());

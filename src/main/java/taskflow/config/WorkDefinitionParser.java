@@ -11,14 +11,12 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.Assert;
 import org.w3c.dom.Element;
 
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.TaskRef;
 import taskflow.config.register.WorkRegister;
 import taskflow.enums.TagAttribute;
-import taskflow.work.Work;
 
 /**
  * 解析<tf:work>标签<br/>
@@ -27,7 +25,6 @@ import taskflow.work.Work;
  * updated by fuli on 2018/5
  */
 public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
-	@SuppressWarnings("unchecked")
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
         String id = element.getAttribute(ID_ATTRIBUTE);
         String maxTasks = element.getAttribute(TagAttribute.WORK_MAX_TASKS.NAME);
@@ -36,14 +33,7 @@ public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
 
         WorkDefinition workDefinition=new WorkDefinition();
         workDefinition.setWorkId(id);
-		Class<?> workClazz = null;
-		try {
-			workClazz = Class.forName(clazz);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-		Assert.isTrue(Work.class.isAssignableFrom(workClazz),"tf:work must has a class of type of Work");
-        workDefinition.setWorkClazz((Class<Work>)workClazz);
+        workDefinition.setWorkClazz(clazz);
         workDefinition.setStart(element.getAttribute(TagAttribute.WORK_START.NAME));
         workDefinition.setFinish(element.getAttribute(TagAttribute.WORK_FINISH.NAME));
         workDefinition.setMaxTasks(NumberUtils.toInt(maxTasks,0));

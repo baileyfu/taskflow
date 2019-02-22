@@ -2,8 +2,6 @@ package taskflow.config.bean;
 
 import java.util.ArrayList;
 
-import taskflow.work.Work;
-
 /**
  * Work定义
  */
@@ -13,7 +11,7 @@ public class WorkDefinition {
 	private String finish;
 	private int maxTasks;
 	private Boolean traceable;
-	private Class<? extends Work> workClazz;
+	private String workClazz;
 	//支持同一Task执行多次
 	private ArrayList<TaskRef> taskRefs;
 
@@ -50,10 +48,10 @@ public class WorkDefinition {
 	public void setTraceable(Boolean traceable) {
 		this.traceable = traceable;
 	}
-	public Class<? extends Work> getWorkClazz() {
+	public String getWorkClazz() {
 		return workClazz;
 	}
-	public void setWorkClazz(Class<? extends Work> workClazz) {
+	public void setWorkClazz(String workClazz) {
 		this.workClazz = workClazz;
 	}
 	public ArrayList<TaskRef> getTaskRefs() {

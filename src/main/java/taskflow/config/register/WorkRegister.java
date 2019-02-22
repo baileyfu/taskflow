@@ -21,14 +21,22 @@ import taskflow.config.bean.WorkDefinition.TaskRef;
 import taskflow.constants.WorkPropName;
 import taskflow.work.CustomRouteWork;
 import taskflow.work.SequentialRouteWork;
+import taskflow.work.Work;
 import taskflow.work.WorkFactory;
 
 //后注册的Bean优先级高
 public interface WorkRegister {
 
 	default BeanDefinition registerWork(BeanDefinitionRegistry registry, WorkDefinition workDefinition) {
+		Class<?> workClazz = null;
+		try {
+			workClazz = Class.forName(workDefinition.getWorkClazz());
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		Assert.isTrue(Work.class.isAssignableFrom(workClazz),"Work must has a class of type of Work");
 		RootBeanDefinition work = new RootBeanDefinition();
-        work.setBeanClass(workDefinition.getWorkClazz());
+        work.setBeanClass(workClazz);
         work.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
         work.getPropertyValues().add(WorkPropName.NAME, workDefinition.getWorkId());
         work.getPropertyValues().add(WorkPropName.TRACEABLE, workDefinition.getTraceable());

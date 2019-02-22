@@ -39,11 +39,11 @@ public class DemoApplication {
 		Set<TaskBeanDefinition> taskBeanDefinitions = new HashSet<>();
 		TaskBeanDefinition taskBeanDefinition=new TaskBeanDefinition();
 		taskBeanDefinition.setBeanId("TaskABean");
-		taskBeanDefinition.setBeanClazz(TaskA.class);
+		taskBeanDefinition.setBeanClazz(TaskA.class.getName());
 		taskBeanDefinitions.add(taskBeanDefinition);
 		taskBeanDefinition=new TaskBeanDefinition();
 		taskBeanDefinition.setBeanId("TaskCBean");
-		taskBeanDefinition.setBeanClazz(TaskC.class);
+		taskBeanDefinition.setBeanClazz(TaskC.class.getName());
 		taskBeanDefinitions.add(taskBeanDefinition);
 		Set<TaskDefinition> taskDefinitions = new HashSet<>();
 		TaskDefinition taskDefinition=new TaskDefinition();
@@ -66,7 +66,7 @@ public class DemoApplication {
 		Set<WorkDefinition> workDefinitions = new HashSet<>();
 		WorkDefinition workDefinition=new WorkDefinition();
 		workDefinition.setWorkId("Work1");
-		workDefinition.setWorkClazz(SequentialRouteWork.class);
+		workDefinition.setWorkClazz(SequentialRouteWork.class.getName());
 		workDefinition.setTraceable(false);
 		ArrayList<TaskRef> taskRefs=new ArrayList<>();
 		TaskRef taskRef=new TaskRef();
@@ -106,7 +106,7 @@ public class DemoApplication {
 	public String change() {
 		TaskBeanDefinition taskBeanDefinition=new TaskBeanDefinition();
 		taskBeanDefinition.setBeanId("TaskBBean");
-		taskBeanDefinition.setBeanClazz(TaskB.class);
+		taskBeanDefinition.setBeanClazz(TaskB.class.getName());
 		
 		TaskDefinition td = new TaskDefinition();
 		td.setTaskBeanId("TaskBBean");
@@ -115,7 +115,7 @@ public class DemoApplication {
 		
 		WorkDefinition workDefinition=new WorkDefinition();
 		workDefinition.setWorkId("Work1");
-		workDefinition.setWorkClazz(SequentialRouteWork.class);
+		workDefinition.setWorkClazz(SequentialRouteWork.class.getName());
 		workDefinition.setTraceable(false);
 		ArrayList<TaskRef> taskRefs=new ArrayList<>();
 		TaskRef taskRef=new TaskRef();
@@ -132,11 +132,11 @@ public class DemoApplication {
 		taskFlowBeanReloadProcessor.reload(taskBeanDefinition, td, workDefinition);
 		return "SUCCESS";
 	}
-	public static void mainx(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 	
-	public static void main(String[] args) throws Exception {
+	public static void mainx(String[] args) throws Exception {
 //		AppGroovy.main();
 		String file="classpath:status-bus-config.xml";
 //		file="classpath:serial-task-config.xml";
