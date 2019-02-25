@@ -37,7 +37,7 @@ public abstract class AbstractWork implements Work{
 	 */
 	public void receive(TaskRoutingWrap stationRoutingWrap) throws Exception {
 		((AbstractWorkContext)workContext).setCurrentTask(stationRoutingWrap.getName());
-		if (maxTasks <= executedTasks++) {
+		if (maxTasks > 0 && maxTasks <= executedTasks++) {
 			throw new TaskFlowException("max tasks is:" + maxTasks);
 		}
 		if (traceable) {

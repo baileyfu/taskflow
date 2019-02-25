@@ -16,7 +16,7 @@ public class WorkDefinition {
 	private ArrayList<TaskRef> taskRefs;
 
 	public WorkDefinition() {
-		maxTasks = 10000;
+		maxTasks = 0;
 	}
 	public String getWorkId() {
 		return workId;

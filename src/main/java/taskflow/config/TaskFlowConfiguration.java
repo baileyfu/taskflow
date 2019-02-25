@@ -18,7 +18,7 @@ import taskflow.config.bean.WorkDefinition;
 public class TaskFlowConfiguration {
 	@Bean
 	public TaskFlowBeanFactoryPostProcessor taskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration,ConfigurableEnvironment environment) {
-		boolean traceable = environment.getProperty("taskflow.work.traceable", Boolean.class, false);
+		Boolean traceable = environment.getProperty("taskflow.work.traceable", Boolean.class, Boolean.FALSE);
 		Set<WorkDefinition> workDefinitions=taskflowConfiguration.getWorkDefinitions();
 		if (workDefinitions != null && workDefinitions.size() > 0) {
 			for (WorkDefinition wd : workDefinitions) {
