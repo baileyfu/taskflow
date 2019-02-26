@@ -6,6 +6,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import taskflow.config.register.WorkRegister;
+import taskflow.enums.ConfigSource;
 import taskflow.work.WorkFactory;
 
 /**
@@ -16,4 +17,9 @@ public class WorkFactoryDefinitionParser implements BeanDefinitionParser,WorkReg
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         return registerWorkFactory(parserContext.getRegistry());
     }
+
+	@Override
+	public ConfigSource getConfigSource() {
+		return ConfigSource.XML;
+	}
 }

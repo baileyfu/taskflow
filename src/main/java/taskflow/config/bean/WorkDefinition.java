@@ -83,6 +83,11 @@ public class WorkDefinition {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "WorkDefinition [workId=" + workId + ", start=" + start + ", finish=" + finish + ", maxTasks=" + maxTasks
+				+ ", traceable=" + traceable + ", workClazz=" + workClazz + ", taskRefs=" + taskRefs + "]";
+	}
 	public static class TaskRef{
 		private String taskId;
 		private String extra;
@@ -97,6 +102,10 @@ public class WorkDefinition {
 		}
 		public void setExtra(String extra) {
 			this.extra = extra;
+		}
+		@Override
+		public String toString() {
+			return "TaskRef [taskId=" + taskId + ", extra=" + extra + "]";
 		}
 	}
 }

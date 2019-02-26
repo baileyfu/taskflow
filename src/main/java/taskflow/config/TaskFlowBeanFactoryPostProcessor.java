@@ -15,7 +15,7 @@ import taskflow.work.WorkFactory;
 /**
  * 容器初始化完成后注册TaskFlow的Bean
  */
-public class TaskFlowBeanFactoryPostProcessor extends TaskFlowRegister implements ApplicationListener<ContextRefreshedEvent>, Ordered {
+public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister implements ApplicationListener<ContextRefreshedEvent>, Ordered {
 	private TaskflowConfiguration taskflowConfiguration;
 	public TaskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration) {
 		this.taskflowConfiguration=taskflowConfiguration;
@@ -51,6 +51,8 @@ public class TaskFlowBeanFactoryPostProcessor extends TaskFlowRegister implement
 				//注册WorkFactory
 				registerWorkFactory(beanFactory);
 				beanFactory.getBean(WorkFactory.class);
+				// 打印注册日志
+				printRegisterLog(null);
 			}
 		}
 	}

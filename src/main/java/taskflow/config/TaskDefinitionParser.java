@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import taskflow.config.bean.TaskDefinition;
 import taskflow.config.bean.TaskDefinition.RouteDefinition;
 import taskflow.config.register.TaskRegister;
+import taskflow.enums.ConfigSource;
 import taskflow.enums.Tag;
 import taskflow.enums.TagAttribute;
 import taskflow.task.TaskRoutingWrap;
@@ -53,5 +54,10 @@ public class TaskDefinitionParser implements BeanDefinitionParser,TaskRegister {
 		}
 		taskDefinition.setRouteDefinitions(routeDefinitions);
 		return registerTask(parserContext.getRegistry(), taskDefinition);
+	}
+
+	@Override
+	public ConfigSource getConfigSource() {
+		return ConfigSource.XML;
 	}
 }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
 import taskflow.config.bean.TaskDefinition.RouteDefinition;
 import taskflow.constants.RoutingConditionPropName;
+import taskflow.constants.TFLogType;
 import taskflow.constants.TaskRoutingPropName;
 import taskflow.routing.DefaultRouting;
 import taskflow.routing.PatternRoutingCondition;
@@ -24,7 +25,7 @@ import taskflow.task.ReflectedTaskRoutingWrap;
 import taskflow.task.TaskMethodInvoker;
 import taskflow.work.context.ExtraArgsHolder;
 //后注册的Bean优先级高
-public interface TaskRegister {
+public interface TaskRegister extends ConfigSourceAware{
 
 	default BeanDefinition registerTask(BeanDefinitionRegistry registry, TaskDefinition taskDefinition) {
 		RuntimeBeanReference taskRef = new RuntimeBeanReference(taskDefinition.getTaskBeanId());
@@ -75,6 +76,8 @@ public interface TaskRegister {
 		
 		//保留task.extra参数
 		ExtraArgsHolder.putTaskExtra(taskDefinition.getTaskId(), taskDefinition.getExtra());
+		
+		RegisterLogger.log(getConfigSource(), TFLogType.TASK,taskDefinition.getTaskId(), taskDefinition.toString());
 		return taskRoutingWrapDefinition;
 	}
 	

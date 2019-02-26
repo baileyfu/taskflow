@@ -15,7 +15,7 @@ import taskflow.config.bean.WorkDefinition.TaskRef;
 /**
  * 运行时重载TaskFlow的bean
  */
-public class TaskFlowBeanReloadProcessor extends TaskFlowRegister {
+public class TaskFlowBeanReloadProcessor extends CustomTaskFlowRegister {
 	private boolean reloadable;
 
 	public TaskFlowBeanReloadProcessor(boolean reloadable) {
@@ -51,5 +51,7 @@ public class TaskFlowBeanReloadProcessor extends TaskFlowRegister {
 			}
 			registerWork(beanFactory, workDefinition);
 		}
+		// 打印注册日志
+		printRegisterLog(true);
 	};
 }

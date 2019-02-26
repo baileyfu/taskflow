@@ -18,6 +18,7 @@ import org.springframework.util.Assert;
 
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.TaskRef;
+import taskflow.constants.TFLogType;
 import taskflow.constants.WorkPropName;
 import taskflow.work.CustomRouteWork;
 import taskflow.work.SequentialRouteWork;
@@ -25,7 +26,7 @@ import taskflow.work.Work;
 import taskflow.work.WorkFactory;
 
 //后注册的Bean优先级高
-public interface WorkRegister {
+public interface WorkRegister extends ConfigSourceAware{
 
 	default BeanDefinition registerWork(BeanDefinitionRegistry registry, WorkDefinition workDefinition) {
 		Class<?> workClazz = null;
@@ -55,7 +56,7 @@ public interface WorkRegister {
         }else if(SequentialRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有SerialRouteWork才解析sequence
         	ManagedMap<String, RuntimeBeanReference> tasksMap=new ManagedMap<>();
 			ArrayList<TaskRef> taskRefs = workDefinition.getTaskRefs();
-			Assert.isTrue(taskRefs != null & taskRefs.size() > 0, "the Work must has a task-ref at least!");
+			Assert.isTrue(taskRefs != null && taskRefs.size() > 0, "the Work must has a task-ref at least!");
 			Map<String, String> taskRefExtraMap = new HashMap<>();
 			for (TaskRef taskRef : taskRefs) {
 				if(StringUtils.isEmpty(taskRef.getTaskId())) {
@@ -77,7 +78,9 @@ public interface WorkRegister {
 		if (registry.containsBeanDefinition(workDefinition.getWorkId()))
 			registry.removeBeanDefinition(workDefinition.getWorkId());
 		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(work, workDefinition.getWorkId()), registry);
-        return work;
+		
+		RegisterLogger.log(getConfigSource(), TFLogType.WORK,workDefinition.getWorkId(), workDefinition.toString());
+		return work;
 	}
 	
 	default BeanDefinition registerWorkFactory(BeanDefinitionRegistry registry) {
@@ -87,6 +90,8 @@ public interface WorkRegister {
 		RootBeanDefinition workerFactory = new RootBeanDefinition();
 		workerFactory.setBeanClass(WorkFactory.class);
 		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(workerFactory, beanName), registry);
+		
+		RegisterLogger.log(getConfigSource(), TFLogType.WORK_FACTORY,beanName, "[beanId:"+beanName+" , class:"+WorkFactory.class.getName()+"]");
 		return workerFactory;
 	}
 }

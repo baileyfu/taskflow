@@ -8,6 +8,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 import taskflow.config.bean.TaskflowConfiguration;
 import taskflow.config.bean.WorkDefinition;
+import taskflow.constants.ConfigParams;
 
 /**
  * TaskFlow配置器</p>
@@ -18,7 +19,7 @@ import taskflow.config.bean.WorkDefinition;
 public class TaskFlowConfiguration {
 	@Bean
 	public TaskFlowBeanFactoryPostProcessor taskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration,ConfigurableEnvironment environment) {
-		Boolean traceable = environment.getProperty("taskflow.work.traceable", Boolean.class, Boolean.FALSE);
+		Boolean traceable = environment.getProperty(ConfigParams.WORK_TRACEABLE, Boolean.class, Boolean.FALSE);
 		Set<WorkDefinition> workDefinitions=taskflowConfiguration.getWorkDefinitions();
 		if (workDefinitions != null && workDefinitions.size() > 0) {
 			for (WorkDefinition wd : workDefinitions) {
@@ -31,7 +32,7 @@ public class TaskFlowConfiguration {
 	}
 	@Bean
 	public TaskFlowBeanReloadProcessor taskFlowBeanReloadProcessor(ConfigurableEnvironment environment) {
-		boolean reloadable = environment.getProperty("taskflow.reload.enable", Boolean.class, true);
+		Boolean reloadable = environment.getProperty(ConfigParams.RELOAD_ENABLE, Boolean.class, Boolean.TRUE);
 		return new TaskFlowBeanReloadProcessor(reloadable);
 	}
 }

@@ -6,9 +6,10 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 
 import taskflow.config.bean.TaskBeanDefinition;
+import taskflow.constants.TFLogType;
 
 //后注册的Bean优先级高
-public interface TaskBeanRegister {
+public interface TaskBeanRegister extends ConfigSourceAware{
 	default void registerTaskBean(BeanDefinitionRegistry registry, TaskBeanDefinition taskBeanDefinition) {
 		Class<?> beanClazz = null;
 		try {
@@ -22,5 +23,7 @@ public interface TaskBeanRegister {
 		if (registry.containsBeanDefinition(taskBeanDefinition.getBeanId())) 
 			registry.removeBeanDefinition(taskBeanDefinition.getBeanId());
 		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(taskBean, taskBeanDefinition.getBeanId()), registry);
+	
+		RegisterLogger.log(getConfigSource(), TFLogType.TASK_BEAN,taskBeanDefinition.getBeanId(), taskBeanDefinition.toString());
 	}
 }

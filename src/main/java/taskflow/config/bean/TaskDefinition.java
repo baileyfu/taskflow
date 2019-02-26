@@ -65,6 +65,11 @@ public class TaskDefinition {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "TaskDefinition [taskId=" + taskId + ", taskBeanId=" + taskBeanId + ", method=" + method + ", extra="
+				+ extra + ", routeDefinitions=" + routeDefinitions + "]";
+	}
 	public static class RouteDefinition{
 		private String key;
 		private String toTask;
@@ -116,6 +121,11 @@ public class TaskDefinition {
 			} else if (!key.equals(other.key))
 				return false;
 			return true;
+		}
+		@Override
+		public String toString() {
+			return "RouteDefinition [key=" + key + ", toTask=" + toTask + ", patten=" + patten + ", extra=" + extra
+					+ "]";
 		}
 	}
 }

@@ -42,4 +42,8 @@ public class TaskBeanDefinition {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "TaskBeanDefinition [beanId=" + beanId + ", beanClazz=" + beanClazz + "]";
+	}
 }

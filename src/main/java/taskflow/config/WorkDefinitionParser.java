@@ -16,6 +16,7 @@ import org.w3c.dom.Element;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.TaskRef;
 import taskflow.config.register.WorkRegister;
+import taskflow.enums.ConfigSource;
 import taskflow.enums.TagAttribute;
 
 /**
@@ -53,4 +54,9 @@ public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
         workDefinition.setTaskRefs(taskRefs);
         return registerWork(parserContext.getRegistry(), workDefinition);
     }
+
+	@Override
+	public ConfigSource getConfigSource() {
+		return ConfigSource.XML;
+	}
 }
