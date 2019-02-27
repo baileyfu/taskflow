@@ -25,7 +25,7 @@ public class CustomTaskFlowRegister implements BeanFactoryAware, TaskBeanRegiste
 
 	@Override
 	public ConfigSource getConfigSource() {
-		return ConfigSource.CUSTOM;
+		return ConfigSource.CUS;
 	}
 	
 	protected void printRegisterLog(Boolean printDetail) {

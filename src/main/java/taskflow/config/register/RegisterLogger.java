@@ -17,6 +17,7 @@ public abstract class RegisterLogger{
 	private static Map<String, String> REGISTER_LOG = new LinkedHashMap<>(INIT_SIZE);
 
 	static void log(ConfigSource configSource, TFLogType type, String id, String value) {
+		REGISTER_LOG.remove(id);
 		StringBuilder log=new StringBuilder("Register from ");
 		log.append(configSource);
 		log.append(" , [TYPE] : ").append(type);
@@ -43,6 +44,7 @@ public abstract class RegisterLogger{
 						logPrinter.accept(StringUtils.substringBefore(temp.get(id), "[VALUE]") + "[VALUE] : " + id);
 					}
 				}
+				temp = null;
 			}
 		} else {
 			REGISTER_LOG.clear();

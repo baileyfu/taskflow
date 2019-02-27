@@ -35,7 +35,7 @@ public interface WorkRegister extends ConfigSourceAware{
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-		Assert.isTrue(Work.class.isAssignableFrom(workClazz),"Work must has a class of type of Work");
+		Assert.isTrue(Work.class.isAssignableFrom(workClazz),"Work '"+workDefinition.getWorkId()+"' must has a class of type of Work");
 		RootBeanDefinition work = new RootBeanDefinition();
         work.setBeanClass(workClazz);
         work.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
@@ -44,7 +44,7 @@ public interface WorkRegister extends ConfigSourceAware{
         
         if(CustomRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有CustomRouteWork才解析start和finish
         	String start = workDefinition.getStart();
-			Assert.isTrue(!StringUtils.isEmpty(start), "Work's start can not be empty");
+			Assert.isTrue(!StringUtils.isEmpty(start), "Work '"+workDefinition.getWorkId()+"' must has a start task");
             String finish = workDefinition.getFinish();
         	
         	RuntimeBeanReference startBean = new RuntimeBeanReference(start);
@@ -56,11 +56,11 @@ public interface WorkRegister extends ConfigSourceAware{
         }else if(SequentialRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有SerialRouteWork才解析sequence
         	ManagedMap<String, RuntimeBeanReference> tasksMap=new ManagedMap<>();
 			ArrayList<TaskRef> taskRefs = workDefinition.getTaskRefs();
-			Assert.isTrue(taskRefs != null && taskRefs.size() > 0, "the Work must has a task-ref at least!");
+			Assert.isTrue(taskRefs != null && taskRefs.size() > 0, "the Work '"+workDefinition.getWorkId()+"' must has a task-ref at least!");
 			Map<String, String> taskRefExtraMap = new HashMap<>();
 			for (TaskRef taskRef : taskRefs) {
 				if(StringUtils.isEmpty(taskRef.getTaskId())) {
-					throw new NullPointerException("Work's task-ref can not be empty");
+					throw new NullPointerException("the Work '"+workDefinition.getWorkId()+"' has a empty task-ref");
 				}
 				tasksMap.put(taskRef.getTaskId(), new RuntimeBeanReference(taskRef.getTaskId()));
 				if (!StringUtils.isBlank(taskRef.getExtra())) {
