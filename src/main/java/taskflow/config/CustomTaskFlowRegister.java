@@ -32,8 +32,7 @@ public class CustomTaskFlowRegister implements BeanFactoryAware, TaskBeanRegiste
 		Map<String, RegisterLogger> rlMap = beanFactory.getBeansOfType(RegisterLogger.class);
 		if (rlMap != null && rlMap.size() > 0) {
 			rlMap.values().iterator().next().printLog(printDetail);
-		}else {
-			RegisterLogger.clear();
 		}
+		RegisterLogger.clear();
 	}
 }

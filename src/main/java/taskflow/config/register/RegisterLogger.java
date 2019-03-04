@@ -34,16 +34,20 @@ public abstract class RegisterLogger{
 	public synchronized void printLog(Boolean printDetail) {
 		if (environment.getProperty(ConfigParams.LOG_PRINTABLE, Boolean.class, Boolean.FALSE)) {
 			if (REGISTER_LOG.size() > 0) {
+				String lineSeparator = System.getProperty("line.separator");
+				StringBuilder logInfo=new StringBuilder();
 				Map<String, String> temp = REGISTER_LOG;
 				REGISTER_LOG = new LinkedHashMap<>(INIT_SIZE);
 				if(printDetail==null?environment.getProperty(ConfigParams.LOG_PRINT_DETAIL, Boolean.class, Boolean.FALSE):printDetail) {
-					temp.values().stream().forEach(getLogPrinter());
+					temp.values().stream().forEach((x)->{
+						logInfo.append(x).append(lineSeparator);
+					});
 				} else {
-					Consumer<String> logPrinter = getLogPrinter();
 					for (String id : temp.keySet()) {
-						logPrinter.accept(StringUtils.substringBefore(temp.get(id), "[VALUE]") + "[VALUE] : " + id);
+						logInfo.append(StringUtils.substringBefore(temp.get(id), "[VALUE]")).append("[VALUE] : ").append(id).append(lineSeparator);
 					}
 				}
+				getLogPrinter().accept(logInfo.toString());
 				temp = null;
 			}
 		} else {
