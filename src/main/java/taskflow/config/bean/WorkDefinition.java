@@ -40,7 +40,7 @@ public class WorkDefinition {
 		return maxTasks;
 	}
 	public void setMaxTasks(int maxTasks) {
-		this.maxTasks = maxTasks < 1 ? 1 : maxTasks;
+		this.maxTasks = maxTasks;
 	}
 	public Boolean getTraceable() {
 		return traceable == null ? Boolean.FALSE : traceable;
