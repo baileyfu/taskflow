@@ -32,8 +32,11 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 				for (TaskBeanDefinition taskBeanDefinition : taskBeanDefinitions) {
 					registerTaskBean(beanFactory, taskBeanDefinition);
 				}
+				int registeredTask = 0;
+				int registeredWork = 0;
 				Set<TaskDefinition> taskDefinitions = taskflowConfiguration.getTaskDefinitions();
 				if (taskDefinitions != null && taskDefinitions.size() > 0) {
+					registeredTask = taskDefinitions.size();
 					//注册Task
 					for (TaskDefinition taskDefinition : taskDefinitions) {
 						registerTask(beanFactory, taskDefinition);
@@ -42,6 +45,7 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 					}
 					Set<WorkDefinition> workDefinitions=taskflowConfiguration.getWorkDefinitions();
 					if (workDefinitions != null && workDefinitions.size() > 0) {
+						registeredWork = workDefinitions.size();
 						//注册Work
 						for (WorkDefinition workDefinition : workDefinitions) {
 							registerWork(beanFactory, workDefinition);
@@ -51,8 +55,12 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 				//注册WorkFactory
 				registerWorkFactory(beanFactory);
 				beanFactory.getBean(WorkFactory.class);
+				
 				// 打印注册日志
+				directlyLog("Register List : ");
 				printRegisterLog(null);
+				directlyLog("Registered Total : [TaskBean : "+taskBeanDefinitions.size()+" , Task : "+registeredTask+" , Work : "+registeredWork+"]");
+				directlyLog("The 'Register List' of TaskFlow has been printed!");
 			}
 		}
 	}

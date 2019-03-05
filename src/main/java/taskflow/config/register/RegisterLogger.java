@@ -35,7 +35,7 @@ public abstract class RegisterLogger{
 		if (environment.getProperty(ConfigParams.LOG_PRINTABLE, Boolean.class, Boolean.FALSE)) {
 			if (REGISTER_LOG.size() > 0) {
 				String lineSeparator = System.getProperty("line.separator");
-				StringBuilder logInfo = new StringBuilder("Register List : ");
+				StringBuilder logInfo = new StringBuilder();
 				logInfo.append(lineSeparator);
 				Map<String, String> temp = REGISTER_LOG;
 				REGISTER_LOG = new LinkedHashMap<>(INIT_SIZE);
@@ -48,12 +48,9 @@ public abstract class RegisterLogger{
 						logInfo.append(StringUtils.substringBefore(temp.get(id), "[VALUE]")).append("[VALUE] : ").append(id).append(lineSeparator);
 					}
 				}
-				logInfo.append("The 'Register List' of TaskFlow has been printed!");
 				getLogPrinter().accept(logInfo.toString());
 				temp = null;
 			}
-		} else {
-			REGISTER_LOG.clear();
 		}
 	}
 
