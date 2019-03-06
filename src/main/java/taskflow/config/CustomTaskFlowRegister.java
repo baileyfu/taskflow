@@ -29,20 +29,23 @@ public class CustomTaskFlowRegister implements BeanFactoryAware, TaskBeanRegiste
 	}
 
 	private RegisterLogger registerLogger = null;
-	protected void printRegisterLog(Boolean printDetail) {
+	private void initLogger() {
 		if (registerLogger == null) {
 			Map<String, RegisterLogger> rlMap = beanFactory.getBeansOfType(RegisterLogger.class);
 			if (rlMap != null && rlMap.size() > 0) {
 				registerLogger = rlMap.values().iterator().next();
 			}
 		}
+	}
+	protected void printRegisterLog(Boolean printDetail) {
+		initLogger();
 		if (registerLogger != null) {
 			registerLogger.printLog(printDetail);
 		}
 		RegisterLogger.clear();
 	}
-
 	protected void directlyLog(String content) {
+		initLogger();
 		if (registerLogger != null) {
 			registerLogger.getLogPrinter().accept(content);
 		}

@@ -48,11 +48,10 @@ public abstract class RegisterLogger{
 						logInfo.append(StringUtils.substringBefore(temp.get(id), "[VALUE]")).append("[VALUE] : ").append(id).append(lineSeparator);
 					}
 				}
-				getLogPrinter().accept(logInfo.toString());
+				getLogPrinter().accept(logInfo.substring(0,logInfo.length()-lineSeparator.length()).toString());
 				temp = null;
 			}
 		}
 	}
-
 	public abstract Consumer<String> getLogPrinter();
 }
