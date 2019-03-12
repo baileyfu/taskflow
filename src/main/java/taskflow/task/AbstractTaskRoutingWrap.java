@@ -8,7 +8,7 @@ import taskflow.work.Work;
  * 仅持有routing
  */
 public abstract class AbstractTaskRoutingWrap implements TaskRoutingWrap {
-	private String name;
+	protected String name;
 	private Routing routing;
 	public AbstractTaskRoutingWrap(){
 	}
