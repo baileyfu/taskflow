@@ -13,13 +13,13 @@
   <version>${taskflow.version}</version>
   
 		<properties>
-			<taskflow.version>2.0.0-RELEASE</taskflow.version>
+			<taskflow.version>2.0.1-RELEASE</taskflow.version>
 		</properties>
 		<profiles>
 			<profile>
 				<id>snapshots</id>
 				<properties>
-					<taskflow.version>2.0.0-SNAPSHOT</taskflow.version>
+					<taskflow.version>2.0.1-SNAPSHOT</taskflow.version>
 				</properties>
 			</profile>
 		</profiles>

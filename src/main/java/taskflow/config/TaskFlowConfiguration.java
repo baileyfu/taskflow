@@ -28,7 +28,8 @@ public class TaskFlowConfiguration {
 				}
 			}
 		}
-		return new TaskFlowBeanFactoryPostProcessor(taskflowConfiguration);
+		Boolean ignoreNoExists = environment.getProperty(ConfigParams.WORK_NO_EXISTS_IGNORABLE, Boolean.class, Boolean.FALSE);
+		return new TaskFlowBeanFactoryPostProcessor(taskflowConfiguration,ignoreNoExists);
 	}
 	@Bean
 	public TaskFlowBeanReloadProcessor taskFlowBeanReloadProcessor(ConfigurableEnvironment environment) {

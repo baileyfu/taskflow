@@ -17,8 +17,10 @@ import taskflow.work.WorkFactory;
  */
 public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister implements ApplicationListener<ContextRefreshedEvent>, Ordered {
 	private TaskflowConfiguration taskflowConfiguration;
-	public TaskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration) {
+	private boolean ignoreNoExists;
+	public TaskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration,boolean ignoreNoExists) {
 		this.taskflowConfiguration=taskflowConfiguration;
+		this.ignoreNoExists = ignoreNoExists;
 	}
 
 	private boolean initialized = false;
@@ -30,7 +32,15 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 			if (taskBeanDefinitions != null && taskBeanDefinitions.size() > 0) {
 				//注册TaskBean
 				for (TaskBeanDefinition taskBeanDefinition : taskBeanDefinitions) {
-					registerTaskBean(beanFactory, taskBeanDefinition);
+					try {
+						registerTaskBean(beanFactory, taskBeanDefinition);
+					} catch (Exception e) {
+						if (ignoreNoExists) {
+							directlyLog("Register TaskBean '"+taskBeanDefinition.getBeanId()+"' error ! ex : "+e.toString());
+						} else {
+							throw e;
+						}
+					}
 				}
 				int registeredTask = 0;
 				int registeredWork = 0;
@@ -39,16 +49,32 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 					registeredTask = taskDefinitions.size();
 					//注册Task
 					for (TaskDefinition taskDefinition : taskDefinitions) {
-						registerTask(beanFactory, taskDefinition);
-						//创建Task实例
-						beanFactory.getBean(taskDefinition.getTaskId());
+						try {
+							registerTask(beanFactory, taskDefinition);
+							//创建Task实例
+							beanFactory.getBean(taskDefinition.getTaskId());
+						}catch(Exception e) {
+							if (ignoreNoExists) {
+								directlyLog("Register Task '"+taskDefinition.getTaskId()+"' error ! ex : "+e.toString());
+							} else {
+								throw e;
+							}
+						}
 					}
 					Set<WorkDefinition> workDefinitions=taskflowConfiguration.getWorkDefinitions();
 					if (workDefinitions != null && workDefinitions.size() > 0) {
 						registeredWork = workDefinitions.size();
 						//注册Work
 						for (WorkDefinition workDefinition : workDefinitions) {
-							registerWork(beanFactory, workDefinition);
+							try {
+								registerWork(beanFactory, workDefinition);
+							}catch(Exception e) {
+								if (ignoreNoExists) {
+									directlyLog("Register Work '"+workDefinition.getWorkId()+"' error ! ex : "+e.toString());
+								} else {
+									throw e;
+								}
+							}
 						}
 					}
 				}
