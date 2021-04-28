@@ -22,8 +22,8 @@ logging:
     root: debug
     
 taskflow:
-	reload:
-		enable: true
-	work:
-		traceable: false
+    reload:
+        enable: true
+    work:
+        traceable: false
     
