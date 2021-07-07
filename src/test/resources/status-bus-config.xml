@@ -2,12 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xmlns:tf="http://www.xteam.org/taskflow"
-       xmlns:xcache="http://www.xteam.org/xcache"
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-2.0.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-        http://www.xteam.org/xcache http://www.xteam.org/xcache/xcache-1.0.xsd">
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     <bean id="initStatus" class="x.demo.station1.InitStatus"/>
     <bean id="oneStatus" class="x.demo.station1.StationOne"/>
     <bean id="twoStatus" class="x.demo.station1.StationTwo"/>
@@ -15,8 +13,9 @@
     <bean id="endStatus" class="x.demo.station1.EndStation"/>
     
     <tf:work id="testStatusBus" start="initStatusStop" traceable="true" finish="end" class="x.demo.StatusHolderBus">
-    	<tf:constructor-arg index="0" value="TestName"/>
-    	<tf:constructor-arg index="1" value="1" type="java.lang.Integer"/>
+    	<tf:constructor-arg index="0" value="TestName" type="java.lang.String"/>
+    	<tf:constructor-arg index="1" value="160" type="int"/>
+    	<tf:constructor-arg index="2" ref="initStatus"/>
     </tf:work>
     <tf:task id="initStatusStop" ref="initStatus" method="init" extra="{A:'B'}">
         <tf:routing key="oneStop" toTask="oneStop" patten="string"/>

@@ -2,7 +2,7 @@
 <Configuration name="taskflow" status="warn" monitorInterval="60">
 	<Properties>
 		<!-- <Property name= "LOG_HOME" value= "/Users/bailey/Data/logs/taskflow"/>  -->
-		<Property name= "LOG_HOME" value= "${sys:log.home}"/>
+		<Property name= "LOG_HOME" value= "${sys:log.home:-/Users/bailey/Data/logs/taskflow}"/>
 		<Property name= "FILE_PATTERN_SUFFIX" value= "%d{yyyy-MM-dd}-%i.log.gz"/>
 		<Property name= "CONSOLE_PATTERN_SUFFIX" value= "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
 		<Property name= "FILE_PATTERN_LAYOUT" value= "%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%t] %-40.40c{1.} : %m%n"/>
