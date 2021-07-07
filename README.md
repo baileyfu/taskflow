@@ -17,6 +17,11 @@
 		3.支持task热加载</td>
 		<td>2019-2</td>
 	</tr>
+	<tr>
+		<td>2.0.1</td>
+		<td>1.Work可配置构造参数</br>
+		<td>2021-7</td>
+	</tr>
 </table>
 
 # 以Athlizo的business-flow为蓝本修改而成的任务流框架；原项目地址

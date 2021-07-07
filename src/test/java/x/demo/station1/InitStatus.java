@@ -1,5 +1,7 @@
 package x.demo.station1;
 
+import org.apache.commons.lang3.RandomUtils;
+
 import taskflow.work.Work;
 import x.demo.StatusHolderBus;
 
@@ -7,6 +9,9 @@ public class InitStatus {
 
 	public void init(Work bus) {
 		StatusHolderBus sBus = (StatusHolderBus) bus;
+		if(RandomUtils.nextBoolean()) {
+			sBus.setStatus(StatusHolderBus.STATUS_PASSED_TWO);
+		}
 		if (sBus.getStatus().equals(StatusHolderBus.STATUS_INIT)) {
 			sBus.setRoutingKey("oneStop");
 		} else if (sBus.getStatus().equals(StatusHolderBus.STATUS_PASSED_ONE)) {

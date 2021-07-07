@@ -19,7 +19,11 @@ public class StatusHolderBus extends CustomRouteWork {
 	
 	public StatusHolderBus(String userName) {
 		this.userName=userName;
-		status = STATUS_INIT;
+		this.status = STATUS_INIT;
+	}
+	
+	public StatusHolderBus(String userName,Integer times) {
+		this.userName=userName;
 	}
 	
 	public String getStatus() {

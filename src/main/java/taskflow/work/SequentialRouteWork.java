@@ -8,7 +8,8 @@ import taskflow.task.TaskRoutingWrap;
 import taskflow.work.context.WorkContext;
 
 /**
- * 串行执行任务,由SerialWork指定任务路由顺序
+ * 串行执行任务,由SerialWork指定任务路由顺序<br/>
+ * 扩展时,构造器参数中extraArgsMap必须放到最后
  * 
  * @author bailey.fu
  * @date 2018年5月17日

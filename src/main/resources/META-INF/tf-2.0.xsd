@@ -177,6 +177,45 @@
 			        </xsd:attribute>
 		        </xsd:complexType>
             </xsd:element>
+			<xsd:element name="constructor-arg" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType mixed="true">
+					<xsd:attribute name="index" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+							<![CDATA[ The exact index of the argument in the constructor argument list. Only needed to avoid ambiguities, e.g. in case of 2 arguments of the exact same type. ]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="type" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+							<![CDATA[ The exact type of the constructor argument. Only needed to avoid ambiguities, e.g. in case of 2 single argument constructors that can both be converted from a String. ]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="name" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+							<![CDATA[ The exact name of the argument in the constructor argument list. Only needed to avoid ambiguities, e.g. in case of 2 arguments of the exact same type. Note: This requires debug symbols to be stored in the class file in order to introspect argument names! ]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="ref" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+							<![CDATA[ A short-cut alternative to a nested "<ref bean='...'/>" element. ]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="value" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+							<![CDATA[ A short-cut alternative to a nested "<value>...<value/>" element. ]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>
         </xsd:sequence>
     </xsd:group>
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
+import org.springframework.beans.factory.config.ConstructorArgumentValues.ValueHolder;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.util.Assert;
 
 import taskflow.config.bean.WorkDefinition;
+import taskflow.config.bean.WorkDefinition.ConstructorArg;
 import taskflow.config.bean.WorkDefinition.TaskRef;
 import taskflow.constants.TFLogType;
 import taskflow.constants.WorkPropName;
@@ -39,9 +41,28 @@ public interface WorkRegister extends ConfigSourceAware{
 		RootBeanDefinition work = new RootBeanDefinition();
         work.setBeanClass(workClazz);
         work.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
+        //set constructor args
+        ConstructorArgumentValues constructorArgumentValues=new ConstructorArgumentValues();
+        if(workDefinition.getConstructorArgs()!=null) {
+			for (ConstructorArg arg : workDefinition.getConstructorArgs()) {
+				ValueHolder valueHolder;
+				if (StringUtils.isEmpty(arg.getRef())) {
+					String type = arg.getType();
+					String name = arg.getName();
+					valueHolder = new ValueHolder(arg.getValue(), StringUtils.isEmpty(type)?null:type, StringUtils.isEmpty(arg.getName())?null:name);
+				}else {
+					valueHolder = new ValueHolder(new RuntimeBeanReference(arg.getRef()));
+				}
+				if(arg.getIndex()>0) {
+					constructorArgumentValues.addIndexedArgumentValue(arg.getIndex(), valueHolder);
+				}else {
+					constructorArgumentValues.addGenericArgumentValue(valueHolder);
+				}
+        	}
+        }
+        //set property
         work.getPropertyValues().add(WorkPropName.NAME, workDefinition.getWorkId());
         work.getPropertyValues().add(WorkPropName.TRACEABLE, workDefinition.getTraceable());
-        
         if(CustomRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有CustomRouteWork才解析start和finish
         	String start = workDefinition.getStart();
 			Assert.isTrue(!StringUtils.isEmpty(start), "Work '"+workDefinition.getWorkId()+"' must has a start task");
@@ -69,10 +90,12 @@ public interface WorkRegister extends ConfigSourceAware{
 			}
 			work.getPropertyValues().add(WorkPropName.TASKS, tasksMap);
 			if (taskRefExtraMap.size() > 0) {
-				ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
+				//extra构造参数必须放到最后
 				constructorArgumentValues.addGenericArgumentValue(taskRefExtraMap);
-				work.setConstructorArgumentValues(constructorArgumentValues);
 			}
+        }
+        if(!constructorArgumentValues.isEmpty()) {
+        	work.setConstructorArgumentValues(constructorArgumentValues);
         }
         work.getPropertyValues().add(WorkPropName.MAX_TASKS, Integer.valueOf(workDefinition.getMaxTasks()));
 		if (registry.containsBeanDefinition(workDefinition.getWorkId()))

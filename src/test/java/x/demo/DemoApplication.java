@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -132,24 +134,39 @@ public class DemoApplication {
 		taskFlowBeanReloadProcessor.reload(taskBeanDefinition, td, workDefinition);
 		return "SUCCESS";
 	}
-	public static void main(String[] args) throws Exception {
+	public static void mainc(String[] args) throws Exception {
 		SpringApplication.run(DemoApplication.class, args);
 	}
+	public static String a(String str) {
+		return str;
+	}
 	
-	public static void mainx(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
+		System.setProperty("log.home","/Users/bailey/Data/logs/taskflow");
+		Logger logger=LogManager.getFormatterLogger(DemoApplication.class);
+		logger.debug("debug info %s",()->a("BBB"));
+		logger.info("logging info %s",()->a("AAA"));
+		logger.error("ERROR!!!!!!!!");
+		Logger stdLogger=LogManager.getLogger("ASYN_STD");
+		stdLogger.info("logging info {}","RRR");
+		
 //		AppGroovy.main();
-		String file="classpath:status-bus-config.xml";
+		String file;
+		file="classpath:status-bus-config.xml";
 //		file="classpath:serial-task-config.xml";
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(file);
-
-		Work testBus=WorkFactory.createWork("testStatusBus");
+		
+		Work testBus=WorkFactory.createWork(
+				"testStatusBus"
+//				"sequentialTaskWork"
+				);
 		testBus.run();
 
 		Thread.sleep(1000l);
-		System.out.println("+++++++++++++");
-		testBus = (CustomRouteWork)context.getBean("testStatusBus");
-		Object result = testBus.run().getResult();
-		System.out.println(result);
+//		System.out.println("+++++++++++++");
+//		testBus = (CustomRouteWork)context.getBean("testStatusBus");
+//		Object result = testBus.run().getResult();
+//		System.out.println(result);
 		context.close();
 	}
 }

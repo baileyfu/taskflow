@@ -9,9 +9,10 @@ import taskflow.work.context.WorkContext;
 public class CustomRouteWork extends AbstractWork {
 	// 初始任务;一般在此初始化一些参数
 	private TaskRoutingWrap start;
-	// 结束任务;无论是否正常完成,该任务都会执行;可在次封装返回的结果
+	// 结束任务;无论是否正常完成,该任务都会执行;可再次封装返回的结果
 	private TaskRoutingWrap finish;
-
+	public CustomRouteWork() {
+	}
 	public WorkContext run() {
 		try {
 			if (!(start instanceof TaskRoutingWrap)) {

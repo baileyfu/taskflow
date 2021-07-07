@@ -20,11 +20,13 @@
     <tf:task id="step5" ref="taskC" method="method3"/>
     <tf:task id="end" ref="taskC" method="methodEnd"/>
     
-    <tf:work id="sequentialTaskWork" record="true" class="taskflow.work.SequentialRouteWork">
+    <tf:work id="sequentialTaskWork" traceable="true" class="taskflow.work.SequentialRouteWork">
     	<tf:task-ref value="step1" extra="{x:2}"/>
     	<tf:task-ref value="step3"/>
     	<tf:task-ref value="step2"/>
     	<tf:task-ref value="step5"/>
     	<tf:task-ref value="end"/>
     </tf:work>
+    
+    <tf:workFactory/>
 </beans>

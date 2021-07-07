@@ -3,6 +3,10 @@ package taskflow.config;
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.CLASS_ATTRIBUTE;
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.ID_ATTRIBUTE;
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.VALUE_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.INDEX_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.TYPE_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.NAME_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.REF_ATTRIBUTE;
 
 import java.util.ArrayList;
 
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import taskflow.config.bean.WorkDefinition;
+import taskflow.config.bean.WorkDefinition.ConstructorArg;
 import taskflow.config.bean.WorkDefinition.TaskRef;
 import taskflow.config.register.WorkRegister;
 import taskflow.enums.ConfigSource;
@@ -39,18 +44,30 @@ public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
         workDefinition.setFinish(element.getAttribute(TagAttribute.WORK_FINISH.NAME));
         workDefinition.setMaxTasks(NumberUtils.toInt(maxTasks,0));
         workDefinition.setTraceable(BooleanUtils.toBoolean(traceable));
+		ArrayList<ConstructorArg> constructorArgs = new ArrayList<>();
         ArrayList<TaskRef> taskRefs=new ArrayList<>();
         int length = element.getChildNodes().getLength();
 		for (int i = 0; i < length; i++) {
 			org.w3c.dom.Node node = element.getChildNodes().item(i);
 			if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
 				Element elm = (Element) node;
-				TaskRef taskRef=new TaskRef();
-				taskRef.setTaskId(elm.getAttribute(VALUE_ATTRIBUTE));
-				taskRef.setExtra(elm.getAttribute(TagAttribute.TASK_EXTRA.NAME));
-				taskRefs.add(taskRef);
+				if("tf:task-ref".equalsIgnoreCase(elm.getTagName())) {
+					TaskRef taskRef=new TaskRef();
+					taskRef.setTaskId(elm.getAttribute(VALUE_ATTRIBUTE));
+					taskRef.setExtra(elm.getAttribute(TagAttribute.TASK_EXTRA.NAME));
+					taskRefs.add(taskRef);
+				}else if("tf:constructor-arg".equalsIgnoreCase(elm.getTagName())) {
+					ConstructorArg constructorArg = new ConstructorArg();
+					constructorArg.setIndex(NumberUtils.toInt(elm.getAttribute(INDEX_ATTRIBUTE), 0));
+					constructorArg.setName(elm.getAttribute(NAME_ATTRIBUTE));
+					constructorArg.setType(elm.getAttribute(TYPE_ATTRIBUTE));
+					constructorArg.setValue(elm.getAttribute(VALUE_ATTRIBUTE));
+					constructorArg.setRef(elm.getAttribute(REF_ATTRIBUTE));
+					constructorArgs.add(constructorArg);
+				}
 			}
 		}
+		workDefinition.setConstructorArgs(constructorArgs);
         workDefinition.setTaskRefs(taskRefs);
         return registerWork(parserContext.getRegistry(), workDefinition);
     }

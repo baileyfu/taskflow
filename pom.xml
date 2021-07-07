@@ -14,6 +14,7 @@
   
 		<properties>
 			<taskflow.version>2.0.1-RELEASE</taskflow.version>
+			<jmh.version>1.31</jmh.version>
 		</properties>
 		<profiles>
 			<profile>
@@ -25,11 +26,71 @@
 		</profiles>
   
   <dependencies>
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>com.pholser</groupId>
+		    <artifactId>junit-quickcheck-core</artifactId>
+		    <version>1.0</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>com.pholser</groupId>
+		    <artifactId>junit-quickcheck-generators</artifactId>
+		    <version>1.0</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-core</artifactId>
+		</dependency>
+  
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.springframework.boot</groupId>
+            		<artifactId>spring-boot-starter-logging</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-api</artifactId>
+		    <version>2.13.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		    <version>2.13.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-slf4j-impl</artifactId>
+		    <version>2.14.1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>commons-logging</groupId>
+		    <artifactId>commons-logging</artifactId>
+		    <version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>3.4.2</version>
+		</dependency>
+		<!-- com.lmax.disruptor会用到 -->
+		<dependency>
+		    <groupId>com.conversantmedia</groupId>
+		    <artifactId>disruptor</artifactId>
+		    <version>1.2.10</version>
+		</dependency>
   
   		<dependency>
 		    <groupId>org.codehaus.groovy</groupId>
@@ -38,12 +99,6 @@
 		    <type>pom</type>
 		    <scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
@@ -68,8 +123,48 @@
             <version>3.5</version>
             <scope>provided</scope>
         </dependency>
+        
+        
+		<dependency>
+		    <groupId>ognl</groupId>
+		    <artifactId>ognl</artifactId>
+		    <version>3.2.20</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.openjdk.jmh</groupId>
+		    <artifactId>jmh-core</artifactId>
+		    <version>${jmh.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.openjdk.jmh</groupId>
+		    <artifactId>jmh-generator-annprocess</artifactId>
+		    <version>${jmh.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>asm</groupId>
+		    <artifactId>asm</artifactId>
+		    <version>3.3.1</version>
+		</dependency>
+		
+		<!-- JMX management -->
+		<dependency>
+		    <groupId>org.opendaylight.cardinal</groupId>
+		    <artifactId>jdmk</artifactId>
+		    <version>0.3.3</version>
+		</dependency>
+		
+		
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>5.1.49</version>
+		</dependency>
+		
     </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -86,6 +181,55 @@
 			<skipTests>true</skipTests>
 		</configuration>
 	</plugin>
+
+	<plugin>
+        <groupId>org.evosuite.plugins</groupId>
+        <artifactId>evosuite-maven-plugin</artifactId>
+		<version>1.0.6</version>
+	</plugin>
+
+	<plugin>
+         <groupId>com.x</groupId>
+         <artifactId>testMojo-maven-plugin</artifactId>
+         <version>0.0.1-SNAPSHOT</version>
+		<configuration>
+             <msg>this is msg</msg>
+             <options>
+                 <option>option1</option>
+                 <option>option2</option>
+                 <option>option3</option>
+             </options>
+         </configuration>
+         <executions>
+             <execution>
+                 <phase>package</phase>
+                 <goals>
+                     <goal>myMojo</goal>
+                 </goals>
+             </execution>
+         </executions>
+     </plugin>
+	
+	<plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-jar-plugin</artifactId>
+	    <version>3.1.0</version>
+	    <configuration>
+	        <archive>
+	            <!--自动添加META-INF/MANIFEST.MF -->
+	            <manifest>
+	                <addClasspath>true</addClasspath>
+	            </manifest>
+	            <manifestEntries>
+	                <Premain-Class>experiment.agent.PreMainDefiner</Premain-Class>
+	                <Agent-Class>experiment.agent.AgentMainDefiner</Agent-Class>
+	                <Can-Redefine-Classes>true</Can-Redefine-Classes>
+	                <Can-Retransform-Classes>true</Can-Retransform-Classes>
+	            </manifestEntries>
+	        </archive>
+	    </configuration>
+	</plugin>
+	
       <!-- 
       	<plugin>
 		    <groupId>org.codehaus.gmavenplus</groupId>
