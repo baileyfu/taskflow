@@ -1,6 +1,7 @@
 package x.demo;
 
 import taskflow.work.CustomRouteWork;
+import x.demo.station1.InitStatus;
 
 public class StatusHolderBus extends CustomRouteWork {
 
@@ -19,7 +20,12 @@ public class StatusHolderBus extends CustomRouteWork {
 	
 	public StatusHolderBus(String userName) {
 		this.userName=userName;
-		status = STATUS_INIT;
+		this.status = STATUS_INIT;
+	}
+	
+	public StatusHolderBus(String userName,int times,InitStatus is) {
+		this.userName=userName;
+		System.out.println("times : "+times+" - InitStatus : "+is);
 	}
 	
 	public String getStatus() {

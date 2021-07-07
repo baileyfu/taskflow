@@ -1,7 +1,9 @@
 package taskflow.task;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.MethodParameter;
@@ -13,18 +15,10 @@ import org.springframework.util.ReflectionUtils;
 
 import taskflow.work.Work;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 /**
  * Created by lizhou on 2017/5/4/004.
  */
 public class TaskMethodInvoker {
-    /**
-     * Logger that is available to subclasses
-     */
-    protected final Log logger = LogFactory.getLog(getClass());
     //不一定是Task接口
     private final Object bean;
     private final Class<?> beanType;
@@ -34,8 +28,8 @@ public class TaskMethodInvoker {
 
 
     public TaskMethodInvoker(Object bean, String methodName) throws NoSuchMethodException {
-        Assert.notNull(bean, "Bean is required");
-        Assert.notNull(methodName, "Method name is required");
+        Assert.notNull(bean, "Task-ref Bean is required");
+        Assert.notNull(methodName, "Task Method name is required");
         this.bean = bean;
         this.beanType = ClassUtils.getUserClass(bean);
 //        this.method = station.getClass().getMethod(methodName, parameterTypes);

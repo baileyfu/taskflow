@@ -8,7 +8,8 @@ import taskflow.task.TaskRoutingWrap;
 import taskflow.work.context.WorkContext;
 
 /**
- * 串行执行任务,由SerialWork指定任务路由顺序
+ * 串行执行任务,由SerialWork指定任务路由顺序<br/>
+ * 扩展时,构造器参数中extraArgsMap必须放到最后
  * 
  * @author bailey.fu
  * @date 2018年5月17日
@@ -17,11 +18,12 @@ import taskflow.work.context.WorkContext;
  */
 public class SequentialRouteWork extends AbstractWork {
 	private boolean executed=false;
-	private String currentTask;
-	private Map<String,String> extraMap;
 	private LinkedHashMap<String, TaskRoutingWrap> tasks;
 
 	public SequentialRouteWork() {
+	}
+	public SequentialRouteWork(Map<String,String> extraArgsMap) {
+		super(extraArgsMap);
 	}
 	public void appendTask(TaskRoutingWrap task) {
 		if (task != null)
@@ -35,7 +37,6 @@ public class SequentialRouteWork extends AbstractWork {
 				if (tasks != null && tasks.size() > 0) {
 					tasks.values().stream().forEach((task) -> {
 						AbstractTaskRoutingWrap absTask = (AbstractTaskRoutingWrap) task;
-						currentTask = absTask.getName();
 						absTask.setRouting(null);
 						task.doTask(this);
 					});
@@ -48,16 +49,5 @@ public class SequentialRouteWork extends AbstractWork {
 	}
 	public void setTasks(LinkedHashMap<String, TaskRoutingWrap> tasks) {
 		this.tasks = tasks;
-	}
-
-	public void setExtraMap(Map<String, String> extraMap) {
-		this.extraMap = extraMap;
-	}
-
-	public Map<String, String> getExtraMap() {
-		return this.extraMap;
-	}
-	public String getExtra() {
-		return extraMap == null ? null : extraMap.get(currentTask);
 	}
 }

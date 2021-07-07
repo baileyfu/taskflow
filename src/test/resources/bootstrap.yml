@@ -1,0 +1,29 @@
+### Http server
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: UTF-8
+### Spring config
+spring: 
+  application: 
+    name: taskflow-test
+    index: 0
+  aop: 
+    auto: true
+    proxy-target-class: true
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true 
+      force: true
+      
+logging: 
+  level:
+    root: debug
+    
+taskflow:
+    reload:
+        enable: true
+    work:
+        traceable: false
+    

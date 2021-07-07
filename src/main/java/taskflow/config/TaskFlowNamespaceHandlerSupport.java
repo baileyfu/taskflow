@@ -2,6 +2,8 @@ package taskflow.config;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
+import taskflow.enums.Tag;
+
 /**
  * bf注册
  * Created by lizhou on 2017/3/14/014.

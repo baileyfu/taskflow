@@ -27,4 +27,9 @@ public class TaskTrace {
 	public void setContextInfo(String contextInfo) {
 		this.contextInfo = contextInfo;
 	}
+
+	@Override
+	public String toString() {
+		return "TaskTrace [taskName=" + taskName + ", contextInfo=" + contextInfo + "]";
+	}
 }

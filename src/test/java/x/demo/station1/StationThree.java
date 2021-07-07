@@ -9,11 +9,8 @@ public class StationThree implements Task{
 	public void execute(Work bus) {
 		StatusHolderBus sBus=(StatusHolderBus)bus;
         try {
-        	System.out.println("Step Three begging...");
+        	System.out.println("Step Three begging...--->"+bus.getWorkContext().getRuntimeArgs());
         	Thread.sleep(3000l);
-        	if(bus!=null) {
-        		throw new Exception();
-        	}
         	//Success
         	sBus.setStatus(StatusHolderBus.STATUS_PASSED_THREE);
     		System.out.println("Step Three successed!");

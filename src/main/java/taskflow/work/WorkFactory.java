@@ -11,10 +11,10 @@ public class WorkFactory implements BeanFactoryAware {
     private static BeanFactory beanFactory;
 
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        WorkFactory.beanFactory = beanFactory;
+    	WorkFactory.beanFactory = beanFactory;
     }
-
-    public static Work createWork(String id) {
-        return beanFactory!=null?beanFactory.getBean(id, Work.class):null;
+    @SuppressWarnings("unchecked")
+	public static <T extends Work>T createWork(String workId) {
+    	return beanFactory!=null?(T)beanFactory.getBean(workId, Work.class):null;
     }
 }

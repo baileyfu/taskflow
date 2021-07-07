@@ -10,7 +10,8 @@ public class StationOne implements Task{
 		StatusHolderBus sBus=(StatusHolderBus)bus;
 		String routingKey="twoStop";
         try {
-        	System.out.println("Step One begging...");
+        	System.out.println("Step One begging...--->"+bus.getWorkContext().getRuntimeArgs());
+        	System.out.println(bus.getWorkContext());
         	Thread.sleep(3000l);
         	//Success
         	sBus.setStatus(StatusHolderBus.STATUS_PASSED_ONE);

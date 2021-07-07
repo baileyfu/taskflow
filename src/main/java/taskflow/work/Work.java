@@ -2,7 +2,6 @@ package taskflow.work;
 
 import java.util.ArrayList;
 
-import taskflow.task.TaskRoutingWrap;
 import taskflow.work.context.TaskTrace;
 import taskflow.work.context.WorkContext;
 
@@ -25,19 +24,11 @@ public interface Work {
 	WorkContext getWorkContext();
 
 	/**
-	 * 在调用真正的Task业务逻辑之前进行操作,记录调用轨迹
-	 * 
-	 * @param taskRoutingWrap
-	 * @throws Exception
-	 */
-	void receive(TaskRoutingWrap taskRoutingWrap) throws Exception;
-
-	/**
 	 * 返回Task调用轨迹
 	 * 
 	 * @return
 	 */
-	ArrayList<TaskTrace> getTaskTrace();
+	ArrayList<TaskTrace> getTaskTraces();
 
 	/**
 	 * 加入上下文环境

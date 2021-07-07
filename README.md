@@ -1,3 +1,29 @@
+# 版本记录
+<table>
+	<tr>
+		<th>版本</th>
+		<th>内容</th>
+		<th>时间</th>
+	</tr>
+	<tr>
+		<td>1.0.0</td>
+		<td>初次改造</td>
+		<td>2018-5</td>
+	</tr>
+	<tr>
+		<td>2.0.0</td>
+		<td>1.支持SpringBoot方式启动</br>
+		2.支持非XML方式配置</br>
+		3.支持task热加载</td>
+		<td>2019-2</td>
+	</tr>
+	<tr>
+		<td>2.0.1</td>
+		<td>1.Work可配置构造参数</br>
+		<td>2021-7</td>
+	</tr>
+</table>
+
 # 以Athlizo的business-flow为蓝本修改而成的任务流框架；原项目地址
 - 码云：[https://git.oschina.net/null_584_3382/business-flow-parent](https://git.oschina.net/null_584_3382/business-flow-parent)
 - github:[https://github.com/Athlizo/business-flow-parent](https://github.com/Athlizo/business-flow-parent)   

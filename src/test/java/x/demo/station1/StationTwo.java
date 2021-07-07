@@ -10,7 +10,7 @@ public class StationTwo implements Task{
 		StatusHolderBus sBus=(StatusHolderBus)bus;
 		String routingKey="threeStop";
         try {
-        	System.out.println("Step Two begging...");
+        	System.out.println("Step Two begging...--->"+bus.getWorkContext().getRuntimeArgs());
         	Thread.sleep(3000l);
         	if(bus!=null) {
         		//throw new Exception("step two break!");

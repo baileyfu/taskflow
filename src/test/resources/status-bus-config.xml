@@ -2,36 +2,35 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xmlns:tf="http://www.xteam.org/taskflow"
-       xmlns:xcache="http://www.xteam.org/xcache"
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-1.0.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-        http://www.xteam.org/xcache http://www.xteam.org/xcache/xcache-1.0.xsd">
-
-    
-    
+        http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     <bean id="initStatus" class="x.demo.station1.InitStatus"/>
     <bean id="oneStatus" class="x.demo.station1.StationOne"/>
     <bean id="twoStatus" class="x.demo.station1.StationTwo"/>
     <bean id="threeStatus" class="x.demo.station1.StationThree"/>
     <bean id="endStatus" class="x.demo.station1.EndStation"/>
     
-    <tf:work id="testStatusBus" start="initStatusStop" record="true" finish="end" class="x.demo.StatusHolderBus"/>
-
-    <tf:task id="initStatusStop" ref="initStatus" method="init">
-        <tf:routing value="oneStop" to="oneStop"/>
-        <tf:routing value="twoStop" to="twoStop"/>
-        <tf:routing value="threeStop" to="threeStop"/>
+    <tf:work id="testStatusBus" start="initStatusStop" traceable="true" finish="end" class="x.demo.StatusHolderBus">
+    	<tf:constructor-arg index="0" value="TestName" type="java.lang.String"/>
+    	<tf:constructor-arg index="1" value="160" type="int"/>
+    	<tf:constructor-arg index="2" ref="initStatus"/>
+    </tf:work>
+    <tf:task id="initStatusStop" ref="initStatus" method="init" extra="{A:'B'}">
+        <tf:routing key="oneStop" toTask="oneStop" patten="string"/>
+        <tf:routing key="twoStop" toTask="twoStop" extra="{C:'D'}"/>
+        <tf:routing key="threeStop" toTask="threeStop"/>
+        <!-- 未匹配到routing则跳到finish定义的task -->
     </tf:task>
     <tf:task id="oneStop" ref="oneStatus">
-        <tf:routing value="twoStop" to="twoStop"/>
+        <tf:routing key="twoStop" toTask="twoStop" extra="{E:'F'}"/>
     </tf:task>
-    <tf:task id="twoStop" ref="twoStatus">
-        <tf:routing value="threeStop" to="threeStop"/>
+    <tf:task id="twoStop" ref="twoStatus" extra="{CCC:'DDD'}">
+        <tf:routing key="threeStop" toTask="threeStop" extra="{III:'VVV'}"/>
     </tf:task>
-    <tf:task id="threeStop" ref="threeStatus">
-    </tf:task>
-    <tf:task id="end" ref="endStatus" method="over">
-    </tf:task>
+    <tf:task id="threeStop" ref="threeStatus"/>
+    <tf:task id="end" ref="endStatus" method="over"/>
+    
+    <tf:workFactory/>
 </beans>

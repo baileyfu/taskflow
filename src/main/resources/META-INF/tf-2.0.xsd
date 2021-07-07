@@ -57,6 +57,10 @@
             <xsd:annotation>
             </xsd:annotation>
         </xsd:attribute>
+        <xsd:attribute name="extra" type="xsd:string" use="optional">
+            <xsd:annotation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:attributeGroup>
 
 
@@ -79,10 +83,10 @@
     <!--</xsd:element>-->
 
     <xsd:attributeGroup name="routingAttributes">
-        <xsd:attribute name="value" type="xsd:string" default="@default">
+        <xsd:attribute name="key" type="xsd:string" default="@default">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="to" type="xsd:IDREF" use="required">
+        <xsd:attribute name="toTask" type="xsd:IDREF" use="required">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
                 <!--<tool:annotation kind="ref">-->
@@ -91,7 +95,10 @@
                 <!--</xsd:appinfo>-->
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="patten" type="xsd:string" default="string">
+        <xsd:attribute name="patten" type="xsd:string" default="string"><!-- string or regex -->
+            <![CDATA[ ]]>
+        </xsd:attribute>
+        <xsd:attribute name="extra" type="xsd:string" use="optional">
             <![CDATA[ ]]>
         </xsd:attribute>
     </xsd:attributeGroup>
@@ -151,7 +158,7 @@
                 </xsd:appinfo>
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="record" type="xsd:boolean" default="true">
+        <xsd:attribute name="traceable" type="xsd:boolean" default="false">
             <![CDATA[ ]]>
         </xsd:attribute>
         <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.CustomRouteWork">
@@ -170,6 +177,45 @@
 			        </xsd:attribute>
 		        </xsd:complexType>
             </xsd:element>
+			<xsd:element name="constructor-arg" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType mixed="true">
+					<xsd:attribute name="index" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+							<![CDATA[ The exact index of the argument in the constructor argument list. Only needed to avoid ambiguities, e.g. in case of 2 arguments of the exact same type. ]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="type" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+							<![CDATA[ The exact type of the constructor argument. Only needed to avoid ambiguities, e.g. in case of 2 single argument constructors that can both be converted from a String. ]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="name" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+							<![CDATA[ The exact name of the argument in the constructor argument list. Only needed to avoid ambiguities, e.g. in case of 2 arguments of the exact same type. Note: This requires debug symbols to be stored in the class file in order to introspect argument names! ]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="ref" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+							<![CDATA[ A short-cut alternative to a nested "<ref bean='...'/>" element. ]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="value" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+							<![CDATA[ A short-cut alternative to a nested "<value>...<value/>" element. ]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>
         </xsd:sequence>
     </xsd:group>
 

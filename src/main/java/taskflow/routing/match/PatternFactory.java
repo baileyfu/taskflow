@@ -15,21 +15,12 @@ public class PatternFactory {
 
     static {
         for (PatternType patternType : PatternType.values()) {
-            Class clazz = patternType.getClazz();
+            Class<? extends PatternMatch> clazz = patternType.getClazz();
             try {
-                Object o = clazz.newInstance();
-                if (o instanceof PatternMatch) {
-                    patternMatchMap.put(patternType, (PatternMatch) o);
-                } else {
-                    throw new TaskFlowException(o.getClass().getName() + " not instanceof PatternMatch");
-                }
-            } catch (InstantiationException e) {
-                throw new TaskFlowException("PatternFactory init error,can not newInstance " + clazz.getName());
-            } catch (IllegalAccessException e) {
+            	patternMatchMap.put(patternType, clazz.newInstance());
+            } catch (Exception e) {
                 throw new TaskFlowException("PatternFactory init error,can not newInstance " + clazz.getName());
             }
-
-            ;
         }
     }
 

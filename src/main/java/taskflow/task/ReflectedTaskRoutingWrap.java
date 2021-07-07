@@ -20,7 +20,7 @@ public class ReflectedTaskRoutingWrap extends AbstractTaskRoutingWrap {
 		if (taskMethodInvoker != null) {
 			taskMethodInvoker.invokeTask(work);
 		} else {
-			throw new TaskFlowException("TaskMethodInvoker is null,No task be executed !");
+			throw new TaskFlowException("the ReflectedTaskRoutingWrap '"+name+"' has a TaskMethodInvoker of null,No task be executed !");
 		}
 	}
 
