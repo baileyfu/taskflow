@@ -15,9 +15,6 @@ public class CustomRouteWork extends AbstractWork {
 	}
 	public WorkContext run() {
 		try {
-			if (!(start instanceof TaskRoutingWrap)) {
-				throw new IllegalArgumentException("Task type error");
-			}
 			start.doTask(this);
 		} catch (Exception e) {
 			dealExcpetion(e);

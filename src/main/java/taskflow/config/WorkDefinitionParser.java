@@ -22,6 +22,7 @@ import taskflow.config.bean.WorkDefinition.ConstructorArg;
 import taskflow.config.bean.WorkDefinition.TaskRef;
 import taskflow.config.register.WorkRegister;
 import taskflow.enums.ConfigSource;
+import taskflow.enums.Tag;
 import taskflow.enums.TagAttribute;
 
 /**
@@ -51,12 +52,12 @@ public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
 			org.w3c.dom.Node node = element.getChildNodes().item(i);
 			if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
 				Element elm = (Element) node;
-				if("tf:task-ref".equalsIgnoreCase(elm.getTagName())) {
+				if(Tag.TASK_REF.getTagName().equalsIgnoreCase(elm.getTagName())) {
 					TaskRef taskRef=new TaskRef();
 					taskRef.setTaskId(elm.getAttribute(VALUE_ATTRIBUTE));
 					taskRef.setExtra(elm.getAttribute(TagAttribute.TASK_EXTRA.NAME));
 					taskRefs.add(taskRef);
-				}else if("tf:constructor-arg".equalsIgnoreCase(elm.getTagName())) {
+				}else if(Tag.CONSTRUCTOR_ARG.getTagName().equalsIgnoreCase(elm.getTagName())) {
 					ConstructorArg constructorArg = new ConstructorArg();
 					constructorArg.setIndex(NumberUtils.toInt(elm.getAttribute(INDEX_ATTRIBUTE), 0));
 					constructorArg.setName(elm.getAttribute(NAME_ATTRIBUTE));

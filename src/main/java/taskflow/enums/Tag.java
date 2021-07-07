@@ -11,7 +11,9 @@ package taskflow.enums;
 public enum Tag {
 	WORK_FACTORY("workFactory"),
 	WORK("work"),
+	CONSTRUCTOR_ARG("constructor-arg"),
 	TASK("task"),
+	TASK_REF("task-ref"),
 	ROUTING("routing");
 	public String VALUE;
 	private Tag(String VALUE) {
