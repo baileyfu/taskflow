@@ -52,6 +52,7 @@ public class TaskFlowBeanReloadProcessor extends CustomTaskFlowRegister {
 			registerWork(beanFactory, workDefinition);
 		}
 		// 打印注册日志
+		// 重载每次都打印详情
 		printRegisterLog(true);
 	};
 }

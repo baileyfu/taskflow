@@ -32,7 +32,7 @@ public abstract class RegisterLogger{
 	Environment environment;
 
 	public synchronized void printLog(Boolean printDetail) {
-		if (environment.getProperty(ConfigParams.LOG_PRINTABLE, Boolean.class, Boolean.FALSE)) {
+		if (environment!=null&&environment.getProperty(ConfigParams.LOG_PRINTABLE, Boolean.class, Boolean.FALSE)) {
 			if (REGISTER_LOG.size() > 0) {
 				String lineSeparator = System.getProperty("line.separator");
 				StringBuilder logInfo = new StringBuilder();

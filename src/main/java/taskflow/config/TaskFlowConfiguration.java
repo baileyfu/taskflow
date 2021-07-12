@@ -17,7 +17,7 @@ import taskflow.constants.ConfigParams;
  */
 @Configuration
 public class TaskFlowConfiguration {
-	@Bean
+	@Bean(initMethod="init")
 	public TaskFlowBeanFactoryPostProcessor taskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration,ConfigurableEnvironment environment) {
 		Boolean traceable = environment.getProperty(ConfigParams.WORK_TRACEABLE, Boolean.class, Boolean.FALSE);
 		Set<WorkDefinition> workDefinitions=taskflowConfiguration.getWorkDefinitions();
@@ -31,7 +31,7 @@ public class TaskFlowConfiguration {
 		Boolean ignoreNoExists = environment.getProperty(ConfigParams.WORK_NO_EXISTS_IGNORABLE, Boolean.class, Boolean.FALSE);
 		return new TaskFlowBeanFactoryPostProcessor(taskflowConfiguration,ignoreNoExists);
 	}
-	@Bean
+	@Bean(initMethod="init")
 	public TaskFlowBeanReloadProcessor taskFlowBeanReloadProcessor(ConfigurableEnvironment environment) {
 		Boolean reloadable = environment.getProperty(ConfigParams.RELOAD_ENABLE, Boolean.class, Boolean.TRUE);
 		return new TaskFlowBeanReloadProcessor(reloadable);
