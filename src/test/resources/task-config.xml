@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:tf="http://www.xteam.org/taskflow"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    <!-- Bean Define -->
+    <bean id="numberService" class="demo.service.NumberService"/>
+    <bean id="findNumberTaskBean" class="demo.task.FindNumber">
+    	<property name="numberService" ref="numberService"/>
+    </bean>
+    
+    <!-- Task Define -->
+	<tf:task id="findMaxTask" ref="findNumberTaskBean" method="findMax">
+		<!-- 当只有一个routing时，不设置key并且Task中不设置RoutingKey，将直接跳转到toTask -->
+	    <tf:routing toTask="findMinTask"/>
+	</tf:task>
+	<tf:task id="findMinTask" ref="findNumberTaskBean" method="findMin">
+	    <tf:routing toTask="getDiffTask"/>
+	</tf:task>
+	<tf:task id="getDiffTask" ref="findNumberTaskBean" method="getDiff" extra="{threshold:10}">
+	    <tf:routing key="ok" toTask="soutOutOkTask" extra="HighPriority_OK"/>
+	    <tf:routing key="no" toTask="soutOutNoTask" extra="HighPriority_NO"/>
+	</tf:task>
+	<tf:task id="soutOutOkTask" ref="findNumberTaskBean" method="soutOutOk" extra="LowPriority_OK"/>
+	<tf:task id="soutOutNoTask" ref="findNumberTaskBean" method="soutOutNo" extra="LowPriority_NO"/>
+    
+    <!-- Work Define -->
+    <tf:work id="testWork" start="findMaxTask" class="taskflow.work.CustomRouteWork"/>
+    
+    <tf:workFactory/>
+</beans>

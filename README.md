@@ -1,4 +1,227 @@
-# 版本记录
+### 1.概述
+以Athlizo的business-flow为蓝本修改而成的任务流框架.原项目地址:
+- github:[https://github.com/Athlizo/business-flow-parent](https://github.com/Athlizo/business-flow-parent)
+
+本项目增加了部分功能，支持SpringBoot，支持动态修改等；并调整了原框架中的一些概念：
+- Work：表示一项工作；由若干个任务组成，并维护各项任务执行时所需的上下文环境；根据执行方式分为下面两种：
+  - Sequential Work：顺序工作；其任务按创建时的顺序依次执行；
+  - RouteAble Work：可路由工作；任务根据条件决定执行顺序；
+- Task：表示一项任务；其定义应该是一个无状态方法；
+- Routing：路由；只有RouteAble Work才能定义Routing。决定当前Task执行完成后，指向下一个Task；若不指定或未匹配到任何Task则跳转到finish Task，执行完成后，整个Work执行完成，若未指定finish Task，则直接执行结束；
+
+在执行任务中，任意Task抛出异常将中断Work的执行。推荐实现Work的dealExcpetion方法自定义异常的处理。
+
+### 2.API介绍
+#### 2.1 WorkContext接口
+保存一个业务处理逻辑的上下文环境。
+
+在Task中通过WorkContext来获取之前Task设置的数据，或设置当前Task的执行数据，传递给下一个Task；
+
+改进后，支持设置额外的参数传递给特定Task或Routing，详见Usage；
+
+#### 2.2 SequentialRouteWork类
+Sequential Work的实现类。可直接使用，或进行扩展来自定义异常处理（dealExcpetion方法）和Task执行前置处理（receive方法；每个Task执行前会调用此方法）。
+
+#### 2.3 CustomRouteWork类
+RouteAble Work的实现类。在Task中调用其setRoutingKey方法来指定路由。
+
+#### 2.4 Task接口
+定义任务内容。只有一个方法void execute(Work work)。
+
+除了实现Task接口来定义任务，也可以使用任意类来配置Task，此时需配置指定类的方法作为Task的执行方法。
+
+#### 2.5 Routing接口
+不支持扩展Routing接口；目前路由匹配模式只有两种：string（字符串匹配，默认）和regex（正则匹配）。 
+
+### 3.Usage
+#### 3.1 Task的定义
+Task定义了要执行的内容。
+
+推荐的方式是，将业务逻辑写在各种Service中，然后在Task中仅调用对应的若干Service，而不写任何业务逻辑代码。
+
+定义的Task仅由taskflow框架调用；这样可以避免业务逻辑和taskflow框架耦合。
+```
+public class GetDiff implements Task {
+    @Autowired
+    private SomeBizService bizService;
+    @Override
+    public void execute(Work work) {
+        int maxValue = work.getContext（"maxValue"）；
+        int minValue = work.getContext（"minValue"）；
+        //设置处理结果传递给下一个Task
+        work.putContext（"effective"，bizService.isEffective(maxValue,minValue)）；
+    }
+}
+```
+或者
+```
+public class GetDiffTask {
+    @Autowired
+    private SomeBizService bizService;
+    //方法名任意
+    public void checkIfEffective(Work work) {
+        int maxValue = work.getContext（"maxValue"）；
+        int minValue = work.getContext（"minValue"）；
+        //设置处理结果传递给下一个Task
+        work.putContext（"effective"，bizService.isEffective(maxValue,minValue)）；
+        //如果是RouteAble Work，可以指定Routing规则
+        （（CustomRouteWork）work).setRoutingKey("some routing key");
+    }
+}
+```
+Task获取之前Task传入的参数，可以通过Work或者WorkContext获取，也可以直接将方法的参数名定义为与之前Task传入参数名一致。下面这个Task就获取了GetDiffTask.checkIfEffective所设置的值：
+```
+public class EndBizTask {
+    //参数名在整个Work的所有Task中若不唯一，则需要在参数名上加@Taskparam("xxx")注解以区分
+    public void end(String effective) {
+        if("yes".equals(effective)){
+           //invoke some service
+        }
+    }
+}
+```
+
+#### 3.2 Task的配置
+使用taskflow的标签来配置Task，其基于Spring。
+```
+<!--1.将定义Task的类配置为一个Spring管理的Bean-->
+<bean id="getDiff" class="taskflow.examples.task.GetDiff"/>
+或
+<bean id="getDiffTask" class="taskflow.examples.task.GetDiffTask"/>
+
+<!--2.配置Task-->
+<tf:task id="step1" ref="getDiff"/>
+或
+<tf:task id="step11" ref="getDiffTask" method="checkIfEffective"/>
+
+<!--2.1 RouteAble Work可以配置Routing-->
+<tf:task id="step1" ref="getDiff">
+   <tf:routing key="oneStop" toTask="target taskId1" patten="string"/>
+   <tf:routing key="twoStop" toTask="target taskId2"/>
+   <!-- 未匹配到routing则跳到finish定义的task，未配置finish则整个Work结束 -->
+</tf:task>
+```
+
+#### 3.3 Work的配置
+Sequential Work的定义，如下：
+```
+<tf:work id="sequentialTaskWork" traceable="true" maxTasks=100 class="taskflow.work.SequentialRouteWork">
+  <tf:task-ref value="step1"/>
+  <tf:task-ref value="step3"/>
+  <tf:task-ref value="step2"/>
+  <tf:task-ref value="step5"/>
+  <tf:task-ref value="end"/>
+</tf:work>
+```
+其中：
+- id: 对应的一个Spring Bean的name
+- traceable: 是否记录Task调用轨迹；true会记录执行每个task时的WorkContext内容快照
+- maxTasks:规定了Work如果处理的次数大于这个数就会跑出异常（防止死循环）
+- class:制定Work的类型;可自行扩展
+
+RouteAble Work的定义，如下：
+```
+<tf:work id="routeAbleWork" start="start" finish="end" class="taskflow.work.CustomRouteWork"/>
+```
+其中:
+- start: 起始Task；从指定Task开始执行；必填
+- finish:最终Task；无论如何都会执行，即使执行过程中出现异常；选填
+
+#### 3.4 Extra的配置
+在开发中往往需要定义许多的Work，这些不同的Work可能会引用到同一个Task，在执行该Task时，不同的Work可能会需要不同的参数；
+
+extra可以用来指定处于不同Work中的同一个Task的执行参数；extra的数据类型为String，建议定义为JSON，这样更灵活；定义方式如下：
+~~~~
+<tf:task id="step1" ref="getDiff" extra="{paramName:'paramValue'}">
+   <tf:routing key="someKey" toTask="step2" extra="{paramName1:'paramValue1'}"/>
+</tf:task>
+...
+<tf:task id="step2" ref="task2" extra="{paramName2:'paramValue2'}"/>
+~~~~
+上面定义的2个Task，若Work1引用了step2，此时step2的Task获得的extra为{paramName2:'paramValue2'}
+
+而Work2引用step1执行完成后路由到step2时，此时step2的Task获得的extra为step1的routing中定义的{paramName1:'paramValue1'}
+
+extra的获取：
+~~~~
+public class GetDiffTask {
+    public void checkIfEffective(Work work) {
+        String extra = work.getWorkContext().getRuntimeArgs()；
+        ...
+    }
+    public void otherTaskMethod(WorkContext workContext) {
+        String extra = workContext.getRuntimeArgs()；
+        ...
+    }
+}
+~~~~
+
+### 4.Demo
+现在有一个业务需求，需要做以下处理
+1. 输入一个整型的list
+2. 找出最大值和最小值
+3. 如果最大值和最小值的差大于{x}输出“no”，否则输入“ok”
+4. {x}通过配置extra指定
+
+在classpath下新建配置文件task-config.xml
+
+#### 第一步 编写Task类
+编写响应的业务逻辑代码，详见test/demo
+
+例如getDiff的核心代码如下：
+```
+public void getDiff(@Taskparam("maxValue") int a, @Taskparam("minValue") int b,WorkContext workContext) {
+	int diff = workContext.getRuntimeArgsJSON().getInteger("threshold");
+    if (Math.abs(a - b) < diff) {
+       workContext.setRoutingKey("ok");
+    } else {
+       workContext.setRoutingKey("no");
+    }
+}
+```
+#### 第二步 定义Task
+task-config.xml加入如下配置
+```
+<bean id="findNumberTaskBean" class="demo.task.FindNumber"/>
+
+<tf:task id="findMaxTask" ref="findNumberTaskBean" method="findMax">
+    <tf:routing toTask="findMinTask"/>
+</tf:task>
+<tf:task id="findMinTask" ref="findNumberTaskBean" method="findMin">
+    <tf:routing toTask="getDiffTask"/>
+</tf:task>
+<tf:task id="getDiffTask" ref="findNumberTaskBean" method="getDiff" extra="{threshold:10}">
+    <tf:routing key="ok" toTask="soutOutOkTask"/>
+    <tf:routing key="no" toTask="soutOutNoTask"/>
+</tf:task>
+<tf:task id="soutOutOkTask" ref="findNumberTaskBean" method="soutOutOk"/>
+<tf:task id="soutOutNoTask" ref="findNumberTaskBean" method="soutOutNo"/>
+```
+#### 第三步 定义Work
+task-config.xml加入如下配置
+```
+<tf:work id="testWork" start="findMaxTask" class="taskflow.work.CustomRouteWork"/>
+```
+#### 第四步 运行
+```
+public class DemoApplication {
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:task-config.xml");
+
+        Work testWork = WorkFactory.createWork("testWork");
+        List<Integer> input = Arrays.asList(5, 7, 1, 0, 1, 3, 4, 5, 6, 4);
+        testWork.putContext("intList", input);
+        testWork.run();
+
+        testWork = WorkFactory.createWork("testWork");
+        input = Arrays.asList(52, 7, 1, -10, 1, 3, 4, 5, 6, 4);
+        testWork.putContext("intList", input);
+        testWork.run();
+    }
+}
+```
+
+### 5.版本记录
 <table>
 	<tr>
 		<th>版本</th>
@@ -12,168 +235,14 @@
 	</tr>
 	<tr>
 		<td>2.0.0</td>
-		<td>1.支持SpringBoot方式启动</br>
-		2.支持非XML方式配置</br>
+		<td>1.支持SpringBoot方式启动<br/>
+		2.支持非XML方式配置<br/>
 		3.支持task热加载</td>
 		<td>2019-2</td>
 	</tr>
 	<tr>
 		<td>2.0.1</td>
-		<td>1.Work可配置构造参数</br>
+		<td>1.Work可配置构造参数</td>
 		<td>2021-7</td>
 	</tr>
 </table>
-
-# 以Athlizo的business-flow为蓝本修改而成的任务流框架；原项目地址
-- 码云：[https://git.oschina.net/null_584_3382/business-flow-parent](https://git.oschina.net/null_584_3382/business-flow-parent)
-- github:[https://github.com/Athlizo/business-flow-parent](https://github.com/Athlizo/business-flow-parent)   
-
-# 先通俗的介绍一下框架
-该框架的灵感来自于现实中的公交系统。公交系统的中最重要的几个元素，及其对工作流框架的对应：
-- 乘客：对应工作流框架的中的数据（data）
-- 公交车：数据的载体，
-- 车站：一个车站可以看成工作流中的一个节点，负责处理“公交车”上的“乘客”。
-- 线路：由哪些节点组成一个完整的工作流的处理链  
-是不是感觉整个公交系统就是一个庞大的工作流处理网，每时每刻都公交车从车站出发，到达一个车站，上下乘客又开往下一个车站(当然前提是不出事故（exception））。  
-
-# 框架中的一些重要接口
-## BusContext
-保存一个业务处理逻辑的上下文环境。
-## Bus
-一个Bus是保存一次业务流程的上下文环境，业务的起始节点、抛异常的时候怎么处理等等。一个业务流都会新建一个bus，让后顺着一个一个节点进行处理。
-## Station
-Station为一个业务流（处理链）中的一个单独的节点。这个节点应该是只依赖于Bus中的上下文环境，根据bus的上下文环境进行处理，并且把处理后的结果（如果有）也放入bus的上下文环境中，供下游的节点使用。
-例如下面就是一个Station，从Bus上下文中获取maxValue和minValue,如果之间的差小于10则设置路由的key为OK(Routing根据这个进行路由）
-## Routing
-由于Station之间并没有直接关联，因此Routing负责连接各个Station，每个Station都有一个Routing来负责处理bus到底哪个Station，即可以动态的决定Bus的下一个Station
-#如何使用
-# 举例子
-## Station
-一个Station就是一个Spring容器管理的Bean（实现了com.lizo.busflow.station.Station接口）。一个station应该是独立的，有一定通用性的业务处理类，例如一个参数检查器，ip控制或一个相对对立的业务逻辑等等。
-```
-public class GetDiff implements Station {
-    public void abstractCalculate(@BusParameter("maxValue") int a, @BusParameter("minValue") int b, Bus bus) {
-        if (Math.abs(a - b) < 10) {
-            bus.setRoutingKey("ok");
-        } else {
-            bus.setRoutingKey("no");
-        }
-    }
-    @Override
-    public String getName() {
-        return null;
-    }
-}
-```
-
-
-## Routing
-Routing的一定是要一个对应的Station的，例如可以在xml配置中，根据路由的key为进行选择下一个处理的Station
-```
-  <!--这个是一个Station-->
-   <bean id="getDiff" class="com.lizo.demo.station.GetDiff"></bean>
-
-<!--这个是一个Routing，包含了对应的Station Bean-->
-    <bf:stop id="getDiffStop" ref="getDiff" method="abstractCalculate">
-        <bf:routing value="ok" to="soutOutOkStop"/>
-        <bf:routing value="no" to="soutOutNoStop"/>
-    </bf:stop>
-```
-注意，
-- **后面所说的Station默认是指包含了Routing的Bean（<bf:stop>标签），并不是Station那个Bean**
-- 需要ref制定一个Spring bean，使用method制定是由那个method来处理。
-- 默认会使用BusContext的key对应方法的参数名来自动注入，如果有特殊需要，可以使用@BusParameter注解，指定BusContext对应的key，是否是必须（默认是必须的，设置为非必须，会注入默认值）。  
-
-
-
-## Bus
-一个完整Bus在xml中定义，如下：
-
-```
-<bf:bus id="testBus" start="findMaxStop" maxPath="1000"  exception="exceptionStation" finish="endStation" class="xxx.xxx.xxx.myBus"/>
-```
-其中: 
-- id: 对应的一个Spring Bean的name
-- start: 对应工作流开始Routing
-- maxPath:规定了bus如果处理的次数大于这个数就会跑出异常（防止死循环）
-- exception:指定当发送异常的时候由哪个Station进行处理，例如一个打错误日志的Station
-- finish:表示当整个流程处理完以后会由哪个Station最最后处理
-- class:制定bus的类型，如果为空就使用默认的com.lizo.busflow.bus.DefaultBus    
-
-# 看个DEMO
-现在有一个业务需求，需要做以下处理
-1. 输入一个整型的list
-2. 找出最大值和最小值
-3. 如果最大值和最小值的差大于10输出“no”，否则输入“ok”  、
-当然真实项目中的业务流程不会这么简单，只是这里使用这个做个例子
-
-## 第一步 编写独立的Station
-```
-<bean id="findMax" class="com.lizo.demo.station.FindMax"/>
-    <bean id="findMin" class="com.lizo.demo.station.FindMin"/>
-    <bean id="soutOutOk" class="com.lizo.demo.station.SoutOutOk"/>
-    <bean id="soutOutNo" class="com.lizo.demo.station.SoutOutNo"/>
-    <bean id="getDiff" class="com.lizo.demo.station.GetDiff">
-```
-例如getDiff的核心代码如下：
-```
-public class GetDiff implements Station {
-
-    public void abstractCalculate(@BusParameter("maxValue") int a, @BusParameter("minValue") int b, BusContext busContext) {
-
-        if (Math.abs(a - b) < 10) {
-            busContext.setRoutingKey("ok");
-        } else {
-            busContext.setRoutingKey("no");
-        }
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
-}
-```
-## 把他们串起来吧
-```
-    <bf:stop id="findMaxStop" ref="findMax" method="doBusiness">
-        <bf:routing to="findMinStop"/>
-    </bf:stop>
-
-    <bf:stop id="findMinStop" ref="findMin" method="doBusiness">
-        <bf:routing to="getDiffStop"/>
-    </bf:stop>
-
-    <bf:stop id="getDiffStop" ref="getDiff" method="abstractCalculate">
-        <bf:routing value="ok" to="soutOutOkStop"/>
-        <bf:routing value="no" to="soutOutNoStop"/>
-    </bf:stop>
-
-    <bf:stop id="soutOutOkStop" ref="soutOutOk" method="printOk"/>
-
-    <bf:stop id="soutOutNoStop" ref="soutOutNo" method="printNo"/>
-```
-## 创建一个bus，开车吧司机
-```
-<bf:bus id="testBus" start="findMaxStop" />
-```
-## 运行demo
-```
-public class DemoApplication {
-    public static void main(String[] args) {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:bus-config.xml");
-
-        Bus testBus = BusFactory.createNewBus("testBus");
-        List<Integer> input = Arrays.asList(5, 7, 1, 0, 1, 3, 4, 5, 6, 4);
-        testBus.putContext("intList", input);
-        testBus.run();
-
-
-        testBus = BusFactory.createNewBus("testBus");
-        input = Arrays.asList(52, 7, 1, -10, 1, 3, 4, 5, 6, 4);
-        testBus.putContext("intList", input);
-        testBus.run();
-    }
-}
-```

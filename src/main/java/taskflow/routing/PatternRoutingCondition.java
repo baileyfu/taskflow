@@ -13,7 +13,6 @@ import taskflow.work.context.WorkContext;
  */
 public class PatternRoutingCondition extends AbstractRoutingCondition {
 	private PatternType pattern;
-	private String condition;
 
 	public boolean matched(WorkContext workContext) {
 		String routingKey = workContext.getRoutingKey();
@@ -26,12 +25,7 @@ public class PatternRoutingCondition extends AbstractRoutingCondition {
 	public void setPattern(PatternType pattern) {
 		this.pattern = pattern;
 	}
-	public String getCondition() {
-		return condition;
-	}
-	public void setCondition(String condition) {
-		this.condition = condition;
-	}
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
