@@ -166,16 +166,17 @@ public class GetDiffTask {
 在classpath下新建配置文件task-config.xml
 
 #### 第一步 编写Task类
-编写响应的业务逻辑代码，详见test/demo
+编写相应的业务逻辑代码，详见test/demo
 
 例如getDiff的核心代码如下：
 ```
+private NumberService numberService;
 public void getDiff(@Taskparam("maxValue") int a, @Taskparam("minValue") int b,WorkContext workContext) {
 	int diff = workContext.getRuntimeArgsJSON().getInteger("threshold");
-    if (Math.abs(a - b) < diff) {
-       workContext.setRoutingKey("ok");
+    if (numberService.checkNumber(a, b, diff)) {
+        workContext.setRoutingKey("ok");
     } else {
-       workContext.setRoutingKey("no");
+        workContext.setRoutingKey("no");
     }
 }
 ```
@@ -217,6 +218,8 @@ public class DemoApplication {
         input = Arrays.asList(52, 7, 1, -10, 1, 3, 4, 5, 6, 4);
         testWork.putContext("intList", input);
         testWork.run();
+        
+        context.close();
     }
 }
 ```
