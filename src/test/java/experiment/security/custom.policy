@@ -1,8 +1,0 @@
-//codeBase下面的jar包或class类 可以读取/opt
-grant codeBase "file:/Users/bailey/git/taskflow/target/test-classes/experiment/security/opt/-" {
-    //permission java.io.FilePermission  "/tmp/*","read";
-    permission java.security.AllPermission;
-};
-grant {
-    permission java.io.FilePermission "/Users/bailey/*", "read,write";
-};

@@ -63,10 +63,7 @@ public abstract class AbstractWorkContext extends ExtraArgsHolder implements Wor
 				runtimeArgs = getTaskRoutingExtra(previousTask, currentTask);
 			}
 		}
-		if (runtimeArgs == null) {
-			runtimeArgs = getTaskExtra(currentTask);
-		}
-		return runtimeArgs;
+		return StringUtils.isEmpty(runtimeArgs) ? getTaskExtra(currentTask) : runtimeArgs;
 	}
 	@Override
 	public JSONObject getRuntimeArgsJSON() {

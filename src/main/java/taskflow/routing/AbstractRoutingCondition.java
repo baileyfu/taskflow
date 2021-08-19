@@ -7,6 +7,7 @@ import taskflow.task.TaskRoutingWrap;
  * Created by lizhou on 2017/4/7/007.
  */
 public abstract class AbstractRoutingCondition implements RoutingCondition {
+	protected String condition;
     private TaskRoutingWrap taskRoutingWrap;
 
 	public TaskRoutingWrap getTaskRoutingWrap() {
@@ -15,5 +16,11 @@ public abstract class AbstractRoutingCondition implements RoutingCondition {
 
 	public void setTaskRoutingWrap(TaskRoutingWrap taskRoutingWrap) {
 		this.taskRoutingWrap = taskRoutingWrap;
+	}
+	public String getCondition() {
+		return condition;
+	}
+	public void setCondition(String condition) {
+		this.condition = condition;
 	}
 }

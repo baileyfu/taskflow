@@ -29,7 +29,7 @@ public abstract class AbstractWork implements Work{
 	 */
 	public void dealExcpetion(Exception workException) {
 		workContext.holderException(((AbstractWorkContext)workContext).getCurrentTask(), workException);
-		System.err.println(workException.getMessage());
+		workException.printStackTrace();
 	}
 
 	/**

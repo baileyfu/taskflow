@@ -9,16 +9,16 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
         http://www.xteam.org/xcache http://www.xteam.org/xcache/xcache-1.0.xsd">
 
-    <bean id="taskA" class="x.demo.work.task.TaskA"/>
-    <bean id="taskB" class="x.demo.work.task.TaskB"/>
-    <bean id="taskC" class="x.demo.work.task.TaskC"/>
+    <bean id="taskATaskBean" class="demo.task.TaskA"/>
+    <bean id="taskBTaskBean" class="demo.task.TaskB"/>
+    <bean id="taskCTaskBean" class="demo.task.TaskC"/>
     
-    <tf:task id="step1" ref="taskA"/>
-    <tf:task id="step2" ref="taskB"/>
-    <tf:task id="step3" ref="taskC" method="method1"/>
-    <tf:task id="step4" ref="taskC" method="method2"/>
-    <tf:task id="step5" ref="taskC" method="method3"/>
-    <tf:task id="end" ref="taskC" method="methodEnd"/>
+    <tf:task id="step1" ref="taskATaskBean"/>
+    <tf:task id="step2" ref="taskBTaskBean"/>
+    <tf:task id="step3" ref="taskCTaskBean" method="method1"/>
+    <tf:task id="step4" ref="taskCTaskBean" method="method2"/>
+    <tf:task id="step5" ref="taskCTaskBean" method="method3"/>
+    <tf:task id="end" ref="taskCTaskBean" method="methodEnd"/>
     
     <tf:work id="sequentialTaskWork" traceable="true" class="taskflow.work.SequentialRouteWork">
     	<tf:task-ref value="step1" extra="{x:2}"/>

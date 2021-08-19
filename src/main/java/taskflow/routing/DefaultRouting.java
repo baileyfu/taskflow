@@ -2,8 +2,11 @@ package taskflow.routing;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import taskflow.task.TaskRoutingWrap;
 import taskflow.work.context.WorkContext;
+import static taskflow.constants.RoutingConditionPropValue.CONDITION_DEFAULT_VALUE;
 
 /**
  * Created by lizhou on 2017/4/7/007.
@@ -15,14 +18,22 @@ public class DefaultRouting implements Routing {
         this.routingConditions = routingConditions;
     }
 
-    public TaskRoutingWrap doRouting(WorkContext busContext) {
-        for (RoutingCondition routingCondition : routingConditions) {
-            if (routingCondition.matched(busContext)) {
-                return routingCondition.getTaskRoutingWrap();
-            }
-        }
-        return null;
-    }
+	public TaskRoutingWrap doRouting(WorkContext busContext) {
+		// 当只有一个routing时，不设置key并且Task中不设置RoutingKey，将直接跳转到toTask
+		if (routingConditions.size() == 1) {
+			RoutingCondition unique = routingConditions.get(0);
+			if (CONDITION_DEFAULT_VALUE.equals(unique.getCondition()) && StringUtils.isEmpty(busContext.getRoutingKey())) {
+				return unique.getTaskRoutingWrap();
+			}
+		} else {
+			for (RoutingCondition routingCondition : routingConditions) {
+				if (routingCondition.matched(busContext)) {
+					return routingCondition.getTaskRoutingWrap();
+				}
+			}
+		}
+		return null;
+	}
 
     public List<RoutingCondition> getRoutingConditions() {
         return routingConditions;

@@ -84,6 +84,7 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 				
 				// 打印注册日志
 				directlyLog("Register List : ");
+				//由配置文件决定是否输出
 				printRegisterLog(null);
 				directlyLog("Registered Total : [TaskBean : "+taskBeanDefinitions.size()+" , Task : "+registeredTask+" , Work : "+registeredWork+"]");
 				directlyLog("The 'Register List' of TaskFlow has been printed!");

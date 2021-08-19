@@ -8,6 +8,7 @@ import taskflow.work.context.WorkContext;
  * Created by lizhou on 2017/4/7/007.
  */
 public interface RoutingCondition {
+	String getCondition();
 	/**
 	 * 是否匹配workContext中指定的routing
 	 * @param workContext

@@ -26,28 +26,6 @@
 		</profiles>
   
   <dependencies>
-		<dependency>
-		    <groupId>junit</groupId>
-		    <artifactId>junit</artifactId>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>com.pholser</groupId>
-		    <artifactId>junit-quickcheck-core</artifactId>
-		    <version>1.0</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>com.pholser</groupId>
-		    <artifactId>junit-quickcheck-generators</artifactId>
-		    <version>1.0</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.mockito</groupId>
-		    <artifactId>mockito-core</artifactId>
-		</dependency>
-  
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -62,53 +40,18 @@
 		<dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
 		    <artifactId>log4j-api</artifactId>
-		    <version>2.13.3</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
 		    <artifactId>log4j-core</artifactId>
-		    <version>2.13.3</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
 		    <artifactId>log4j-slf4j-impl</artifactId>
-		    <version>2.14.1</version>
 		</dependency>
-		
-		<dependency>
-		    <groupId>commons-logging</groupId>
-		    <artifactId>commons-logging</artifactId>
-		    <version>1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.lmax</groupId>
-			<artifactId>disruptor</artifactId>
-			<version>3.4.2</version>
-		</dependency>
-		<!-- com.lmax.disruptor会用到 -->
-		<dependency>
-		    <groupId>com.conversantmedia</groupId>
-		    <artifactId>disruptor</artifactId>
-		    <version>1.2.10</version>
-		</dependency>
-  
-  		<dependency>
-		    <groupId>org.codehaus.groovy</groupId>
-		    <artifactId>groovy-all</artifactId>
-		    <version>2.5.5</version>
-		    <type>pom</type>
-		    <scope>provided</scope>
-		</dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>4.3.1.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>4.3.1.RELEASE</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -123,147 +66,37 @@
             <version>3.5</version>
             <scope>provided</scope>
         </dependency>
-        
-        
-		<dependency>
-		    <groupId>ognl</groupId>
-		    <artifactId>ognl</artifactId>
-		    <version>3.2.20</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.openjdk.jmh</groupId>
-		    <artifactId>jmh-core</artifactId>
-		    <version>${jmh.version}</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.openjdk.jmh</groupId>
-		    <artifactId>jmh-generator-annprocess</artifactId>
-		    <version>${jmh.version}</version>
-		    <scope>test</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>asm</groupId>
-		    <artifactId>asm</artifactId>
-		    <version>3.3.1</version>
-		</dependency>
-		
-		<!-- JMX management -->
-		<dependency>
-		    <groupId>org.opendaylight.cardinal</groupId>
-		    <artifactId>jdmk</artifactId>
-		    <version>0.3.3</version>
-		</dependency>
-		
-		
-		<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
-		    <version>5.1.49</version>
-		</dependency>
-		
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-	<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-surefire-plugin</artifactId>
-		<configuration>
-			<skipTests>true</skipTests>
-		</configuration>
-	</plugin>
-
-	<plugin>
-        <groupId>org.evosuite.plugins</groupId>
-        <artifactId>evosuite-maven-plugin</artifactId>
-		<version>1.0.6</version>
-	</plugin>
-
-	<plugin>
-         <groupId>com.x</groupId>
-         <artifactId>testMojo-maven-plugin</artifactId>
-         <version>0.0.1-SNAPSHOT</version>
-		<configuration>
-             <msg>this is msg</msg>
-             <options>
-                 <option>option1</option>
-                 <option>option2</option>
-                 <option>option3</option>
-             </options>
-         </configuration>
-         <executions>
-             <execution>
-                 <phase>package</phase>
-                 <goals>
-                     <goal>myMojo</goal>
-                 </goals>
-             </execution>
-         </executions>
-     </plugin>
-	
-	<plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-jar-plugin</artifactId>
-	    <version>3.1.0</version>
-	    <configuration>
-	        <archive>
-	            <!--自动添加META-INF/MANIFEST.MF -->
-	            <manifest>
-	                <addClasspath>true</addClasspath>
-	            </manifest>
-	            <manifestEntries>
-	                <Premain-Class>experiment.agent.PreMainDefiner</Premain-Class>
-	                <Agent-Class>experiment.agent.AgentMainDefiner</Agent-Class>
-	                <Can-Redefine-Classes>true</Can-Redefine-Classes>
-	                <Can-Retransform-Classes>true</Can-Retransform-Classes>
-	            </manifestEntries>
-	        </archive>
-	    </configuration>
-	</plugin>
-	
-      <!-- 
-      	<plugin>
-		    <groupId>org.codehaus.gmavenplus</groupId>
-		    <artifactId>gmavenplus-plugin</artifactId>
-		    <version>1.5</version>
-		    <executions>
-		        <execution>
-		            <goals>
-		                <goal>addSources</goal>
-		                <goal>addTestSources</goal>
-		                <goal>generateStubs</goal>
-		                <goal>compile</goal>
-		                <goal>testGenerateStubs</goal>
-		                <goal>testCompile</goal>
-		                <goal>removeStubs</goal>
-		                <goal>removeTestStubs</goal>
-		            </goals>
-		        </execution>
-		    </executions>
+	      <plugin>
+	        <artifactId>maven-compiler-plugin</artifactId>
+	        <configuration>
+	          <source>1.8</source>
+	          <target>1.8</target>
+	        </configuration>
+	      </plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-surefire-plugin</artifactId>
+			<configuration>
+				<skipTests>true</skipTests>
+			</configuration>
 		</plugin>
-		 -->
     </plugins>
   </build>
   
-	<distributionManagement>
-		<repository>
-			<id>release-repository</id>
-			<name>Release Repository</name>
-			<url>http://nexus.ldxinyong.com/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots-repository</id>
-			<name>Snapshots Repository</name>
-			<url>http://nexus.ldxinyong.com/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/baileyfu/taskflow</url>
+        </repository>
+    </distributionManagement>
 </project>
