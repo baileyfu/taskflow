@@ -6,7 +6,7 @@ import taskflow.work.Work;
 import taskflow.work.WorkFactory;
 
 /**
- * 顺序任务流
+ * Sequential Work
  * 
  * @author bailey
  * @date 2021年8月19日

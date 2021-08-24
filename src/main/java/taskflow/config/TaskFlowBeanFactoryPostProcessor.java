@@ -10,6 +10,7 @@ import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
 import taskflow.config.bean.TaskflowConfiguration;
 import taskflow.config.bean.WorkDefinition;
+import taskflow.constants.PropertyNameAndValue;
 import taskflow.work.WorkFactory;
 
 /**
@@ -17,10 +18,8 @@ import taskflow.work.WorkFactory;
  */
 public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister implements ApplicationListener<ContextRefreshedEvent>, Ordered {
 	private TaskflowConfiguration taskflowConfiguration;
-	private boolean ignoreNoExists;
-	public TaskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration,boolean ignoreNoExists) {
+	public TaskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration) {
 		this.taskflowConfiguration=taskflowConfiguration;
-		this.ignoreNoExists = ignoreNoExists;
 	}
 
 	private boolean initialized = false;
@@ -28,6 +27,7 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		if (!initialized) {
 			initialized = true;
+			boolean ignoreNoExists = Boolean.getBoolean(PropertyNameAndValue.WORK_NO_EXISTS_IGNORABLE);
 			Set<TaskBeanDefinition> taskBeanDefinitions = taskflowConfiguration.getTaskBeanDefinitions();
 			if (taskBeanDefinitions != null && taskBeanDefinitions.size() > 0) {
 				//注册TaskBean
@@ -84,10 +84,8 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 				
 				// 打印注册日志
 				directlyLog("Register List : ");
-				//由配置文件决定是否输出
-				printRegisterLog(null);
+				printRegisterLog(true);
 				directlyLog("Registered Total : [TaskBean : "+taskBeanDefinitions.size()+" , Task : "+registeredTask+" , Work : "+registeredWork+"]");
-				directlyLog("The 'Register List' of TaskFlow has been printed!");
 			}
 		}
 	}

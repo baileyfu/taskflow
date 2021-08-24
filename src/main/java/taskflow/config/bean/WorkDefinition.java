@@ -10,7 +10,7 @@ public class WorkDefinition {
 	private String start;
 	private String finish;
 	private int maxTasks;
-	private Boolean traceable;
+	private boolean traceable;
 	private String workClazz;
 	private ArrayList<ConstructorArg> constructorArgs;
 	//支持同一Task执行多次
@@ -43,10 +43,10 @@ public class WorkDefinition {
 	public void setMaxTasks(int maxTasks) {
 		this.maxTasks = maxTasks;
 	}
-	public Boolean getTraceable() {
-		return traceable == null ? Boolean.FALSE : traceable;
+	public boolean getTraceable() {
+		return traceable;
 	}
-	public void setTraceable(Boolean traceable) {
+	public void setTraceable(boolean traceable) {
 		this.traceable = traceable;
 	}
 	public String getWorkClazz() {

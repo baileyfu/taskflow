@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xmlns:tf="http://www.xteam.org/taskflow"
        xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-2.0.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     <!-- Bean Define -->
@@ -28,7 +28,7 @@
 	<tf:task id="soutOutNoTask" ref="findNumberTaskBean" method="soutOutNo" extra="LowPriority_NO"/>
     
     <!-- Work Define -->
-    <tf:work id="testWork" start="findMaxTask" class="taskflow.work.CustomRouteWork"/>
+    <tf:work id="testWork" start="findMaxTask" traceable="true" class="taskflow.work.CustomRouteWork"/>
     
     <tf:workFactory/>
 </beans>

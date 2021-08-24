@@ -3,6 +3,7 @@ package taskflow.work;
 import java.util.ArrayList;
 import java.util.Map;
 
+import taskflow.constants.PropertyNameAndValue;
 import taskflow.exception.TaskFlowException;
 import taskflow.task.TaskRoutingWrap;
 import taskflow.work.context.AbstractWorkContext;
@@ -41,10 +42,12 @@ public abstract class AbstractWork implements Work{
 			throw new TaskFlowException("the work '"+name+"''s maxTasks is:" + maxTasks);
 		}
 		if (traceable) {
-			if (taskTraces == null) {
-				taskTraces = new ArrayList<TaskTrace>();
+			if (Boolean.getBoolean(PropertyNameAndValue.WORK_TRACEABLE)) {
+				if (taskTraces == null) {
+					taskTraces = new ArrayList<TaskTrace>();
+				}
+				taskTraces.add(new TaskTrace(stationRoutingWrap.getName(), workContext.toString()));
 			}
-			taskTraces.add(new TaskTrace(stationRoutingWrap.getName(), workContext.toString()));
 		}
 	}
 	public String getName() {

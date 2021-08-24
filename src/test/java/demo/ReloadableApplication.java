@@ -3,13 +3,13 @@ package demo;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +23,8 @@ import taskflow.config.bean.TaskDefinition;
 import taskflow.config.bean.TaskflowConfiguration;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.TaskRef;
+import taskflow.logger.ConsoleLogger;
+import taskflow.logger.TFLogger;
 import taskflow.work.SequentialRouteWork;
 import taskflow.work.Work;
 import taskflow.work.WorkFactory;
@@ -30,7 +32,8 @@ import taskflow.work.context.TaskTrace;
 
 /**
  * taskflow2.0.1 <br/>
- * 支持非XML配置，可热加载
+ * 支持非XML配置，可热加载；可以将Work/Task的配置存放到数据库，在程序运行中动态的修改Task<br/>
+ * 相关配置见application.yml
  * 
  * @author bailey
  * @date 2021年8月19日
@@ -40,6 +43,16 @@ import taskflow.work.context.TaskTrace;
 @RestController
 @Configuration
 public class ReloadableApplication {
+	//自定义TFLogger将日志输出到指定地方
+	//@Bean
+	public TFLogger RegisterLogger() {
+		return new TFLogger() {
+			@Override
+			protected Consumer<String> getLogPrinter() {
+				return System.out::println;
+			}
+		};
+	}
 	@Bean
 	public TaskflowConfiguration taskflowConfiguration() {
 		Set<TaskBeanDefinition> taskBeanDefinitions = new HashSet<>();
@@ -73,7 +86,7 @@ public class ReloadableApplication {
 		WorkDefinition workDefinition = new WorkDefinition();
 		workDefinition.setWorkId("Work1");
 		workDefinition.setWorkClazz(SequentialRouteWork.class.getName());
-		workDefinition.setTraceable(false);
+		workDefinition.setTraceable(true);
 		ArrayList<TaskRef> taskRefs = new ArrayList<>();
 		TaskRef taskRef = new TaskRef();
 		taskRef.setTaskId("Task1");
@@ -105,12 +118,13 @@ public class ReloadableApplication {
 		ArrayList<TaskTrace> taskTraces = Work1.getTaskTraces();
 		if (taskTraces != null) {
 			for (TaskTrace tt : taskTraces) {
-				System.out.println("TRACE--->" + tt);
+				System.out.println("Work1-[TRACE]" + tt);
 			}
 		}
-		return "Run result===>" + result;
+		return result.toString();
 	}
 
+	//修改Work1的Task执行序列
 	@RequestMapping("/change")
 	public String change() {
 		TaskBeanDefinition taskBeanDefinition = new TaskBeanDefinition();
@@ -142,26 +156,8 @@ public class ReloadableApplication {
 		return "SUCCESS";
 	}
 
-	public static void mainc(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ReloadableApplication.class, args);
 	}
 
-	public static void main(String[] args) throws Exception {
-		String file;
-		file = "classpath:status-bus-config.xml";
-//		file="classpath:serial-task-config.xml";
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(file);
-
-		Work testBus = WorkFactory.createWork("testStatusBus"
-//				"sequentialTaskWork"
-		);
-		testBus.run();
-
-		Thread.sleep(1000l);
-//		System.out.println("+++++++++++++");
-//		testBus = (CustomRouteWork)context.getBean("testStatusBus");
-//		Object result = testBus.run().getResult();
-//		System.out.println(result);
-		context.close();
-	}
 }

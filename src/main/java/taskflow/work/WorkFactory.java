@@ -5,7 +5,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
- * 手动创建Work
+ * 手动创建Work</br>
  */
 public class WorkFactory implements BeanFactoryAware {
     private static BeanFactory beanFactory;

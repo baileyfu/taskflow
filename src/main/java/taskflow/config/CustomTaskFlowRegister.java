@@ -8,11 +8,13 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.util.Assert;
 
-import taskflow.config.register.RegisterLogger;
 import taskflow.config.register.TaskBeanRegister;
 import taskflow.config.register.TaskRegister;
 import taskflow.config.register.WorkRegister;
+import taskflow.constants.PropertyNameAndValue;
+import taskflow.constants.TFLogType;
 import taskflow.enums.ConfigSource;
+import taskflow.logger.TFLogger;
 
 public class CustomTaskFlowRegister implements BeanFactoryAware, TaskBeanRegister, TaskRegister, WorkRegister{
 	protected DefaultListableBeanFactory beanFactory;
@@ -28,24 +30,33 @@ public class CustomTaskFlowRegister implements BeanFactoryAware, TaskBeanRegiste
 		return ConfigSource.CUS;
 	}
 
-	private RegisterLogger registerLogger = null;
+	private TFLogger registerLogger = null;
 	public void init() {
 		if (registerLogger == null) {
-			Map<String, RegisterLogger> rlMap = beanFactory.getBeansOfType(RegisterLogger.class);
+			Map<String, TFLogger> rlMap = beanFactory.getBeansOfType(TFLogger.class);
 			if (rlMap != null && rlMap.size() > 0) {
 				registerLogger = rlMap.values().iterator().next();
+			} else {
+				registerLogger = DEFAULT_LOGGER;
 			}
 		}
 	}
-	protected void printRegisterLog(Boolean printDetail) {
-		if (registerLogger != null) {
-			registerLogger.printLog(printDetail);
+
+	protected void printRegisterLog(boolean printDetail) {
+		if (registerLogger != null && Boolean.getBoolean(PropertyNameAndValue.LOG_PRINTABLE)) {
+			registerLogger.printRegister(printDetail && Boolean.getBoolean(PropertyNameAndValue.LOG_PRINT_DETAIL));
 		}
-		RegisterLogger.clear();
 	}
 	protected void directlyLog(String content) {
-		if (registerLogger != null) {
-			registerLogger.getLogPrinter().accept(content);
+		if (registerLogger != null && Boolean.getBoolean(PropertyNameAndValue.LOG_PRINTABLE)) {
+			registerLogger.log(content);
+		}
+	}
+
+	@Override
+	public void logRegister(ConfigSource configSource, TFLogType type, String id, String value) {
+		if (registerLogger != null && Boolean.getBoolean(PropertyNameAndValue.LOG_PRINTABLE)) {
+			registerLogger.logRegister(configSource, type, id, value);
 		}
 	}
 }

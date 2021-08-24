@@ -10,7 +10,7 @@ import taskflow.work.Work;
 import taskflow.work.context.WorkContext;
 
 /**
- * 推荐Task不涉及业务逻辑;在Task的方法中调用Service完成响应的任务<br/>
+ * 推荐Task不涉及业务逻辑;在Task的方法中调用Service完成相应的任务<br/>
  * Task的作用是将若干Service的方法自由组合成适当粒度的功能模块
  * 
  * @author bailey
@@ -36,9 +36,9 @@ public class FindNumber {
 		work.putContext("minValue", minValue);
 	}
 
-	public void getDiff(@Taskparam("maxValue") int a, @Taskparam("minValue") int b,WorkContext workContext) {
+	public void getDiff(@Taskparam("maxValue") int a, int minValue,WorkContext workContext) {
 		int diff = workContext.getRuntimeArgsJSON().getInteger("threshold");
-        if (numberService.checkNumber(a, b, diff)) {
+        if (numberService.checkNumber(a, minValue, diff)) {
             workContext.setRoutingKey("ok");
         } else {
             workContext.setRoutingKey("no");
