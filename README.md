@@ -256,4 +256,9 @@ public class DemoApplication {
 		4.SpringBoot升级到2.5.3</td>
 		<td>2021-8</td>
 	</tr>
+	<tr>
+		<td>2.2.0</td>
+		<td>1.支持yml和property配置Work/Task</td>
+		<td>2021-?</td>
+	</tr>
 </table>
