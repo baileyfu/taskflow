@@ -4,18 +4,17 @@
   <artifactId>taskflow</artifactId>
   <version>${taskflow.version}</version>
   
-		<properties>
-			<taskflow.version>2.1.0-RELEASE</taskflow.version>
-			<jmh.version>1.31</jmh.version>
-		</properties>
-		<profiles>
-			<profile>
-				<id>snapshots</id>
-				<properties>
-					<taskflow.version>2.1.0-SNAPSHOT</taskflow.version>
-				</properties>
-			</profile>
-		</profiles>
+	<properties>
+		<taskflow.version>2.1.0-RELEASE</taskflow.version>
+	</properties>
+	<profiles>
+		<profile>
+			<id>snapshots</id>
+			<properties>
+				<taskflow.version>2.1.0-SNAPSHOT</taskflow.version>
+			</properties>
+		</profile>
+	</profiles>
   
   <dependencyManagement>
 	  <dependencies>
@@ -49,7 +48,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
