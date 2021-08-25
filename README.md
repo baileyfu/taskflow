@@ -248,4 +248,12 @@ public class DemoApplication {
 		<td>1.Work可配置构造参数</td>
 		<td>2021-7</td>
 	</tr>
+	<tr>
+		<td>2.1.0</td>
+		<td>1.修改Log输出方式及类名<br/>
+		2.参数改为从系统Property读取<br/>
+		3.修改xsd文件，所有type值为xsd:IDREF修改为xsd:string<br/>
+		4.SpringBoot升级到2.5.3</td>
+		<td>2021-8</td>
+	</tr>
 </table>

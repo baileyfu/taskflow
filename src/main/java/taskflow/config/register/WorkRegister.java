@@ -102,7 +102,7 @@ public interface WorkRegister extends ConfigSourceAware{
 			registry.removeBeanDefinition(workDefinition.getWorkId());
 		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(work, workDefinition.getWorkId()), registry);
 		
-		RegisterLogger.log(getConfigSource(), TFLogType.WORK,workDefinition.getWorkId(), workDefinition.toString());
+		logRegister(getConfigSource(), TFLogType.WORK,workDefinition.getWorkId(), workDefinition.toString());
 		return work;
 	}
 	
@@ -114,7 +114,7 @@ public interface WorkRegister extends ConfigSourceAware{
 		workerFactory.setBeanClass(WorkFactory.class);
 		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(workerFactory, beanName), registry);
 		
-		RegisterLogger.log(getConfigSource(), TFLogType.WORK_FACTORY,beanName, "[beanId:"+beanName+" , class:"+WorkFactory.class.getName()+"]");
+		logRegister(getConfigSource(), TFLogType.WORK_FACTORY,beanName, "[beanId:"+beanName+" , class:"+WorkFactory.class.getName()+"]");
 		return workerFactory;
 	}
 }

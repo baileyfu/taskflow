@@ -11,19 +11,15 @@ import taskflow.config.bean.TaskDefinition;
 import taskflow.config.bean.TaskDefinition.RouteDefinition;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.TaskRef;
+import taskflow.constants.PropertyNameAndValue;
 
 /**
  * 运行时重载TaskFlow的bean
  */
 public class TaskFlowBeanReloadProcessor extends CustomTaskFlowRegister {
-	private boolean reloadable;
-
-	public TaskFlowBeanReloadProcessor(boolean reloadable) {
-		this.reloadable = reloadable;
-	}
 
 	public void reload(TaskBeanDefinition taskBeanDefinition,TaskDefinition taskDefinition,WorkDefinition workDefinition) {
-		Assert.isTrue(reloadable, "TaskFlow be set to not reloadable!");
+		Assert.isTrue(Boolean.getBoolean(PropertyNameAndValue.RELOAD_ENABLE), "TaskFlow is set to not reloadable!");
 		if (taskBeanDefinition != null)
 			registerTaskBean(beanFactory, taskBeanDefinition);
 		
@@ -52,7 +48,6 @@ public class TaskFlowBeanReloadProcessor extends CustomTaskFlowRegister {
 			registerWork(beanFactory, workDefinition);
 		}
 		// 打印注册日志
-		// 重载每次都打印详情
 		printRegisterLog(true);
 	};
 }

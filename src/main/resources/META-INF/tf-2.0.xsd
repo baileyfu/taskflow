@@ -44,7 +44,7 @@
     </xsd:element>
 
     <xsd:attributeGroup name="taskAttributes">
-        <xsd:attribute name="ref" type="xsd:IDREF" use="required">
+    	<xsd:attribute name="ref" type="xsd:string" use="required">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
                 <!--<tool:annotation kind="ref">-->
@@ -86,7 +86,7 @@
         <xsd:attribute name="key" type="xsd:string" default="@default">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="toTask" type="xsd:IDREF" use="required">
+        <xsd:attribute name="toTask" type="xsd:string" use="required">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
                 <!--<tool:annotation kind="ref">-->
@@ -137,7 +137,7 @@
             <xsd:annotation>
             </xsd:annotation>
         </xsd:attribute> -->
-        <xsd:attribute name="start" type="xsd:IDREF">
+        <xsd:attribute name="start" type="xsd:string">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
                 <!--<tool:annotation kind="ref">-->
@@ -149,7 +149,7 @@
         <xsd:attribute name="maxTasks" type="xsd:integer" default="100000">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="finish" type="xsd:IDREF">
+        <xsd:attribute name="finish" type="xsd:string">
             <xsd:annotation>
                 <xsd:appinfo>
                     <tool:annotation kind="ref">

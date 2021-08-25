@@ -24,6 +24,6 @@ public interface TaskBeanRegister extends ConfigSourceAware{
 			registry.removeBeanDefinition(taskBeanDefinition.getBeanId());
 		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(taskBean, taskBeanDefinition.getBeanId()), registry);
 	
-		RegisterLogger.log(getConfigSource(), TFLogType.TASK_BEAN,taskBeanDefinition.getBeanId(), taskBeanDefinition.toString());
+		logRegister(getConfigSource(), TFLogType.TASK_BEAN,taskBeanDefinition.getBeanId(), taskBeanDefinition.toString());
 	}
 }

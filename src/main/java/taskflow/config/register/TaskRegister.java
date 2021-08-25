@@ -77,7 +77,7 @@ public interface TaskRegister extends ConfigSourceAware{
 		//保留task.extra参数
 		ExtraArgsHolder.putTaskExtra(taskDefinition.getTaskId(), taskDefinition.getExtra());
 		
-		RegisterLogger.log(getConfigSource(), TFLogType.TASK,taskDefinition.getTaskId(), taskDefinition.toString());
+		logRegister(getConfigSource(), TFLogType.TASK,taskDefinition.getTaskId(), taskDefinition.toString());
 		return taskRoutingWrapDefinition;
 	}
 	
