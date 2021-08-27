@@ -26,11 +26,11 @@ public abstract class AbstractWork implements Work{
 		((MapWorkContext) workContext).setTaskRefExtraMap(taskRefExtraMap);
 	}
 	/**
-	 * 最好创建子类覆盖次方法以自定义异常处理
+	 * 最好创建子类覆盖方法以自定义异常处理
 	 */
 	public void dealExcpetion(Exception workException) {
-		workContext.holderException(((AbstractWorkContext)workContext).getCurrentTask(), workException);
-		workException.printStackTrace();
+		workContext.holderException(((AbstractWorkContext) workContext).getCurrentTask(), workException);
+		throw new TaskFlowException("TaskFlow's work '"+name+"' occur error!", workException);
 	}
 
 	/**
