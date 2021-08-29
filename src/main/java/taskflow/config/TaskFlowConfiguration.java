@@ -1,19 +1,18 @@
 package taskflow.config;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-
 import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
 import taskflow.config.bean.TaskflowConfiguration;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.constants.PropertyNameAndValue;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * TaskFlow配置器</p>
