@@ -92,4 +92,9 @@ public abstract class AbstractWork implements Work{
 	public void setWorkContext(WorkContext workContext) {
 		this.workContext = workContext;
 	}
+	//让SequentialRouteWork和CustomRouteWork都可以设置路由信息，以支持将某个SequentialRouteWork作为一个Task在其他的CustomRouteWork中执行时可以路由到其下一个Task
+	//通过配置Task或者Routing时指定extra来决定路由信息
+	public void setRoutingKey(String key) {
+		workContext.setRoutingKey(key);
+	}
 }

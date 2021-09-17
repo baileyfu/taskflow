@@ -1,0 +1,38 @@
+#tf-task打头开始定义Task
+tf-task:
+   findMaxTask:
+      ref: findNumberTaskBean
+      method: findMax
+      routing:
+         - toTask: findMinTask
+   findMaxTask:
+      ref: findNumberTaskBean
+      method: findMin
+      routing:
+         - toTask: getDiffTask
+   getDiffTask:
+      ref: findNumberTaskBean
+      method: getDiff
+      extra: {threshold:10}
+      routing:
+         - key: ok
+           toTask: soutOutOkTask
+           extra: HighPriority_OK
+         - key: no
+           toTask: soutOutNoTask
+           extra: HighPriority_NO
+   soutOutOkTask:
+      ref: findNumberTaskBean
+      method: soutOutOk
+      extra: LowPriority_OK
+   soutOutNoTask:
+      ref: findNumberTaskBean
+      method: soutOutNo
+      extra: LowPriority_NO
+#tf-work打头开始定义Work
+tf-work:
+   testWork:
+      start: findMaxTask
+      traceable: true
+      class: taskflow.work.CustomRouteWork
+   
