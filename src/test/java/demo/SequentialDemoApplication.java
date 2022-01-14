@@ -2,6 +2,7 @@ package demo;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import demo.work.MySequentialWork;
 import taskflow.work.Work;
 import taskflow.work.WorkFactory;
 
@@ -15,9 +16,9 @@ public class SequentialDemoApplication {
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:serial-task-config.xml");
 
-		Work testWork = WorkFactory.createWork("sequentialTaskWork");
+		Work testWork = WorkFactory.createWork("mySequentialTaskWork");
 		testWork.run();
-
+		System.out.println("Work's tagName is "+((MySequentialWork)testWork).getTagName());
 		context.close();
 	}
 }
