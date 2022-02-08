@@ -102,6 +102,9 @@ public class WorkDefinition {
 		private String name;
 		private String ref;
 		private String value;
+		public ConstructorArg() {
+			index = -1;
+		}
 		public int getIndex() {
 			return index;
 		}

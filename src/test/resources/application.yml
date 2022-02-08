@@ -1,4 +1,9 @@
-## TaskFlow（xml方式配置无效）
+## Log
+logging:
+  level:
+    root: info
+
+## TaskFlow配置(部分配置在非SpringBoot下无效)
 taskflow: 
   ignoreNoExists: true #为true，则注册Bean时，若指定的Class注册失败，不抛出异常；仅初始化生效，对Reload不生效；默认false
   reload:
@@ -7,4 +12,4 @@ taskflow:
     traceable: false #为true，则Work定义时traceable生效；为false，即便定义Work时traceable=true，也不会记录Task快照；默认false
   log:
     printable: true #打印注册的Work/Task；默认true
-    printDetail: true #打印时输出详情；默认false
+    printDetail: false #打印时输出详情；默认false

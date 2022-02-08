@@ -33,8 +33,4 @@ public class CustomRouteWork extends AbstractWork {
 	public void setFinish(TaskRoutingWrap finish) {
 		this.finish = finish;
 	}
-	
-	public void setRoutingKey(String key) {
-		workContext.setRoutingKey(key);
-	}
 }

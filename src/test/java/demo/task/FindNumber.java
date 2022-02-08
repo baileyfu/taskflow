@@ -47,12 +47,12 @@ public class FindNumber {
 
 	public void soutOutOk(WorkContext workContext) {
 		String show=workContext.getRuntimeArgs();
-		System.out.println("OK_"+show);
+		workContext.setResult("OK_"+show);
 	}
 
 	public void soutOutNo(WorkContext workContext) {
 		String show=workContext.getRuntimeArgs();
-		System.out.println("NO_"+show);
+		workContext.setResult("NO_"+show);
 	}
 
 }
