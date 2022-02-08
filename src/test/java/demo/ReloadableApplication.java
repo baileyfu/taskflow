@@ -1,7 +1,9 @@
 package demo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -10,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,10 +23,8 @@ import taskflow.annotation.EnableTaskFlow;
 import taskflow.config.TaskFlowBeanReloadProcessor;
 import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
-import taskflow.config.bean.TaskflowConfiguration;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.TaskRef;
-import taskflow.logger.ConsoleLogger;
 import taskflow.logger.TFLogger;
 import taskflow.work.SequentialRouteWork;
 import taskflow.work.Work;
@@ -32,7 +33,7 @@ import taskflow.work.context.TaskTrace;
 
 /**
  * taskflow2.0.1 <br/>
- * 支持非XML配置，可热加载；可以将Work/Task的配置存放到数据库，在程序运行中动态的修改Task<br/>
+ * 支持XML、YML、Prop配置Task/Work；支持热加载；建议将Work/Task的配置存放到数据库，修改更方便<br/>
  * 相关配置见application.yml
  * 
  * @author bailey
@@ -42,8 +43,10 @@ import taskflow.work.context.TaskTrace;
 @SpringBootApplication
 @RestController
 @Configuration
+@ImportResource("classpath*:task-config.xml")
 public class ReloadableApplication {
-	//自定义TFLogger将日志输出到指定地方
+	//自定义TFLogger将日志输出到指定地方；默认输出到Console
+	//@EnableTaskFlow方式开启，才会输出Work/Task的注册/重载信息
 	//@Bean
 	public TFLogger RegisterLogger() {
 		return new TFLogger() {
@@ -53,8 +56,10 @@ public class ReloadableApplication {
 			}
 		};
 	}
+	/** 可以单独定义TaskBean/Task/Work，也可以一次定义一组(Collection)，或者直接定义成TaskflowConfiguration */
+	//定义多个TaskBean
 	@Bean
-	public TaskflowConfiguration taskflowConfiguration() {
+	public Set<TaskBeanDefinition> taskflowTaskBeans() {
 		Set<TaskBeanDefinition> taskBeanDefinitions = new HashSet<>();
 		TaskBeanDefinition taskBeanDefinition = new TaskBeanDefinition();
 		taskBeanDefinition.setBeanId("TaskABean");
@@ -64,7 +69,12 @@ public class ReloadableApplication {
 		taskBeanDefinition.setBeanId("TaskCBean");
 		taskBeanDefinition.setBeanClazz(TaskC.class.getName());
 		taskBeanDefinitions.add(taskBeanDefinition);
-		Set<TaskDefinition> taskDefinitions = new HashSet<>();
+		return taskBeanDefinitions;
+	}
+	//定义多个Task
+	@Bean
+	public List<TaskDefinition> taskflowTasks() {
+		List<TaskDefinition> taskDefinitions = new ArrayList<>();
 		TaskDefinition taskDefinition = new TaskDefinition();
 		taskDefinition.setTaskId("Task1");
 		taskDefinition.setTaskBeanId("TaskABean");
@@ -82,7 +92,11 @@ public class ReloadableApplication {
 		taskDefinition.setMethod("method3");
 		taskDefinition.setExtra("{BBB:'DDD'}");
 		taskDefinitions.add(taskDefinition);
-		Set<WorkDefinition> workDefinitions = new HashSet<>();
+		return taskDefinitions;
+	}
+	//定义一个Work
+	@Bean
+	public WorkDefinition taskflowWork() {
 		WorkDefinition workDefinition = new WorkDefinition();
 		workDefinition.setWorkId("Work1");
 		workDefinition.setWorkClazz(SequentialRouteWork.class.getName());
@@ -100,12 +114,7 @@ public class ReloadableApplication {
 		taskRef.setTaskId("Task3");
 		taskRefs.add(taskRef);
 		workDefinition.setTaskRefs(taskRefs);
-		workDefinitions.add(workDefinition);
-		TaskflowConfiguration taskflowConfiguration = new TaskflowConfiguration();
-		taskflowConfiguration.setTaskBeanDefinitions(taskBeanDefinitions);
-		taskflowConfiguration.setTaskDefinitions(taskDefinitions);
-		taskflowConfiguration.setWorkDefinitions(workDefinitions);
-		return taskflowConfiguration;
+		return workDefinition;
 	}
 
 	@Autowired
@@ -113,6 +122,16 @@ public class ReloadableApplication {
 
 	@RequestMapping("/")
 	public String index() {
+		StringBuilder welcome=new StringBuilder("Welcome to TaskFlow Demo!<br/>");
+		welcome.append("You can<br/>");
+		welcome.append("<a href=\"/s\">test SequentialWork</a> and <a href=\"/r\">test RouteAbleWork</a><br/>");
+		welcome.append("or<br/>");
+		welcome.append("<a href=\"/reload\">reload</a> the <i>SequentialWork</i> above , then try test it again.");
+		return welcome.toString();
+	}
+	
+	@RequestMapping("/s")
+	public String sequentialWork() {
 		Work Work1 = WorkFactory.createWork("Work1");
 		Object result = Work1.run();
 		ArrayList<TaskTrace> taskTraces = Work1.getTaskTraces();
@@ -123,9 +142,24 @@ public class ReloadableApplication {
 		}
 		return result.toString();
 	}
+	
+	@RequestMapping("/r")
+	public String routeAbleWork() {
+		Work testWork = WorkFactory.createWork("testWork");
+		List<Integer> input = Arrays.asList(5, 7, 1, 0, 1, 3, 4, 5, 6, 4);
+        testWork.putContext("intList", input);
+		String result = testWork.run().getResult();
+		ArrayList<TaskTrace> taskTraces = testWork.getTaskTraces();
+		if (taskTraces != null) {
+			for (TaskTrace tt : taskTraces) {
+				System.out.println("testWork-[TRACE]" + tt);
+			}
+		}
+		return result;
+	}
 
 	//修改Work1的Task执行序列
-	@RequestMapping("/change")
+	@RequestMapping("/reload")
 	public String change() {
 		TaskBeanDefinition taskBeanDefinition = new TaskBeanDefinition();
 		taskBeanDefinition.setBeanId("TaskBBean");

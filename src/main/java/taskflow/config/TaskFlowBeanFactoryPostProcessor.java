@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.Ordered;
+import org.springframework.util.CollectionUtils;
 
 import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
@@ -19,17 +20,17 @@ import taskflow.work.WorkFactory;
 public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister implements ApplicationListener<ContextRefreshedEvent>, Ordered {
 	private TaskflowConfiguration taskflowConfiguration;
 	public TaskFlowBeanFactoryPostProcessor(TaskflowConfiguration taskflowConfiguration) {
-		this.taskflowConfiguration=taskflowConfiguration;
+		this.taskflowConfiguration = taskflowConfiguration;
 	}
 
 	private boolean initialized = false;
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		if (!initialized) {
+		if (!initialized && taskflowConfiguration != null) {
 			initialized = true;
 			boolean ignoreNoExists = Boolean.getBoolean(PropertyNameAndValue.WORK_NO_EXISTS_IGNORABLE);
 			Set<TaskBeanDefinition> taskBeanDefinitions = taskflowConfiguration.getTaskBeanDefinitions();
-			if (taskBeanDefinitions != null && taskBeanDefinitions.size() > 0) {
+			if (!CollectionUtils.isEmpty(taskBeanDefinitions)) {
 				//注册TaskBean
 				for (TaskBeanDefinition taskBeanDefinition : taskBeanDefinitions) {
 					try {
@@ -42,11 +43,8 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 						}
 					}
 				}
-				int registeredTask = 0;
-				int registeredWork = 0;
 				Set<TaskDefinition> taskDefinitions = taskflowConfiguration.getTaskDefinitions();
-				if (taskDefinitions != null && taskDefinitions.size() > 0) {
-					registeredTask = taskDefinitions.size();
+				if (!CollectionUtils.isEmpty(taskDefinitions)) {
 					//注册Task
 					for (TaskDefinition taskDefinition : taskDefinitions) {
 						try {
@@ -61,10 +59,9 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 							}
 						}
 					}
-					Set<WorkDefinition> workDefinitions=taskflowConfiguration.getWorkDefinitions();
-					if (workDefinitions != null && workDefinitions.size() > 0) {
-						registeredWork = workDefinitions.size();
-						//注册Work
+					Set<WorkDefinition> workDefinitions = taskflowConfiguration.getWorkDefinitions();
+					if (!CollectionUtils.isEmpty(workDefinitions)) {
+						// 注册Work
 						for (WorkDefinition workDefinition : workDefinitions) {
 							try {
 								registerWork(beanFactory, workDefinition);
@@ -81,12 +78,9 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 				//注册WorkFactory
 				registerWorkFactory(beanFactory);
 				beanFactory.getBean(WorkFactory.class);
-				
-				// 打印注册日志
-				directlyLog("Register List : ");
-				printRegisterLog(true);
-				directlyLog("Registered Total : [TaskBean : "+taskBeanDefinitions.size()+" , Task : "+registeredTask+" , Work : "+registeredWork+"]");
 			}
+			// 打印注册日志
+			printRegisterLog(true);
 		}
 	}
 	@Override

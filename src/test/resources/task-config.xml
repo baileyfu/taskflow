@@ -11,6 +11,7 @@
     <bean id="findNumberTaskBean" class="demo.task.FindNumber">
     	<property name="numberService" ref="numberService"/>
     </bean>
+    <bean id="calNumberTaskBean" class="demo.task.CalNumber"/>
     
     <!-- Task Define -->
 	<tf:task id="findMaxTask" ref="findNumberTaskBean" method="findMax">
@@ -27,8 +28,9 @@
 	<tf:task id="soutOutOkTask" ref="findNumberTaskBean" method="soutOutOk" extra="LowPriority_OK"/>
 	<tf:task id="soutOutNoTask" ref="findNumberTaskBean" method="soutOutNo" extra="LowPriority_NO"/>
     
+    <tf:task id="calTask" ref="calNumberTaskBean" method="cal"/>
     <!-- Work Define -->
     <tf:work id="testWork" start="findMaxTask" traceable="true" class="taskflow.work.CustomRouteWork"/>
-    
+    <tf:work id="subWork" start="calTask" class="taskflow.work.CustomRouteWork"/>
     <tf:workFactory/>
 </beans>

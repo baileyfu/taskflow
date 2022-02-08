@@ -53,7 +53,7 @@ public interface WorkRegister extends ConfigSourceAware{
 				}else {
 					valueHolder = new ValueHolder(new RuntimeBeanReference(arg.getRef()));
 				}
-				if(arg.getIndex()>0) {
+				if (arg.getIndex() >= 0) {
 					constructorArgumentValues.addIndexedArgumentValue(arg.getIndex(), valueHolder);
 				}else {
 					constructorArgumentValues.addGenericArgumentValue(valueHolder);
@@ -91,7 +91,7 @@ public interface WorkRegister extends ConfigSourceAware{
 			work.getPropertyValues().add(WorkPropName.TASKS, tasksMap);
 			if (taskRefExtraMap.size() > 0) {
 				//extra构造参数必须放到最后
-				constructorArgumentValues.addGenericArgumentValue(taskRefExtraMap);
+				constructorArgumentValues.addIndexedArgumentValue(taskRefExtraMap.size()+1, taskRefExtraMap);
 			}
         }
         if(!constructorArgumentValues.isEmpty()) {
@@ -102,7 +102,7 @@ public interface WorkRegister extends ConfigSourceAware{
 			registry.removeBeanDefinition(workDefinition.getWorkId());
 		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(work, workDefinition.getWorkId()), registry);
 		
-		logRegister(getConfigSource(), TFLogType.WORK,workDefinition.getWorkId(), workDefinition.toString());
+		logRegister(TFLogType.WORK,workDefinition.getWorkId(), workDefinition.toString());
 		return work;
 	}
 	
@@ -114,7 +114,7 @@ public interface WorkRegister extends ConfigSourceAware{
 		workerFactory.setBeanClass(WorkFactory.class);
 		BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(workerFactory, beanName), registry);
 		
-		logRegister(getConfigSource(), TFLogType.WORK_FACTORY,beanName, "[beanId:"+beanName+" , class:"+WorkFactory.class.getName()+"]");
+		logRegister(TFLogType.WORK_FACTORY,beanName, "[beanId:"+beanName+" , class:"+WorkFactory.class.getName()+"]");
 		return workerFactory;
 	}
 }

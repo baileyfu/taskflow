@@ -132,52 +132,16 @@
             </xsd:complexContent>
         </xsd:complexType>
     </xsd:element>
-    <xsd:attributeGroup name="workAttributes">
-        <!-- <xsd:attribute name="id" type="xsd:ID" use="required">
-            <xsd:annotation>
-            </xsd:annotation>
-        </xsd:attribute> -->
-        <xsd:attribute name="start" type="xsd:string">
-            <xsd:annotation>
-                <!--<xsd:appinfo>-->
-                <!--<tool:annotation kind="ref">-->
-                <!--<tool:expected-type type="com.lizo.busflow.station.Station"/>-->
-                <!--</tool:annotation>-->
-                <!--</xsd:appinfo>-->
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="maxTasks" type="xsd:integer" default="100000">
-            <![CDATA[ ]]>
-        </xsd:attribute>
-        <xsd:attribute name="finish" type="xsd:string">
-            <xsd:annotation>
-                <xsd:appinfo>
-                    <tool:annotation kind="ref">
-                        <!--<tool:expected-type type="java.lang.Object"/>-->
-                    </tool:annotation>
-                </xsd:appinfo>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="traceable" type="xsd:boolean" default="false">
-            <![CDATA[ ]]>
-        </xsd:attribute>
-        <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.CustomRouteWork">
-            <![CDATA[ ]]>
-        </xsd:attribute>
-    </xsd:attributeGroup>
 	<xsd:group name="workElements">
-        <xsd:sequence>
-            <xsd:element name="task-ref" minOccurs="0" maxOccurs="unbounded">
-            	<xsd:complexType mixed="true">
-		            <xsd:attribute name="value" type="xsd:string">
-			            <![CDATA[ ]]>
-			        </xsd:attribute>
-			        <xsd:attribute name="extra" type="xsd:string">
-			            <![CDATA[ ]]>
-			        </xsd:attribute>
-		        </xsd:complexType>
-            </xsd:element>
-			<xsd:element name="constructor-arg" minOccurs="0" maxOccurs="unbounded">
+		<xsd:sequence>
+			<xsd:element ref="description" minOccurs="0"/>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="constructor-arg"/>
+				<xsd:element ref="task-ref"/>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:element name="constructor-arg">
 				<xsd:complexType mixed="true">
 					<xsd:attribute name="index" type="xsd:string">
 						<xsd:annotation>
@@ -216,8 +180,49 @@
 					</xsd:attribute>
 				</xsd:complexType>
 			</xsd:element>
-        </xsd:sequence>
-    </xsd:group>
+            <xsd:element name="task-ref">
+            	<xsd:complexType mixed="true">
+		            <xsd:attribute name="value" type="xsd:string">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
+			        <xsd:attribute name="extra" type="xsd:string">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
+		        </xsd:complexType>
+            </xsd:element>
+    <xsd:attributeGroup name="workAttributes">
+        <!-- <xsd:attribute name="id" type="xsd:ID" use="required">
+            <xsd:annotation>
+            </xsd:annotation>
+        </xsd:attribute> -->
+        <xsd:attribute name="start" type="xsd:string">
+            <xsd:annotation>
+                <!--<xsd:appinfo>-->
+                <!--<tool:annotation kind="ref">-->
+                <!--<tool:expected-type type="com.lizo.busflow.station.Station"/>-->
+                <!--</tool:annotation>-->
+                <!--</xsd:appinfo>-->
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="maxTasks" type="xsd:integer" default="100000">
+            <![CDATA[ ]]>
+        </xsd:attribute>
+        <xsd:attribute name="finish" type="xsd:string">
+            <xsd:annotation>
+                <xsd:appinfo>
+                    <tool:annotation kind="ref">
+                        <!--<tool:expected-type type="java.lang.Object"/>-->
+                    </tool:annotation>
+                </xsd:appinfo>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="traceable" type="xsd:boolean" default="false">
+            <![CDATA[ ]]>
+        </xsd:attribute>
+        <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.CustomRouteWork">
+            <![CDATA[ ]]>
+        </xsd:attribute>
+    </xsd:attributeGroup>
 
     <xsd:element name="workFactory">
         <xsd:annotation>

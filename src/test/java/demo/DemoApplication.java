@@ -27,12 +27,14 @@ public class DemoApplication {
         Work testWork = WorkFactory.createWork("testWork");
         List<Integer> input = Arrays.asList(5, 7, 1, 0, 1, 3, 4, 5, 6, 4);
         testWork.putContext("intList", input);
-        testWork.run();
+		String result = testWork.run().getResult();
+		System.out.println(result);
 
         testWork = WorkFactory.createWork("testWork");
         input = Arrays.asList(52, 7, 1, -10, 1, 3, 4, 5, 6, 4);
         testWork.putContext("intList", input);
-        testWork.run();
+        result = testWork.run().getResult();
+		System.out.println(result);
         
         //输出Task执行时的WorkContext快照
         ArrayList<TaskTrace> taskTraces = testWork.getTaskTraces();
