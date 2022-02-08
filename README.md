@@ -258,7 +258,12 @@ public class DemoApplication {
 	</tr>
 	<tr>
 		<td>2.2.0</td>
-		<td>1.支持yml和property配置Work/Task</td>
-		<td>2021-?</td>
+		<td>1.支持yml和property配置Work/Task(终止)</td>
+		<td>2022-?</td>
+	</tr>
+	<tr>
+		<td>3.0.0</td>
+		<td>1.支持异步执行Task</td>
+		<td>2022-x</td>
 	</tr>
 </table>

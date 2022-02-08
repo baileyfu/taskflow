@@ -91,7 +91,7 @@ public interface WorkRegister extends ConfigSourceAware{
 			work.getPropertyValues().add(WorkPropName.TASKS, tasksMap);
 			if (taskRefExtraMap.size() > 0) {
 				//extra构造参数必须放到最后
-				constructorArgumentValues.addIndexedArgumentValue(taskRefExtraMap.size()+1, taskRefExtraMap);
+				constructorArgumentValues.addIndexedArgumentValue(constructorArgumentValues.getArgumentCount(), taskRefExtraMap);
 			}
         }
         if(!constructorArgumentValues.isEmpty()) {

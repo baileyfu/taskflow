@@ -21,10 +21,10 @@
     
     <tf:work id="mySequentialTaskWork" traceable="true" class="demo.work.MySequentialWork">
         <tf:constructor-arg value="TestName"/>
-    	<tf:constructor-arg index="1" value="15" type="int"/>
+    	<tf:constructor-arg value="15" type="int" index="1"/>
     	<tf:task-ref value="step1" extra="{x:2}"/>
-    	<tf:task-ref value="step3"/>
-    	<tf:task-ref value="step2"/>
+    	<tf:task-ref value="step3" extra="{y:1}"/>
+    	<tf:task-ref value="step2" extra="{z:false}"/>
     	<tf:task-ref value="step5"/>
     	<tf:task-ref value="end"/>
     </tf:work>
