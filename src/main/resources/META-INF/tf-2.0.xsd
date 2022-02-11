@@ -188,6 +188,9 @@
 			        <xsd:attribute name="extra" type="xsd:string">
 			            <![CDATA[ ]]>
 			        </xsd:attribute>
+			        <xsd:attribute name="async" type="xsd:boolean">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
 		        </xsd:complexType>
             </xsd:element>
     <xsd:attributeGroup name="workAttributes">

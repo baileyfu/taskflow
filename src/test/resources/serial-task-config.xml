@@ -12,6 +12,8 @@
     <bean id="taskBTaskBean" class="demo.task.TaskB"/>
     <bean id="taskCTaskBean" class="demo.task.TaskC"/>
     
+    <!-- <bean id="taskExecutorFactory" class="taskflow.config.bean.DefaultTaskExecutorFactory"/> -->
+    
     <tf:task id="step1" ref="taskATaskBean"/>
     <tf:task id="step2" ref="taskBTaskBean"/>
     <tf:task id="step3" ref="taskCTaskBean" method="method1"/>
@@ -22,10 +24,10 @@
     <tf:work id="mySequentialTaskWork" traceable="true" class="demo.work.MySequentialWork">
         <tf:constructor-arg value="TestName"/>
     	<tf:constructor-arg value="15" type="int" index="1"/>
-    	<tf:task-ref value="step1" extra="{x:2}"/>
-    	<tf:task-ref value="step3" extra="{y:1}"/>
-    	<tf:task-ref value="step2" extra="{z:false}"/>
-    	<tf:task-ref value="step5"/>
+    	<tf:task-ref value="step1" extra="{x:2}" async="true"/>
+    	<tf:task-ref value="step3" extra="{y:1}" async="false"/>
+    	<tf:task-ref value="step2" extra="{z:false}" async="true"/>
+    	<tf:task-ref value="step5" async="false"/>
     	<tf:task-ref value="end"/>
     </tf:work>
     

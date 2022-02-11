@@ -68,7 +68,9 @@ public interface TaskRegister extends ConfigSourceAware{
 			 * 此时taskRef必须是Task接口
 			 */
 			taskRoutingWrapDefinition.setBeanClass(DefaultTaskRoutingWrap.class);
-			taskRoutingWrapDefinition.getPropertyValues().add(TaskRoutingPropName.TASK, taskRef);
+			ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
+			constructorArgumentValues.addIndexedArgumentValue(0, taskRef);
+			taskRoutingWrapDefinition.setConstructorArgumentValues(constructorArgumentValues);
 		}
 		if (registry.containsBeanDefinition(taskDefinition.getTaskId())) 
 			registry.removeBeanDefinition(taskDefinition.getTaskId());

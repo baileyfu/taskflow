@@ -15,7 +15,7 @@ import taskflow.work.context.TaskTrace;
  * RouteAble Work
  * @author bailey
  */
-public class DemoApplication {
+public class RouteAbleDemoApplication {
 
 	public static void main(String[] args) {
 		//XML方式配置TaskFlow通过系统Property来设置参数

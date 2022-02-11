@@ -3,10 +3,10 @@ package taskflow.task;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ParameterNameDiscoverer;
-import org.springframework.util.StringUtils;
 
 import taskflow.annotation.Taskparam;
 import taskflow.work.Work;
@@ -20,7 +20,7 @@ public class TaskParameterResolver {
     private static ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
     private static final DefaultValue DEFAULT_VALUE = new DefaultValue();
     private static final Map<?,Object> primitiveDefaultValueMap = new HashMap<Object,Object>() {
-		private static final long serialVersionUID = 8334474156660330551L;
+	private static final long serialVersionUID = 8334474156660330551L;
 	{
         put(boolean.class, DEFAULT_VALUE.defaultBoolean);
         put(byte.class, DEFAULT_VALUE.defaultByte);
@@ -58,18 +58,18 @@ public class TaskParameterResolver {
                 continue;
             }
             String parameterName = methodParameter.getParameterName();
-            boolean requeire = false;
+            boolean required = false;
             if (methodParameter.getParameterAnnotation(Taskparam.class) != null) {
                 String parameterNameTemp = methodParameter.getParameterAnnotation(Taskparam.class).value();
                 if (!StringUtils.isEmpty(parameterNameTemp)) {
                     parameterName = parameterNameTemp;
                 }
-                requeire = methodParameter.getParameterAnnotation(Taskparam.class).require();
+                required = methodParameter.getParameterAnnotation(Taskparam.class).required();
             }
             Object candicate = work.getContext(parameterName);
             if (candicate == null) {
-                if (requeire) {
-                    throw new IllegalArgumentException("can not resolve parameter:" + parameterName);
+                if (required) {
+                    throw new IllegalArgumentException("the parameter '"+parameterName+"' is required , but not found in the WorkContext of Work which named '"+work.getName()+"' !");
                 } else {
                     candicate = nullValue(methodParameter.getParameterType());
                 }

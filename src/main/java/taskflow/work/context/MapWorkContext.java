@@ -9,19 +9,18 @@ import taskflow.work.Work;
  * Created by lizhou on 2017/3/14/014.
  */
 public class MapWorkContext extends AbstractWorkContext {
-	private Map<String, Object> context;
+	protected Map<String, Object> context;
 
 	public MapWorkContext(Class<? extends Work> workClazz) {
 		super(workClazz);
 		context = new HashMap<String, Object>();
 	}
+	public MapWorkContext(Class<? extends Work> workClazz,Map<String,String> taskRefExtraMap) {
+		super(workClazz);
+		context = new HashMap<String, Object>();
+		this.setTaskRefExtraMap(taskRefExtraMap);
+	}
 
-	public Map<String, Object> getContext() {
-		return context;
-	}
-	public void setContext(Map<String, Object> context) {
-		this.context = context;
-	}
 	public Object get(String parameterName) {
 		return context.get(parameterName);
 	}

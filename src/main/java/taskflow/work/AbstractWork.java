@@ -1,7 +1,7 @@
 package taskflow.work;
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.function.Function;
 
 import taskflow.constants.PropertyNameAndValue;
 import taskflow.exception.TaskFlowException;
@@ -21,22 +21,16 @@ public abstract class AbstractWork implements Work{
 	public AbstractWork() {
 		workContext = new MapWorkContext(this.getClass());
 	}
-	public AbstractWork(Map<String,String> taskRefExtraMap) {
-		workContext = new MapWorkContext(this.getClass());
-		((MapWorkContext) workContext).setTaskRefExtraMap(taskRefExtraMap);
+
+	public AbstractWork(Function<Work, WorkContext> WorkContextCreator) {
+		workContext = WorkContextCreator.apply(this);
 	}
-	/**
-	 * 最好创建子类覆盖方法以自定义异常处理
-	 */
-	public void dealExcpetion(Exception workException) {
-		workContext.holderException(((AbstractWorkContext) workContext).getCurrentTask(), workException);
-		throw new TaskFlowException("TaskFlow's work '"+name+"' occur error!", workException);
-	}
+
 
 	/**
 	 * 记录任务调用轨迹,并检查任务调用次数上限
 	 */
-	public void receive(TaskRoutingWrap stationRoutingWrap) throws Exception {
+	void receive(TaskRoutingWrap stationRoutingWrap) throws Exception {
 		((AbstractWorkContext)workContext).setCurrentTask(stationRoutingWrap.getName());
 		if (maxTasks > 0 && maxTasks <= executedTasks++) {
 			throw new TaskFlowException("the work '"+name+"''s maxTasks is:" + maxTasks);
@@ -96,5 +90,15 @@ public abstract class AbstractWork implements Work{
 	//通过配置Task或者Routing时指定extra来决定路由信息
 	public void setRoutingKey(String key) {
 		workContext.setRoutingKey(key);
+	}
+	/**
+	 * 处理Work执行过程中的异常;也包括各Task执行过程中hold的异常
+	 * 最好创建子类覆盖方法以自定义异常处理
+	 * @param workException
+	 *            Work.run时抛出的异常
+	 */
+	protected void dealExcpetion(Exception workException) {
+		workContext.holderException(((AbstractWorkContext) workContext).getCurrentTask(), workException);
+		throw new TaskFlowException("TaskFlow's work '"+name+"' occur error!", workException);
 	}
 }

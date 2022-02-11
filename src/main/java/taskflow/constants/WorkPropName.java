@@ -10,4 +10,6 @@ public class WorkPropName {
 	public static final String FINISH="finish";
 	
 	public static final String TASKS="tasks";
+	public static final String ASYNC_TASKS="asyncTasks";
+	public static final String TASK_EXECUTOR_FACTORY="taskExecutorFactory";
 }

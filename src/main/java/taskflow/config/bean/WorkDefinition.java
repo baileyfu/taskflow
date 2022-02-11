@@ -139,6 +139,7 @@ public class WorkDefinition {
 	public static class TaskRef{
 		private String taskId;
 		private String extra;
+		private boolean async;
 		public String getTaskId() {
 			return taskId;
 		}
@@ -151,9 +152,15 @@ public class WorkDefinition {
 		public void setExtra(String extra) {
 			this.extra = extra;
 		}
+		public boolean isAsync() {
+			return async;
+		}
+		public void setAsync(boolean async) {
+			this.async = async;
+		}
 		@Override
 		public String toString() {
-			return "TaskRef [taskId=" + taskId + ", extra=" + extra + "]";
+			return "TaskRef [taskId=" + taskId + ", extra=" + extra + ", async=" + async + "]";
 		}
 	}
 }

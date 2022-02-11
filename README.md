@@ -224,7 +224,10 @@ public class DemoApplication {
 }
 ```
 
-### 5.版本记录
+### 5.异步Task
+//TODO
+
+### 6.版本记录
 <table>
 	<tr>
 		<th>版本</th>
@@ -263,7 +266,8 @@ public class DemoApplication {
 	</tr>
 	<tr>
 		<td>3.0.0</td>
-		<td>1.支持异步执行Task</td>
-		<td>2022-x</td>
+		<td>1.支持异步执行Task<br/>
+		2.修改Work.dealException()方法为protected</td>
+		<td>2022-2-11</td>
 	</tr>
 </table>

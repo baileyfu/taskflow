@@ -1,8 +1,8 @@
 package taskflow.task;
 
 import taskflow.routing.Routing;
-import taskflow.work.AbstractWork;
 import taskflow.work.Work;
+import taskflow.work.WorkAgent;
 
 /**
  * 仅持有routing
@@ -10,16 +10,11 @@ import taskflow.work.Work;
 public abstract class AbstractTaskRoutingWrap implements TaskRoutingWrap {
 	protected String name;
 	private Routing routing;
-	public AbstractTaskRoutingWrap(){
-	}
-	public void doTask(Work work) {
-		try {
-			((AbstractWork)work).receive(this);
-			//执行Task的业务方法
-			invokeTaskMethod(work);
-		} catch (Exception e) {
-			work.dealExcpetion(e);
-		}
+
+	public void doTask(Work work) throws Exception {
+		WorkAgent.callReceive(work, this);
+		// 执行Task的业务方法
+		invokeTaskMethod(work);
 		if (routing != null) {
 			TaskRoutingWrap next = routing.doRouting(work.getWorkContext());
 			if (next != null) {
