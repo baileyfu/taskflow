@@ -20,6 +20,8 @@ import taskflow.logger.ConsoleLogger;
 import taskflow.logger.TFLogger;
 
 public class CustomTaskFlowRegister implements BeanFactoryAware, TaskBeanRegister, TaskRegister, WorkRegister{
+	public static final String NAME_OF_INIT_METHOD = "init";
+	
 	protected DefaultListableBeanFactory beanFactory;
 
 	@Override

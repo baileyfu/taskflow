@@ -13,7 +13,6 @@ import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
 import taskflow.config.bean.TaskflowConfiguration;
 import taskflow.config.bean.WorkDefinition;
-import taskflow.constants.PropertyNameAndValue;
 
 /**
  * TaskFlow配置器</p>
@@ -22,13 +21,16 @@ import taskflow.constants.PropertyNameAndValue;
  */
 @Configuration
 public class TaskFlowConfiguration {
-	@Bean(initMethod="init")
+	@Bean(initMethod = TaskFlowPropertySetterBean.NAME_OF_INIT_METHOD)
+	public TaskFlowPropertySetterBean taskFlowPropertySetter(ApplicationContext applicationContext) {
+		return new TaskFlowPropertySetterBean();
+	}
+	@Bean(initMethod=TaskFlowBeanReloadProcessor.NAME_OF_INIT_METHOD)
 	public TaskFlowBeanReloadProcessor taskFlowBeanReloadProcessor(Environment environment) {
-		PropertyNameAndValue.setProperties(environment::getProperty);
 		return new TaskFlowBeanReloadProcessor();
 	}
 
-	@Bean(initMethod="init")
+	@Bean(initMethod=TaskFlowBeanFactoryPostProcessor.NAME_OF_INIT_METHOD)
 	public TaskFlowBeanFactoryPostProcessor taskFlowBeanFactoryPostProcessor(ApplicationContext applicationContext) {
 		Set<TaskBeanDefinition> taskBeanDefinitions = new HashSet<>();
 		Set<TaskDefinition> taskDefinitions = new HashSet<>();

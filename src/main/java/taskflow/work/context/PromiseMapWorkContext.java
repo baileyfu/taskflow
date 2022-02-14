@@ -3,7 +3,9 @@ package taskflow.work.context;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
+import taskflow.constants.PropertyNameAndValue;
 import taskflow.exception.TaskFlowException;
 import taskflow.work.SequentialRouteWork;
 
@@ -32,20 +34,29 @@ public class PromiseMapWorkContext extends MapWorkContext {
 	public Object get(String parameterName) {
 		//只有同步Task才等待,异步Task直接获取,参数不存在则直接报错
 		if (!context.containsKey(parameterName) && !currentWork.isCurrentTaskAsync()) {
-			if (paramsLatch == null) {
-				paramsLatch = new HashMap<>();
-			}
-			CountDownLatch countDownLatch = paramsLatch.get(parameterName);
-			if (countDownLatch == null) {
-				countDownLatch = new CountDownLatch(1);
-				paramsLatch.put(parameterName, countDownLatch);
-			}
-			try {
-				countDownLatch.await();
-				//理论上不存在同名参数
-				paramsLatch.remove(parameterName);
-			} catch (InterruptedException e) {
-				throw new TaskFlowException(String.format("Error waiting to set parameters which is '%s' for Work '%s'!", parameterName,currentWork.getName()), e);
+			long timeout = Long.getLong(PropertyNameAndValue.TASK_ASYNC_TIMEOUT);
+			//timeout为0则表示不执行任何等待策略
+			if (timeout != 0L) {
+				if (paramsLatch == null) {
+					paramsLatch = new HashMap<>();
+				}
+				CountDownLatch countDownLatch = paramsLatch.get(parameterName);
+				if (countDownLatch == null) {
+					countDownLatch = new CountDownLatch(1);
+					paramsLatch.put(parameterName, countDownLatch);
+				}
+				try {
+					if (timeout > 0) {
+						countDownLatch.await(timeout, TimeUnit.MILLISECONDS);
+					}else {
+						//timeout<0则表示一直等待,直到所需参数被设置
+						countDownLatch.await();
+					}
+					//理论上不存在同名参数
+					paramsLatch.remove(parameterName);
+				} catch (InterruptedException e) {
+					throw new TaskFlowException(String.format("Error waiting to set parameters which is '%s' for Task named '%s' of Work '%s'!", parameterName,getCurrentTask(),currentWork.getName()), e);
+				}
 			}
 		}
 		return super.get(parameterName);

@@ -4,7 +4,6 @@ import taskflow.task.Task;
 import taskflow.work.Work;
 
 public class TaskA implements Task{
-
 	@Override
 	public void execute(Work work) {
 		try {

@@ -10,6 +10,8 @@ taskflow:
     enable: true #是否可运行时重载；默认true
   work:
     traceable: false #为true，则Work定义时traceable生效；为false，即便定义Work时traceable=true，也不会记录Task快照；默认false
+  task:
+    asyncTimeOut: 30000 #异步Task传参超时时间，单位：毫秒
   log:
     printable: true #打印注册的Work/Task；默认true
     printDetail: false #打印时输出详情；默认false

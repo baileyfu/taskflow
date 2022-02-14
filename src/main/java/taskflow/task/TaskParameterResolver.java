@@ -10,6 +10,7 @@ import org.springframework.core.ParameterNameDiscoverer;
 
 import taskflow.annotation.Taskparam;
 import taskflow.work.Work;
+import taskflow.work.context.AbstractWorkContext;
 import taskflow.work.context.WorkContext;
 
 /**
@@ -69,7 +70,7 @@ public class TaskParameterResolver {
             Object candicate = work.getContext(parameterName);
             if (candicate == null) {
                 if (required) {
-                    throw new IllegalArgumentException("the parameter '"+parameterName+"' is required , but not found in the WorkContext of Work which named '"+work.getName()+"' !");
+                    throw new IllegalArgumentException("the parameter '"+parameterName+"' of Task named '"+((AbstractWorkContext)work.getWorkContext()).getCurrentTask()+"' is required , but not found in the WorkContext of Work named '"+work.getName()+"' !");
                 } else {
                     candicate = nullValue(methodParameter.getParameterType());
                 }

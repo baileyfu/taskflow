@@ -225,7 +225,30 @@ public class DemoApplication {
 ```
 
 ### 5.异步Task
-//TODO
+Sequential Work支持异步执行Task（RouteAble Work不支持，因为每一个Task是否执行由上一个Task决定）。
+当Sequential Work中的某些Task跟其它Task没有依赖或执行顺序要求时，可以将该Task设置为异步方式执行，方式如下：
+
+```
+    <tf:work id="mySequentialTaskWork" traceable="true" class="demo.work.MySequentialWork">
+        <tf:constructor-arg value="TestName"/>
+	    	<tf:constructor-arg value="15" type="int" index="1"/>
+	    	<!-- 将task-ref的async属性设置为true，则该Task将以异步方式执行 -->
+	    	<tf:task-ref value="step1" async="true"/>
+	    	<tf:task-ref value="step3" async="false"/>
+	    	<tf:task-ref value="step2" async="true"/>
+	    	<!-- async默认取值为false，所以同步Task可以不设置 -->
+	    	<tf:task-ref value="step5"/>
+	    	<tf:task-ref value="end"/>
+    </tf:work>
+```
+开启异步Task时有几点需要注意：
+##### 1）、异步/同步Task间的参数传递
+异步Task的入参必须不能依赖其它异步/同步Task传入（主要是多个异步Task可能会出现相互依赖参数的情况而形成死锁）。但同步Task可以依赖异步Task传入参数，同步Task在执行时，若发现所需的入参不存在，而同时存在尚未执行的异步Task，则会挂起当前线程，等待所需参数设置后再继续往下执行。
+
+##### 2）、
+
+##### 3）、
+
 
 ### 6.版本记录
 <table>
