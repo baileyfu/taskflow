@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 
 import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
+import taskflow.config.bean.TaskFlowPropertySetterBean;
 import taskflow.config.bean.TaskflowConfiguration;
 import taskflow.config.bean.WorkDefinition;
 

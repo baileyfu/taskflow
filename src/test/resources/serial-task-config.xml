@@ -5,6 +5,7 @@
        xmlns:xcache="http://www.xteam.org/xcache"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-2.0.xsd">
+    <!-- 直接由ClassPathXmlApplicationContext加载时无法将属性值加入到Environment,该类可完成此操作 -->
 	<bean id="customConfig" class="taskflow.springframework.context.support.PropsToEnvironment">  
 	    <property name="locations">  
 	        <array>  
@@ -12,6 +13,8 @@
 	        </array>  
 	    </property>  
 	</bean>
+	<!-- 打印work注册记录 -->
+	<bean id="defaultRegisterLogPrinter" class="taskflow.config.bean.DefaultRegisterLogPrinter" init-method="init"/>
 
     <bean id="taskATaskBean" class="demo.task.TaskA"/>
     <bean id="taskBTaskBean" class="demo.task.TaskB"/>

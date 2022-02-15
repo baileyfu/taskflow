@@ -6,7 +6,15 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-2.0.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-    <!-- Bean Define -->
+	<bean id="customConfig" class="taskflow.springframework.context.support.PropsToEnvironment">  
+	    <property name="locations">  
+	        <array>  
+	            <value>classpath:application.properties</value>  
+	        </array>  
+	    </property>  
+	</bean>
+	<bean id="defaultRegisterLogPrinter" class="taskflow.config.bean.DefaultRegisterLogPrinter" init-method="init"/>
+    <!-- TaskBean Define -->
     <bean id="numberService" class="demo.service.NumberService"/>
     <bean id="findNumberTaskBean" class="demo.task.FindNumber">
     	<property name="numberService" ref="numberService"/>

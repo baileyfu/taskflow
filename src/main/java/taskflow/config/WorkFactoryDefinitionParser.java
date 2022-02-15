@@ -9,6 +9,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+import taskflow.config.bean.TaskFlowPropertySetterBean;
 import taskflow.config.register.WorkRegister;
 import taskflow.enums.ConfigSource;
 import taskflow.work.WorkFactory;

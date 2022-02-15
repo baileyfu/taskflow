@@ -1,4 +1,4 @@
-package taskflow.config;
+package taskflow.config.bean;
 
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
