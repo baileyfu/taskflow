@@ -38,9 +38,21 @@ public class RegisterLogRecorder implements BeanFactoryAware{
 	}
 
 	protected void printRegisterLog(boolean printDetail) {
+		doPrint(registerLogger, printDetail, this.getClass());
+	}
+	protected void log(String content) {
+		if (registerLogger != null && Boolean.getBoolean(PropertyNameAndValue.LOG_PRINTABLE)) {
+			registerLogger.log(content);
+		}
+	}
+	
+	protected void directlyLog(String content) {
+		registerLogger.log(content);
+	}
+	private static synchronized void doPrint(TFLogger registerLogger,boolean printDetail,Class<?> callerClass) {
 		if (registerLogger != null && Boolean.getBoolean(PropertyNameAndValue.LOG_PRINTABLE)) {
 			if (ConfigSourceAware.REGISTER_LOG.size() > 0) {
-				boolean reload=getClass()==TaskFlowBeanReloadProcessor.class;
+				boolean reload = callerClass == TaskFlowBeanReloadProcessor.class;
 				registerLogger.log("Print " + (reload ? "reload" : "register") + " list");
 				if (printDetail && Boolean.getBoolean(PropertyNameAndValue.LOG_PRINT_DETAIL)) {
 					ConfigSourceAware.REGISTER_LOG.values().stream().forEach(registerLogger::log);
@@ -54,14 +66,5 @@ public class RegisterLogRecorder implements BeanFactoryAware{
 		}
 		ConfigSourceAware.REGISTER_LOG.clear();
 		ConfigSourceAware.REGISTER_COUNT.clear();
-	}
-	protected void log(String content) {
-		if (registerLogger != null && Boolean.getBoolean(PropertyNameAndValue.LOG_PRINTABLE)) {
-			registerLogger.log(content);
-		}
-	}
-	
-	protected void directlyLog(String content) {
-		registerLogger.log(content);
 	}
 }

@@ -2,14 +2,14 @@
 以Athlizo的business-flow为蓝本修改而成的任务流框架.原项目地址:
 - github:[https://github.com/Athlizo/business-flow-parent](https://github.com/Athlizo/business-flow-parent)
 
-本项目增加了部分功能，支持SpringBoot，支持动态修改等；并调整了原框架中的一些概念：
+本项目增加了部分功能，支持SpringBoot，支持动态修改，支持异步执行等；并调整了原框架中的一些概念：
 - Work：表示一项工作；由若干个任务组成，并维护各项任务执行时所需的上下文环境；根据执行方式分为下面两种：
   - Sequential Work：顺序工作；其任务按创建时的顺序依次执行；
   - RouteAble Work：可路由工作；任务根据条件决定执行顺序；
 - Task：表示一项任务；其定义应该是一个无状态方法；
 - Routing：路由；只有RouteAble Work才能定义Routing。决定当前Task执行完成后，指向下一个Task；若不指定或未匹配到任何Task则跳转到finish Task，执行完成后，整个Work执行完成，若未指定finish Task，则直接执行结束；
 
-在执行任务中，任意Task抛出异常将中断Work的执行。推荐实现Work的dealExcpetion方法自定义异常的处理。
+在执行任务中，任意同步Task抛出异常将中断Work的执行。推荐实现Work的dealExcpetion方法自定义异常的处理。已经在执行的异步Task不受异常影响，但尚未执行的异步Task将不再执行。
 
 ### 2.API介绍
 #### 2.1 WorkContext接口
@@ -242,12 +242,17 @@ Sequential Work支持异步执行Task（RouteAble Work不支持，因为每一�
     </tf:work>
 ```
 开启异步Task时有几点需要注意：
-##### 1）、异步/同步Task间的参数传递
-异步Task的入参必须不能依赖其它异步/同步Task传入（主要是多个异步Task可能会出现相互依赖参数的情况而形成死锁）。但同步Task可以依赖异步Task传入参数，同步Task在执行时，若发现所需的入参不存在，而同时存在尚未执行的异步Task，则会挂起当前线程，等待所需参数设置后再继续往下执行。
+##### 1）、Task执行顺序
+Task在执行时依然按照定义的顺序调用，若为异步Task则触发调用后立即执行下一个Task。
 
-##### 2）、
+比如有A、B、C三个Task，B为异步，A、C为同步，首先会调用A，等A执行完成后，才会触发调用异步执行B，然后再调用C，也即B和C是并行执行。
 
-##### 3）、
+这样做是因为若异步Task所需的入参由同步Task传入，只需将异步Task放到同步Task之后即可。如若一个异步Task无任何依赖，可将其执行顺序放在最前面。
+
+##### 2）、异步/同步Task间的参数传递
+异步Task最好是可独立执行的，其入参不依赖其它异步Task传入（主要是多个异步Task可能会出现相互依赖参数的情况而形成死锁），但可依赖同步Task传入，如上1描述。
+
+同步Task可以依赖异步Task传入参数。同步Task在执行时，若发现所需的入参不存在，而同时存在尚未执行的异步Task，则会挂起当前线程，等待所需参数设置后再继续往下执行。为防止依赖参数本就不存在或参数名写错，而导致执行同步Task的线程长时间挂起，可通过参数taskflow.task.asyncTimeOut来设置等待时间，单位为毫秒，默认30000。
 
 
 ### 6.版本记录
@@ -290,7 +295,8 @@ Sequential Work支持异步执行Task（RouteAble Work不支持，因为每一�
 	<tr>
 		<td>3.0.0</td>
 		<td>1.支持异步执行Task<br/>
-		2.修改Work.dealException()方法为protected</td>
+		2.修改Work.dealException()方法为protected<br/>
+		3.xml形式注册work支持输出注册记录</td>
 		<td>2022-2-11</td>
 	</tr>
 </table>

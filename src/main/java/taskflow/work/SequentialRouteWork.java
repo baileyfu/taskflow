@@ -28,6 +28,8 @@ public class SequentialRouteWork extends AbstractWork {
 	private LinkedHashMap<String, TaskRoutingWrap> tasks;
 	private TaskExecutorFactory taskExecutorFactory;
 	private HashSet<String> asyncTasks;
+	//不对executedAsyncTask的递增操作进行并发控制,主要因为“是否存在尚未执行的异步Task”本就是额外加的一个弱校验,其结果的有效性不对预期设计构成大的影响。
+	private int executedAsyncTask;
 
 	public SequentialRouteWork() {
 		super((work) -> new PromiseMapWorkContext((SequentialRouteWork)work));
@@ -81,6 +83,7 @@ public class SequentialRouteWork extends AbstractWork {
 		Executor executor = taskExecutorFactory == null ? null : taskExecutorFactory.getExecutor();
 		if (executor == null) {
 			executeSynchronously(task);
+			executedAsyncTask++;
 		} else {
 			executor.execute(() -> {
 				try {
@@ -88,6 +91,8 @@ public class SequentialRouteWork extends AbstractWork {
 				} catch (Exception e) {
 					preDealException(e);
 					this.dealExcpetion(e);
+				} finally {
+					executedAsyncTask++;
 				}
 			});
 		}
@@ -104,8 +109,13 @@ public class SequentialRouteWork extends AbstractWork {
 	public void setTaskExecutorFactory(TaskExecutorFactory taskExecutorFactory) {
 		this.taskExecutorFactory = taskExecutorFactory;
 	}
-	//当前执行的Task是否异步
-	public boolean isCurrentTaskAsync() {
-		return asyncTasks != null && asyncTasks.contains(((AbstractWorkContext) workContext).getCurrentTask());
+	//当前执行的Task是否需要等待参数
+	boolean isCurrentTaskNeedWait4Params() {
+		//不存在异步Task或所有异步Task都已执行完成则无需等待
+		if (asyncTasks == null || executedAsyncTask >= asyncTasks.size()) {
+			return false;
+		}
+		//只有当前Task为同步时才需要等待
+		return !asyncTasks.contains(((AbstractWorkContext) workContext).getCurrentTask());
 	}
 }

@@ -3,7 +3,7 @@ logging:
   level:
     root: info
 
-## TaskFlow配置(部分配置在非SpringBoot下无效)
+## TaskFlow配置
 taskflow: 
   ignoreNoExists: true #为true，则注册Bean时，若指定的Class注册失败，不抛出异常；仅初始化生效，对Reload不生效；默认false
   reload:
