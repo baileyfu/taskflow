@@ -3,6 +3,7 @@ package taskflow.enums;
 public enum TagAttribute {
 	TASK_METHOD("method"),
 	TASK_EXTRA("extra"),
+	TASK_ASYNC("async"),
 	
 	TASK_ROUTING("routing"),
 	TASK_ROUTING_KEY("key"),

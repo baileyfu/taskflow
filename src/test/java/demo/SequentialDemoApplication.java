@@ -13,12 +13,17 @@ import taskflow.work.WorkFactory;
  * @date 2021年8月19日
  */
 public class SequentialDemoApplication {
-	public static void main(String[] args) {
+	
+	public static void main(String[] args) throws Exception{
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:serial-task-config.xml");
-
-		Work testWork = WorkFactory.createWork("mySequentialTaskWork");
-		testWork.run();
-		System.out.println("Work's tagName is "+((MySequentialWork)testWork).getTagName());
-		context.close();
+		try {
+			Work testWork = WorkFactory.createWork("mySequentialTaskWork");
+			testWork.run();
+			System.out.println("Work's tagName is "+((MySequentialWork)testWork).getTagName());
+		}catch(Exception e) {
+			throw e;
+		}finally {
+			context.close();
+		}
 	}
 }

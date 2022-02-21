@@ -2,14 +2,14 @@
 以Athlizo的business-flow为蓝本修改而成的任务流框架.原项目地址:
 - github:[https://github.com/Athlizo/business-flow-parent](https://github.com/Athlizo/business-flow-parent)
 
-本项目增加了部分功能，支持SpringBoot，支持动态修改等；并调整了原框架中的一些概念：
+本项目增加了部分功能，支持SpringBoot，支持动态修改，支持异步执行等；并调整了原框架中的一些概念：
 - Work：表示一项工作；由若干个任务组成，并维护各项任务执行时所需的上下文环境；根据执行方式分为下面两种：
   - Sequential Work：顺序工作；其任务按创建时的顺序依次执行；
   - RouteAble Work：可路由工作；任务根据条件决定执行顺序；
 - Task：表示一项任务；其定义应该是一个无状态方法；
 - Routing：路由；只有RouteAble Work才能定义Routing。决定当前Task执行完成后，指向下一个Task；若不指定或未匹配到任何Task则跳转到finish Task，执行完成后，整个Work执行完成，若未指定finish Task，则直接执行结束；
 
-在执行任务中，任意Task抛出异常将中断Work的执行。推荐实现Work的dealExcpetion方法自定义异常的处理。
+在执行任务中，任意同步Task抛出异常将中断Work的执行。推荐实现Work的dealExcpetion方法自定义异常的处理。已经在执行的异步Task不受异常影响，但尚未执行的异步Task将不再执行。
 
 ### 2.API介绍
 #### 2.1 WorkContext接口
@@ -224,7 +224,84 @@ public class DemoApplication {
 }
 ```
 
-### 5.版本记录
+### 5.异步Task
+Sequential Work支持异步执行Task（RouteAble Work不支持，因为每一个Task是否执行由上一个Task决定）。
+当Sequential Work中的某些Task跟其它Task没有依赖或执行顺序要求时，可以将该Task设置为异步方式执行，方式如下：
+
+```
+    <tf:work id="mySequentialTaskWork" traceable="true" class="demo.work.MySequentialWork">
+        <tf:constructor-arg value="TestName"/>
+	    	<tf:constructor-arg value="15" type="int" index="1"/>
+	    	<!-- 将task-ref的async属性设置为true，则该Task将以异步方式执行 -->
+	    	<tf:task-ref value="step1" async="true"/>
+	    	<tf:task-ref value="step3" async="false"/>
+	    	<tf:task-ref value="step2" async="true"/>
+	    	<!-- async默认取值为false，所以同步Task可以不设置 -->
+	    	<tf:task-ref value="step5"/>
+	    	<tf:task-ref value="end"/>
+    </tf:work>
+```
+开启异步Task时有几点需要注意：
+##### 1）、Task执行顺序
+Task在执行时依然按照定义的顺序调用，若为异步Task则触发调用后立即执行下一个Task。
+
+比如有A、B、C三个Task，B为异步，A、C为同步，首先会调用A，等A执行完成后，才会触发调用异步执行B，然后再调用C，也即B和C是并行执行。
+
+这样做是因为若异步Task所需的入参由同步Task传入，只需将异步Task放到同步Task之后即可。如若一个异步Task无任何依赖，可将其执行顺序放在最前面。
+
+##### 2）、异步/同步Task间的参数传递
+异步Task最好是可独立执行的，其入参不依赖其它异步Task传入（主要是多个异步Task可能会出现相互依赖参数的情况而形成死锁），但可依赖同步Task传入，如上1描述。
+
+同步Task可以依赖异步Task传入参数。同步Task在执行时，若发现所需的入参不存在，而同时存在尚未执行的异步Task，则会挂起当前线程，等待所需参数设置后再继续往下执行。为防止依赖参数本就不存在或参数名写错，而导致执行同步Task的线程长时间挂起，可通过参数taskflow.task.asyncTimeOut来设置等待时间，单位为毫秒，默认30000。
+
+##### 3）、线程池
+可以自定义异步执行的线程池，只需要实现taskflow.config.bean.TaskExecutorFactory接口，并交由Spring管理即可。
+
+如果未自定义线程池，系统会使用默认实现：taskflow.config.bean.DefaultTaskExecutorFactory，其corePoolSize=0，maximumPoolSize=4；
+
+系统并不总是创建这个默认线程池，只有当发现work中有配置异步task时，才尝试查找/注册TaskExecutorFactory的实例。
+
+### 6.参数详情
+<table>
+	<tr>
+		<th>参数名</th>
+		<th>含义</th>
+		<th>默认值</th>
+	</tr>
+	<tr>
+		<td>taskflow.ignoreNoExists</td>
+		<td>当配置的work、taskbean、task所定义的Bean不存在时是否忽略；默认抛出异常终止注册</td>
+		<td>false</td>
+	</tr>
+	<tr>
+		<td>taskflow.reload.enable</td>
+		<td>允许运行时动态重载work</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>taskflow.work.traceable</td>
+		<td>允许记录task执行时的参数情况；开启时每个task执行会记录下当时workcontext的快照</td>
+		<td>false</td>
+	</tr>
+	<tr>
+		<td>taskflow.task.asyncTimeOut</td>
+		<td>同步task等待异步task传参时的等待时间；单位：毫秒</td>
+		<td>30000</td>
+	</tr>
+	<tr>
+		<td>taskflow.log.printable</td>
+		<td>允许输出work注册记录；系统启动或重载时输出加载了哪些work</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>taskflow.log.printDetail</td>
+		<td>输出work注册记录时是否输出详情；详情包含了work对应的类、方法、参数名等</td>
+		<td>false</td>
+	</tr>
+</table>
+
+
+### 版本记录
 <table>
 	<tr>
 		<th>版本</th>
@@ -258,7 +335,14 @@ public class DemoApplication {
 	</tr>
 	<tr>
 		<td>2.2.0</td>
-		<td>1.支持yml和property配置Work/Task</td>
-		<td>2021-?</td>
+		<td>1.支持yml和property配置Work/Task(终止)</td>
+		<td>2022-?</td>
+	</tr>
+	<tr>
+		<td>3.0.0</td>
+		<td>1.支持异步执行Task<br/>
+		2.修改Work.dealException()方法为protected<br/>
+		3.xml形式注册work支持输出注册记录</td>
+		<td>2022-2-11</td>
 	</tr>
 </table>

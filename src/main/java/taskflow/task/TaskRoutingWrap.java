@@ -13,5 +13,5 @@ public interface TaskRoutingWrap {
 	 * 
 	 * @param work
 	 */
-	void doTask(Work work);
+	void doTask(Work work)throws Exception;
 }

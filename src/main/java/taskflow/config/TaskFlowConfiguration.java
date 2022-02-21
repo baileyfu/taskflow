@@ -1,18 +1,19 @@
 package taskflow.config;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+
 import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
+import taskflow.config.bean.TaskFlowPropertySetterBean;
 import taskflow.config.bean.TaskflowConfiguration;
 import taskflow.config.bean.WorkDefinition;
-import taskflow.constants.PropertyNameAndValue;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * TaskFlow配置器</p>
@@ -21,13 +22,16 @@ import java.util.Set;
  */
 @Configuration
 public class TaskFlowConfiguration {
-	@Bean(initMethod="init")
+	@Bean(initMethod = TaskFlowPropertySetterBean.NAME_OF_INIT_METHOD)
+	public TaskFlowPropertySetterBean taskFlowPropertySetter(ApplicationContext applicationContext) {
+		return new TaskFlowPropertySetterBean();
+	}
+	@Bean(initMethod=TaskFlowBeanReloadProcessor.NAME_OF_INIT_METHOD)
 	public TaskFlowBeanReloadProcessor taskFlowBeanReloadProcessor(Environment environment) {
-		PropertyNameAndValue.setProperties(environment::getProperty);
 		return new TaskFlowBeanReloadProcessor();
 	}
 
-	@Bean(initMethod="init")
+	@Bean(initMethod=TaskFlowBeanFactoryPostProcessor.NAME_OF_INIT_METHOD)
 	public TaskFlowBeanFactoryPostProcessor taskFlowBeanFactoryPostProcessor(ApplicationContext applicationContext) {
 		Set<TaskBeanDefinition> taskBeanDefinitions = new HashSet<>();
 		Set<TaskDefinition> taskDefinitions = new HashSet<>();

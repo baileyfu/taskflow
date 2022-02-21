@@ -85,6 +85,6 @@ public class TaskFlowBeanFactoryPostProcessor extends CustomTaskFlowRegister imp
 	}
 	@Override
 	public int getOrder() {
-		return Ordered.LOWEST_PRECEDENCE;
+		return Ordered.LOWEST_PRECEDENCE - 1;
 	}
 }

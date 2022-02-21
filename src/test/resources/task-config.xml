@@ -6,7 +6,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-2.0.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-    <!-- Bean Define -->
+	<bean id="customConfig" class="taskflow.springframework.context.support.PropsToEnvironment">  
+	    <property name="locations">
+	        <array>  
+	            <value>classpath:application.properties</value> 
+	        </array>
+	    </property>
+	</bean>
+	<!-- XML形式注册时，若想输出注册记录，需手动配置此Bean；注解形式（SpringBoot）注册时无需配置 -->
+	<bean id="defaultRegisterLogPrinter" class="taskflow.config.bean.DefaultRegisterLogPrinter" init-method="init"/>
+    <!-- TaskBean Define -->
     <bean id="numberService" class="demo.service.NumberService"/>
     <bean id="findNumberTaskBean" class="demo.task.FindNumber">
     	<property name="numberService" ref="numberService"/>

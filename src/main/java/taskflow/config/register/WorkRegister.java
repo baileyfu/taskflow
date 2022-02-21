@@ -2,9 +2,11 @@ package taskflow.config.register;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.support.ManagedMap;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.util.Assert;
 
+import taskflow.config.bean.DefaultTaskExecutorFactory;
+import taskflow.config.bean.TaskExecutorFactory;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.ConstructorArg;
 import taskflow.config.bean.WorkDefinition.TaskRef;
@@ -74,25 +78,52 @@ public interface WorkRegister extends ConfigSourceAware{
                 RuntimeBeanReference finishBean = new RuntimeBeanReference(finish);
                 work.getPropertyValues().add(WorkPropName.FINISH, finishBean);
             }
-        }else if(SequentialRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有SerialRouteWork才解析sequence
+		} else if(SequentialRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有SerialRouteWork才解析sequence
         	ManagedMap<String, RuntimeBeanReference> tasksMap=new ManagedMap<>();
 			ArrayList<TaskRef> taskRefs = workDefinition.getTaskRefs();
 			Assert.isTrue(taskRefs != null && taskRefs.size() > 0, "the Work '"+workDefinition.getWorkId()+"' must has a task-ref at least!");
-			Map<String, String> taskRefExtraMap = new HashMap<>();
+			Map<String, String> taskRefExtraMap = null;
+			HashSet<String> asyncTasks = null;
 			for (TaskRef taskRef : taskRefs) {
-				if(StringUtils.isEmpty(taskRef.getTaskId())) {
+				String taskId = taskRef.getTaskId();
+				if (StringUtils.isEmpty(taskId)) {
 					throw new NullPointerException("the Work '"+workDefinition.getWorkId()+"' has a empty task-ref");
 				}
-				tasksMap.put(taskRef.getTaskId(), new RuntimeBeanReference(taskRef.getTaskId()));
-				if (!StringUtils.isBlank(taskRef.getExtra())) {
-					taskRefExtraMap.put(taskRef.getTaskId(), taskRef.getExtra());
+				tasksMap.put(taskId, new RuntimeBeanReference(taskId));
+				String extra = taskRef.getExtra();
+				if (!StringUtils.isEmpty(extra)) {
+					if (taskRefExtraMap == null) {
+						taskRefExtraMap = new HashMap<>();
+					}
+					taskRefExtraMap.put(taskId, extra.trim());
+				}
+				if (taskRef.isAsync()) {
+					if (asyncTasks == null) {
+						asyncTasks = new HashSet<>();
+					}
+					asyncTasks.add(taskId);
+				}
+			}
+			if (taskRefExtraMap != null) {
+				//extra构造参数必须放到最后
+				constructorArgumentValues.addIndexedArgumentValue(constructorArgumentValues.getArgumentCount(), taskRefExtraMap);
+			}
+			if (asyncTasks != null) {
+				work.getPropertyValues().add(WorkPropName.ASYNC_TASKS, asyncTasks);
+				try {
+					TaskExecutorFactory taskExecutorFactoryInstance = ((BeanFactory) registry).getBean(TaskExecutorFactory.class);
+					work.getPropertyValues().add(WorkPropName.TASK_EXECUTOR_FACTORY, taskExecutorFactoryInstance);
+				} catch (Exception e) {
+					logWarn("No bean definition of TaskExecutorFactory found , use default TaskExecutorFactory.");
+					if(!registry.containsBeanDefinition(WorkPropName.TASK_EXECUTOR_FACTORY)) {
+						RootBeanDefinition taskExecutorFactory = new RootBeanDefinition();
+						taskExecutorFactory.setBeanClass(DefaultTaskExecutorFactory.class);
+						BeanDefinitionReaderUtils.registerBeanDefinition(new BeanDefinitionHolder(taskExecutorFactory, WorkPropName.TASK_EXECUTOR_FACTORY), registry);
+					}
+					work.getPropertyValues().add(WorkPropName.TASK_EXECUTOR_FACTORY, new RuntimeBeanReference(WorkPropName.TASK_EXECUTOR_FACTORY));
 				}
 			}
 			work.getPropertyValues().add(WorkPropName.TASKS, tasksMap);
-			if (taskRefExtraMap.size() > 0) {
-				//extra构造参数必须放到最后
-				constructorArgumentValues.addIndexedArgumentValue(taskRefExtraMap.size()+1, taskRefExtraMap);
-			}
         }
         if(!constructorArgumentValues.isEmpty()) {
         	work.setConstructorArgumentValues(constructorArgumentValues);

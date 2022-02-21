@@ -56,6 +56,7 @@ public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
 					TaskRef taskRef=new TaskRef();
 					taskRef.setTaskId(elm.getAttribute(VALUE_ATTRIBUTE));
 					taskRef.setExtra(elm.getAttribute(TagAttribute.TASK_EXTRA.NAME));
+					taskRef.setAsync(Boolean.valueOf(elm.getAttribute(TagAttribute.TASK_ASYNC.NAME)));
 					taskRefs.add(taskRef);
 				}else if(Tag.CONSTRUCTOR_ARG.getTagName().equalsIgnoreCase(elm.getTagName())) {
 					ConstructorArg constructorArg = new ConstructorArg();

@@ -11,5 +11,5 @@ import java.lang.annotation.*;
 public @interface Taskparam {
     String value() default "";
 
-    boolean require() default true;
+    boolean required() default true;
 }

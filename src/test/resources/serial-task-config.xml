@@ -3,14 +3,24 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xmlns:tf="http://www.xteam.org/taskflow"
        xmlns:xcache="http://www.xteam.org/xcache"
-       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-2.0.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+        http://www.xteam.org/taskflow http://www.xteam.org/taskflow/tf-2.0.xsd">
+    <!-- 直接由ClassPathXmlApplicationContext加载时无法将属性值加入到Environment,该类可完成此操作 -->
+	<bean id="customConfig" class="taskflow.springframework.context.support.PropsToEnvironment">  
+	    <property name="locations">  
+	        <array>  
+	            <value>classpath:application.properties</value>  
+	        </array>  
+	    </property>  
+	</bean>
+	<!-- 打印work注册记录；SpringBoot时无需配置此Bean -->
+	<bean id="defaultRegisterLogPrinter" class="taskflow.config.bean.DefaultRegisterLogPrinter" init-method="init"/>
 
     <bean id="taskATaskBean" class="demo.task.TaskA"/>
     <bean id="taskBTaskBean" class="demo.task.TaskB"/>
     <bean id="taskCTaskBean" class="demo.task.TaskC"/>
+    
+    <!-- <bean id="taskExecutorFactory" class="taskflow.config.bean.DefaultTaskExecutorFactory"/> -->
     
     <tf:task id="step1" ref="taskATaskBean"/>
     <tf:task id="step2" ref="taskBTaskBean"/>
@@ -21,11 +31,11 @@
     
     <tf:work id="mySequentialTaskWork" traceable="true" class="demo.work.MySequentialWork">
         <tf:constructor-arg value="TestName"/>
-    	<tf:constructor-arg index="1" value="15" type="int"/>
-    	<tf:task-ref value="step1" extra="{x:2}"/>
-    	<tf:task-ref value="step3"/>
-    	<tf:task-ref value="step2"/>
-    	<tf:task-ref value="step5"/>
+    	<tf:constructor-arg value="15" type="int" index="1"/>
+    	<tf:task-ref value="step1" extra="{x:2}" async="true"/>
+    	<tf:task-ref value="step3" extra="{y:1}" async="false"/>
+    	<tf:task-ref value="step2" extra="{z:false}" async="true"/>
+    	<tf:task-ref value="step5" async="false"/>
     	<tf:task-ref value="end"/>
     </tf:work>
     

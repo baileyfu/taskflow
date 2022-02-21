@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
+import taskflow.work.SequentialRouteWork;
 import taskflow.work.Work;
 
 /**
@@ -27,7 +28,7 @@ public class TaskMethodInvoker {
     private final MethodParameter[] parameters;
 
 
-    public TaskMethodInvoker(Object bean, String methodName) throws NoSuchMethodException {
+	public TaskMethodInvoker(Object bean, String methodName) throws NoSuchMethodException {
         Assert.notNull(bean, "Task-ref Bean is required");
         Assert.notNull(methodName, "Task Method name is required");
         this.bean = bean;
@@ -48,7 +49,7 @@ public class TaskMethodInvoker {
         this.parameters = initMethodParameters();
     }
 
-    public void invokeTask(Work work) throws Exception {
+	public void invokeTask(Work work) throws Exception {
         Object[] agrs = TaskParameterResolver.resolve(parameters, work);
         doInvoke(agrs);
     }

@@ -13,7 +13,8 @@ import taskflow.work.Work;
  */
 public class DefaultTaskRoutingWrap extends AbstractTaskRoutingWrap {
 	private Task task;
-	public void setTask(Task task) {
+
+	public DefaultTaskRoutingWrap(Task task) {
 		this.task = task;
 	}
 	@Override

@@ -143,7 +143,7 @@
 	</xsd:group>
 	<xsd:element name="constructor-arg">
 				<xsd:complexType mixed="true">
-					<xsd:attribute name="index" type="xsd:string">
+					<xsd:attribute name="index" type="xsd:string" default="-1">
 						<xsd:annotation>
 							<xsd:documentation>
 							<![CDATA[ The exact index of the argument in the constructor argument list. Only needed to avoid ambiguities, e.g. in case of 2 arguments of the exact same type. ]]>
@@ -186,6 +186,9 @@
 			            <![CDATA[ ]]>
 			        </xsd:attribute>
 			        <xsd:attribute name="extra" type="xsd:string">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
+			        <xsd:attribute name="async" type="xsd:boolean">
 			            <![CDATA[ ]]>
 			        </xsd:attribute>
 		        </xsd:complexType>

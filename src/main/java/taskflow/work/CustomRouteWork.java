@@ -13,15 +13,18 @@ public class CustomRouteWork extends AbstractWork {
 	private TaskRoutingWrap finish;
 	public CustomRouteWork() {
 	}
+
 	public WorkContext run() {
 		try {
-			start.doTask(this);
-		} catch (Exception e) {
-			dealExcpetion(e);
-		} finally {
-			if (finish != null) {
-				finish.doTask(this);
+			try {
+				start.doTask(this);
+			} finally {
+				if (finish != null) {
+					finish.doTask(this);
+				}
 			}
+		} catch (Exception e) {
+			this.dealExcpetion(e);
 		}
 		return workContext;
 	}

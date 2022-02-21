@@ -13,8 +13,11 @@ import taskflow.work.SequentialRouteWork;
 import taskflow.work.Work;
 
 public abstract class AbstractWorkContext extends ExtraArgsHolder implements WorkContext {
+	//仅CustomRouteWork需要
 	private String previousTask;
-	private String currentTask;
+	//异步情况下各线程当前task不同
+	private ThreadLocal<String> currentTask;
+	
 	private String routingKey;
 	// finish task执行完后设置此值,保存需要返回的数据
 	private Object result;
@@ -27,14 +30,15 @@ public abstract class AbstractWorkContext extends ExtraArgsHolder implements Wor
 	
 	public AbstractWorkContext(Class<? extends Work> workClazz) {
 		this.workClazz = workClazz;
+		this.currentTask = new ThreadLocal<>();
 	}
 	
 	public void setCurrentTask(String currentTask) {
-		this.previousTask = this.currentTask;
-		this.currentTask = currentTask;
+		this.previousTask = this.currentTask.get();
+		this.currentTask.set(currentTask);
 	}
 	public String getCurrentTask() {
-		return currentTask;
+		return currentTask.get();
 	}
 	public void setTaskRefExtraMap(Map<String, String> taskRefExtraMap) {
 		this.taskRefExtraMap = taskRefExtraMap;
@@ -51,19 +55,20 @@ public abstract class AbstractWorkContext extends ExtraArgsHolder implements Wor
 	}
 	@Override
 	public String getRuntimeArgs() {
-		if(currentTask==null) 
+		String currentTaskValue = currentTask.get();
+		if (currentTaskValue == null)
 			return null;
 		String runtimeArgs = null;
 		if (SequentialRouteWork.class.isAssignableFrom(workClazz)) {
 			if (taskRefExtraMap != null) {
-				runtimeArgs = taskRefExtraMap.get(currentTask);
+				runtimeArgs = taskRefExtraMap.get(currentTaskValue);
 			}
 		} else if (CustomRouteWork.class.isAssignableFrom(workClazz)) {
 			if (previousTask != null) {
-				runtimeArgs = getTaskRoutingExtra(previousTask, currentTask);
+				runtimeArgs = getTaskRoutingExtra(previousTask, currentTaskValue);
 			}
 		}
-		return StringUtils.isEmpty(runtimeArgs) ? getTaskExtra(currentTask) : runtimeArgs;
+		return StringUtils.isEmpty(runtimeArgs) ? getTaskExtra(currentTaskValue) : runtimeArgs;
 	}
 	@Override
 	public JSONObject getRuntimeArgsJSON() {
