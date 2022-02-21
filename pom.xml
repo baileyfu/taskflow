@@ -10,14 +10,14 @@
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<taskflow.version>2.1.0-RELEASE</taskflow.version>
+		<taskflow.version>3.0.0-RELEASE</taskflow.version>
 		<fastjson.version>1.2.78</fastjson.version>
 	</properties>
 	<profiles>
 		<profile>
 			<id>snapshots</id>
 			<properties>
-				<taskflow.version>2.1.0-SNAPSHOT</taskflow.version>
+				<taskflow.version>3.0.0-SNAPSHOT</taskflow.version>
 			</properties>
 		</profile>
 	</profiles>
