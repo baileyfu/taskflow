@@ -63,8 +63,14 @@ public class RegisterLogRecorder implements BeanFactoryAware{
 				}
 				registerLogger.log((reload?"Reload":"Register")+" Summary : [TaskBean : "+ConfigSourceAware.REGISTER_COUNT.get(TFLogType.TASK_BEAN)+" , Task : "+ConfigSourceAware.REGISTER_COUNT.get(TFLogType.TASK)+" , Work : "+ConfigSourceAware.REGISTER_COUNT.get(TFLogType.WORK)+"]");
 			}
+			if (ConfigSourceAware.WARN.size() > 0) {
+				ConfigSourceAware.WARN.forEach((warn)->{
+					registerLogger.log(String.format("***WARN : %s", warn));
+				});
+			}
 		}
 		ConfigSourceAware.REGISTER_LOG.clear();
 		ConfigSourceAware.REGISTER_COUNT.clear();
+		ConfigSourceAware.WARN.clear();
 	}
 }

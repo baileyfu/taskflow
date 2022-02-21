@@ -13,7 +13,7 @@
 	        </array>  
 	    </property>  
 	</bean>
-	<!-- 打印work注册记录 -->
+	<!-- 打印work注册记录；SpringBoot时无需配置此Bean -->
 	<bean id="defaultRegisterLogPrinter" class="taskflow.config.bean.DefaultRegisterLogPrinter" init-method="init"/>
 
     <bean id="taskATaskBean" class="demo.task.TaskA"/>

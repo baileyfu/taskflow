@@ -15,7 +15,9 @@ public class DefaultTaskExecutorFactory implements TaskExecutorFactory {
 	public Executor getExecutor() {
 		if (executor == null) {
 			synchronized (TaskExecutorFactory.class) {
-				executor = new ThreadPoolExecutor(0, MAX_POOL_SIZE, 60L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
+				if (executor == null) {
+					executor = new ThreadPoolExecutor(0, MAX_POOL_SIZE, 60L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
+				}
 			}
 		}
 		return executor;

@@ -254,8 +254,54 @@ Task在执行时依然按照定义的顺序调用，若为异步Task则触发调
 
 同步Task可以依赖异步Task传入参数。同步Task在执行时，若发现所需的入参不存在，而同时存在尚未执行的异步Task，则会挂起当前线程，等待所需参数设置后再继续往下执行。为防止依赖参数本就不存在或参数名写错，而导致执行同步Task的线程长时间挂起，可通过参数taskflow.task.asyncTimeOut来设置等待时间，单位为毫秒，默认30000。
 
+##### 3）、线程池
+可以自定义异步执行的线程池，只需要实现taskflow.config.bean.TaskExecutorFactory接口，并交由Spring管理即可。
 
-### 6.版本记录
+如果未自定义线程池，系统会使用默认实现：taskflow.config.bean.DefaultTaskExecutorFactory，其corePoolSize=0，maximumPoolSize=4；
+
+系统并不总是创建这个默认线程池，只有当发现work中有配置异步task时，才尝试查找/注册TaskExecutorFactory的实例。
+
+### 6.参数详情
+<table>
+	<tr>
+		<th>参数名</th>
+		<th>含义</th>
+		<th>默认值</th>
+	</tr>
+	<tr>
+		<td>taskflow.ignoreNoExists</td>
+		<td>当配置的work、taskbean、task所定义的Bean不存在时是否忽略；默认抛出异常终止注册</td>
+		<td>false</td>
+	</tr>
+	<tr>
+		<td>taskflow.reload.enable</td>
+		<td>允许运行时动态重载work</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>taskflow.work.traceable</td>
+		<td>允许记录task执行时的参数情况；开启时每个task执行会记录下当时workcontext的快照</td>
+		<td>false</td>
+	</tr>
+	<tr>
+		<td>taskflow.task.asyncTimeOut</td>
+		<td>同步task等待异步task传参时的等待时间；单位：毫秒</td>
+		<td>30000</td>
+	</tr>
+	<tr>
+		<td>taskflow.log.printable</td>
+		<td>允许输出work注册记录；系统启动或重载时输出加载了哪些work</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>taskflow.log.printDetail</td>
+		<td>输出work注册记录时是否输出详情；详情包含了work对应的类、方法、参数名等</td>
+		<td>false</td>
+	</tr>
+</table>
+
+
+### 版本记录
 <table>
 	<tr>
 		<th>版本</th>

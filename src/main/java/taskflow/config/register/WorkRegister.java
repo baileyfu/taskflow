@@ -114,7 +114,7 @@ public interface WorkRegister extends ConfigSourceAware{
 					TaskExecutorFactory taskExecutorFactoryInstance = ((BeanFactory) registry).getBean(TaskExecutorFactory.class);
 					work.getPropertyValues().add(WorkPropName.TASK_EXECUTOR_FACTORY, taskExecutorFactoryInstance);
 				} catch (Exception e) {
-					System.out.println("***[TaskFlow] No bean definition of TaskExecutorFactory found , use default TaskExecutorFactory.");
+					logWarn("No bean definition of TaskExecutorFactory found , use default TaskExecutorFactory.");
 					if(!registry.containsBeanDefinition(WorkPropName.TASK_EXECUTOR_FACTORY)) {
 						RootBeanDefinition taskExecutorFactory = new RootBeanDefinition();
 						taskExecutorFactory.setBeanClass(DefaultTaskExecutorFactory.class);
