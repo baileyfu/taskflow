@@ -9,6 +9,24 @@
 - Task：表示一项任务；其定义应该是一个无状态方法；
 - Routing：路由；只有RouteAble Work才能定义Routing。决定当前Task执行完成后，指向下一个Task；若不指定或未匹配到任何Task则跳转到finish Task，执行完成后，整个Work执行完成，若未指定finish Task，则直接执行结束；
 
+<table>
+	<tr>
+		<td rowspan="2">Sequential Work</td>
+		<td>Synchronous</td>
+		<td><img src="image/SW_Sync.jpeg"</td>
+	</tr>
+	<tr>
+		<td>Asynchronous</td>
+		<td><img src="image/SW_Async.jpeg"/></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td colspan="2">RouteAble Work</td>
+		<td><img src="image/RW.jpeg"/></td>
+		<td></td>
+	</tr>
+</table>
+
 在执行任务中，任意同步Task抛出异常将中断Work的执行。推荐实现Work的dealExcpetion方法自定义异常的处理。已经在执行的异步Task不受异常影响，但尚未执行的异步Task将不再执行。
 
 ### 2.API介绍
