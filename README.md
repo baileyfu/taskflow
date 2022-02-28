@@ -18,12 +18,10 @@
 	<tr>
 		<td>Asynchronous</td>
 		<td><img src="image/SW_Async.jpeg"/></td>
-		<td></td>
 	</tr>
 	<tr>
 		<td colspan="2">RouteAble Work</td>
 		<td><img src="image/RW.jpeg"/></td>
-		<td></td>
 	</tr>
 </table>
 
