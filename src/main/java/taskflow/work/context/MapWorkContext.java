@@ -21,8 +21,9 @@ public class MapWorkContext extends AbstractWorkContext {
 		this.setTaskRefExtraMap(taskRefExtraMap);
 	}
 
-	public Object get(String parameterName) {
-		return context.get(parameterName);
+	@SuppressWarnings("unchecked")
+	public <T> T get(String parameterName) {
+		return (T)context.get(parameterName);
 	}
 	public void put(String key, Object value) {
 		context.put(key, value);

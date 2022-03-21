@@ -1,6 +1,6 @@
 package taskflow.task;
 
-import taskflow.work.Work;
+import taskflow.work.context.WorkContext;
 
 /**
  * 一个Task可以看成是一个单独的业务处理逻辑<br/>
@@ -15,5 +15,5 @@ public interface Task {
 	 * 
 	 * @param work
 	 */
-	void execute(Work work);
+	void execute(WorkContext workContext);
 }

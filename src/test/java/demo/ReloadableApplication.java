@@ -23,6 +23,7 @@ import taskflow.annotation.EnableTaskFlow;
 import taskflow.config.TaskFlowBeanReloadProcessor;
 import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
+import taskflow.config.bean.TaskDefinition.RouteDefinition;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.TaskRef;
 import taskflow.logger.TFLogger;
@@ -33,7 +34,7 @@ import taskflow.work.context.TaskTrace;
 
 /**
  * taskflow2.0.1 <br/>
- * 支持XML、YML、Prop配置Task/Work；支持热加载；建议将Work/Task的配置存放到数据库，修改更方便<br/>
+ * 支持XML、Prop配置Task/Work；支持热加载；建议将Work/Task的配置存放到数据库，修改更方便<br/>
  * 相关配置见application.yml
  * 
  * @author bailey
@@ -46,7 +47,7 @@ import taskflow.work.context.TaskTrace;
 @ImportResource("classpath*:task-config.xml")
 public class ReloadableApplication {
 	//自定义TFLogger将日志输出到指定地方；默认输出到Console
-	//@EnableTaskFlow方式开启，才会输出Work/Task的注册/重载信息
+	//@EnableTaskFlow注解自动开启;手从创建ApplicationContext时需配置taskflow.config.bean.DefaultRegisterLogPrinter才会输出日志
 	//@Bean
 	public TFLogger RegisterLogger() {
 		return new TFLogger() {
@@ -91,6 +92,8 @@ public class ReloadableApplication {
 		taskDefinition.setTaskBeanId("TaskCBean");
 		taskDefinition.setMethod("method3");
 		taskDefinition.setExtra("{BBB:'DDD'}");
+		//RouteableWork需要设置
+		taskDefinition.setRouteDefinitions(new HashSet<RouteDefinition>());
 		taskDefinitions.add(taskDefinition);
 		return taskDefinitions;
 	}

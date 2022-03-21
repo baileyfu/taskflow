@@ -18,7 +18,7 @@ public interface WorkContext {
 	 * @param key
 	 * @return
 	 */
-    Object get(String key);
+	<T> T get(String key);
     /**
      * 设置上下文参数
      * @param key

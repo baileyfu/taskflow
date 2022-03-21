@@ -8,9 +8,6 @@ public class MySequentialWork extends SequentialRouteWork {
 	private String tagName;
 	private int type;
 
-	public MySequentialWork() {
-	}
-
 	public MySequentialWork(Map<String,String> extraArgsMap) {
 		super(extraArgsMap);
 	}

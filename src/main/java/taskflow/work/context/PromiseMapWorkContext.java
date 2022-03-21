@@ -32,7 +32,7 @@ public class PromiseMapWorkContext extends MapWorkContext {
 	}
 
 	@Override
-	public Object get(String parameterName) {
+	public <T> T get(String parameterName) {
 		//只有同步Task才等待,异步Task直接获取,参数不存在则直接报错
 		if (!context.containsKey(parameterName) && WorkAgent.callIsCurrentTaskNeedWait4Params(currentWork)) {
 			long timeout = Long.getLong(PropertyNameAndValue.TASK_ASYNC_TIMEOUT);

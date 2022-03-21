@@ -31,7 +31,8 @@
 	    <tf:routing toTask="getDiffTask"/>
 	</tf:task>
 	<tf:task id="getDiffTask" ref="findNumberTaskBean" method="getDiff" extra="{threshold:10}">
-	    <tf:routing key="ok" toTask="soutOutOkTask" extra="HighPriority_OK"/>
+		<!-- pattern取值:string或regex,默认string -->
+	    <tf:routing key="ok" toTask="soutOutOkTask" extra="HighPriority_OK" patten="string"/>
 	    <tf:routing key="no" toTask="soutOutNoTask" extra="HighPriority_NO"/>
 	</tf:task>
 	<tf:task id="soutOutOkTask" ref="findNumberTaskBean" method="soutOutOk" extra="LowPriority_OK"/>

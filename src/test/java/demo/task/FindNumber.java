@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.service.NumberService;
 import taskflow.annotation.Taskparam;
-import taskflow.work.Work;
 import taskflow.work.context.WorkContext;
 
 /**
@@ -24,16 +23,16 @@ public class FindNumber {
 		this.numberService = numberService;
 	}
 
-	public void findMax(Work work) {
-		List<Integer> input = work.getContext("intList");
+	public void findMax(WorkContext workContext) {
+		List<Integer> input = workContext.get("intList");
 		int maxValue = numberService.findMax(input);
-		work.putContext("maxValue", maxValue);
+		workContext.put("maxValue", maxValue);
 	}
 
-	public void findMin(Work work) {
-		List<Integer> input = work.getContext("intList");
+	public void findMin(WorkContext workContext) {
+		List<Integer> input = workContext.get("intList");
 		int minValue = numberService.findMin(input);
-		work.putContext("minValue", minValue);
+		workContext.put("minValue", minValue);
 	}
 
 	public void getDiff(@Taskparam("maxValue") int a, int minValue,WorkContext workContext) {

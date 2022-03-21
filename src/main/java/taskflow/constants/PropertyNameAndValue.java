@@ -22,7 +22,7 @@ public class PropertyNameAndValue {
 		System.setProperty(LOG_PRINTABLE, "true");
 		System.setProperty(LOG_PRINT_DETAIL, "false");
 	}
-
+	public static void init() {}
 	public static void setProperties(Function<String, String> getter) {
 		if (getter != null) {
 			String ignorable = getter.apply("taskflow.ignoreNoExists");

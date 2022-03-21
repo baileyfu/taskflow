@@ -363,7 +363,10 @@ Task在执行时依然按照定义的顺序调用，若为异步Task则触发调
 	</tr>
 	<tr>
 		<td>3.1.0</td>
-		<td>1.work可复用</td>
+		<td>1.work可复用<br/>
+		2.Task接口参数由Work修改为WorkContext<br/>
+		3.所有Task的如参不再接受Work,统一为WorkContext<br/>
+		</td>
 		<td>2022-?-?</td>
 	</tr>
 </table>

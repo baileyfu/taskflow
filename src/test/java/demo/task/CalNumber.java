@@ -1,10 +1,10 @@
 package demo.task;
 
-import taskflow.work.Work;
+import taskflow.work.context.WorkContext;
 
 public class CalNumber {
 
-	public void cal(Work work) {
+	public void cal(WorkContext workContext) {
 		System.out.println("sub work execute...");
 	}
 	
