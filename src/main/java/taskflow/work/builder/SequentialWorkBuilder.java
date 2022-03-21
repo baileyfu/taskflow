@@ -1,9 +1,9 @@
 package taskflow.work.builder;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 import taskflow.config.bean.TaskExecutorFactory;
 import taskflow.exception.TaskFlowException;
@@ -19,19 +19,9 @@ import taskflow.work.Work;
  */
 public class SequentialWorkBuilder extends WorkBuilder{
 	private static final String ASYNC = "ASYNC@";
-	private Map<String, Task> taskMap = null;
-	private Map<String, String> taskRefExtraMap = null;
-	protected SequentialWorkBuilder(SequentialRouteWork work) {
-		taskMap = new LinkedHashMap<>();
-	}
-	public WorkBuilder addTask(Task task) {
-		taskMap.put(task.toString(), task);
-		return this;
-	}
-	public WorkBuilder addTask(Task task,String extra) {
-		taskRefExtraMap = taskRefExtraMap == null ? new HashMap<>() : taskRefExtraMap;
-		taskRefExtraMap.put(task.toString(), extra);
-		return addTask(task);
+	private Function<Map<String, String>,SequentialRouteWork> workCreater;
+	SequentialWorkBuilder(Function<Map<String, String>,SequentialRouteWork> workCreater) {
+		this.workCreater = workCreater;
 	}
 	public SequentialWorkBuilder addSyncTask(Task task) {
 		taskMap.put(ASYNC + task.toString(), task);
@@ -47,7 +37,7 @@ public class SequentialWorkBuilder extends WorkBuilder{
 	}
 	
 	public Work build(TaskExecutorFactory taskExecutorFactory) {
-		SequentialRouteWork work = new SequentialRouteWork(taskRefExtraMap);
+		SequentialRouteWork work = workCreater.apply(taskRefExtraMap);
 		work.setTaskExecutorFactory(taskExecutorFactory);
 		try {
 			for (Entry<String, Task> entry : taskMap.entrySet()) {
