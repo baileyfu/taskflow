@@ -46,7 +46,7 @@ public class TaskDefinitionParser implements BeanDefinitionParser,TaskRegister {
 					RouteDefinition routeDefinition=new RouteDefinition();
 					routeDefinition.setKey(e.getAttribute(TagAttribute.TASK_ROUTING_KEY.NAME));
 					routeDefinition.setToTask(e.getAttribute(TagAttribute.TASK_ROUTING_TO_TASK.NAME));
-					routeDefinition.setPatten(e.getAttribute(TagAttribute.TASK_ROUTING_PATTEN.NAME));
+					routeDefinition.setPattern(e.getAttribute(TagAttribute.TASK_ROUTING_PATTERN.NAME));
 					routeDefinition.setExtra(e.getAttribute(TagAttribute.TASK_ROUTING_EXTRA.NAME));
 					routeDefinitions.add(routeDefinition);
 				}

@@ -13,6 +13,8 @@ public abstract class AbstractTaskRoutingWrap implements TaskRoutingWrap {
 
 	public void doTask(Work work) throws Exception {
 		WorkAgent.callReceive(work, this);
+		// 将key重置为null,防止前一个task设置的key对当前task的执行造成影响
+		work.getWorkContext().setRoutingKey(null);
 		// 执行Task的业务方法
 		invokeTaskMethod(work);
 		if (routing != null) {

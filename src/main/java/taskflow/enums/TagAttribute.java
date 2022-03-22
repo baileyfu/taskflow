@@ -8,7 +8,7 @@ public enum TagAttribute {
 	TASK_ROUTING("routing"),
 	TASK_ROUTING_KEY("key"),
 	TASK_ROUTING_TO_TASK("toTask"),
-	TASK_ROUTING_PATTEN("patten"),
+	TASK_ROUTING_PATTERN("pattern"),
 	TASK_ROUTING_EXTRA("extra"),
 	
 	WORK_START("start"),

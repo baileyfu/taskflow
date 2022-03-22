@@ -73,7 +73,7 @@ public class TaskDefinition {
 	public static class RouteDefinition{
 		private String key;
 		private String toTask;
-		private String patten;
+		private String pattern;
 		private String extra;
 		public String getKey() {
 			return key;
@@ -87,11 +87,11 @@ public class TaskDefinition {
 		public void setToTask(String toTask) {
 			this.toTask = toTask;
 		}
-		public String getPatten() {
-			return patten;
+		public String getPattern() {
+			return pattern;
 		}
-		public void setPatten(String patten) {
-			this.patten = patten;
+		public void setPattern(String pattern) {
+			this.pattern = pattern;
 		}
 		public String getExtra() {
 			return extra;
@@ -124,7 +124,7 @@ public class TaskDefinition {
 		}
 		@Override
 		public String toString() {
-			return "RouteDefinition [key=" + key + ", toTask=" + toTask + ", patten=" + patten + ", extra=" + extra
+			return "RouteDefinition [key=" + key + ", toTask=" + toTask + ", pattern=" + pattern + ", extra=" + extra
 					+ "]";
 		}
 	}

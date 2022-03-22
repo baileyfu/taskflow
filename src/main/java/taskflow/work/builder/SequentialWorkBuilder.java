@@ -1,6 +1,6 @@
 package taskflow.work.builder;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -17,20 +17,31 @@ import taskflow.work.Work;
  * @author bailey
  * @date 2022年3月21日
  */
-public class SequentialWorkBuilder extends WorkBuilder{
+public final class SequentialWorkBuilder extends WorkBuilder{
 	private static final String ASYNC = "ASYNC@";
+	private Map<String, Task> taskMap = null;
 	private Function<Map<String, String>,SequentialRouteWork> workCreater;
 	SequentialWorkBuilder(Function<Map<String, String>,SequentialRouteWork> workCreater) {
 		this.workCreater = workCreater;
+		taskMap = new LinkedHashMap<>();
 	}
-	public SequentialWorkBuilder addSyncTask(Task task) {
-		taskMap.put(ASYNC + task.toString(), task);
+	
+	public SequentialWorkBuilder addTask(Task task) {
+		taskMap.put(task.getId(), task);
 		return this;
 	}
-	public SequentialWorkBuilder addSyncTask(Task task,String extra) {
-		taskRefExtraMap = taskRefExtraMap == null ? new HashMap<>() : taskRefExtraMap;
-		taskRefExtraMap.put(ASYNC + task.toString(), extra);
-		return addSyncTask(task);
+	public SequentialWorkBuilder addTask(Task task,String extra) {
+		addExtra(task.getId(), extra);
+		return addTask(task);
+	}
+	
+	public SequentialWorkBuilder addAsyncTask(Task task) {
+		taskMap.put(ASYNC + task.getId(), task);
+		return this;
+	}
+	public SequentialWorkBuilder addAsyncTask(Task task,String extra) {
+		addExtra(ASYNC + task.getId(), extra);
+		return addAsyncTask(task);
 	}
 	public Work build() {
 		return build(null);

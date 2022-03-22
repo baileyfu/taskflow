@@ -1,5 +1,6 @@
 package taskflow.work;
 
+import taskflow.task.AbstractTaskRoutingWrap;
 import taskflow.task.TaskRoutingWrap;
 import taskflow.work.context.WorkContext;
 
@@ -20,6 +21,8 @@ public class CustomRouteWork extends AbstractWork {
 				start.doTask(this);
 			} finally {
 				if (finish != null) {
+					// finish的routing置空，不再执行路由逻辑
+					((AbstractTaskRoutingWrap)finish).setRouting(null);
 					finish.doTask(this);
 				}
 			}

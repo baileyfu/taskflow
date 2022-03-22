@@ -40,7 +40,7 @@ public interface TaskRegister extends ConfigSourceAware{
 				// 使用Pattern匹配路由
 				routingCondition.setBeanClass(PatternRoutingCondition.class);
 				routingCondition.getPropertyValues().add(RoutingConditionPropName.CONDITION, routeDefinition.getKey());
-				routingCondition.getPropertyValues().add(RoutingConditionPropName.PATTERN, PatternType.valueOf(routeDefinition.getPatten()));
+				routingCondition.getPropertyValues().add(RoutingConditionPropName.PATTERN, PatternType.valueOf(routeDefinition.getPattern()));
 				routingCondition.getPropertyValues().add(RoutingConditionPropName.TASK_ROUTING_WRAP, new RuntimeBeanReference(routeDefinition.getToTask()));
 				routingConditions.add(routingCondition);
 				//保留task.routing.extra参数

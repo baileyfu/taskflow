@@ -32,7 +32,7 @@
 	</tf:task>
 	<tf:task id="getDiffTask" ref="findNumberTaskBean" method="getDiff" extra="{threshold:10}">
 		<!-- pattern取值:string或regex,默认string -->
-	    <tf:routing key="ok" toTask="soutOutOkTask" extra="HighPriority_OK" patten="string"/>
+	    <tf:routing key="ok" toTask="soutOutOkTask" pattern="string" extra="HighPriority_OK"/>
 	    <tf:routing key="no" toTask="soutOutNoTask" extra="HighPriority_NO"/>
 	</tf:task>
 	<tf:task id="soutOutOkTask" ref="findNumberTaskBean" method="soutOutOk" extra="LowPriority_OK"/>

@@ -16,4 +16,13 @@ public interface Task {
 	 * @param work
 	 */
 	void execute(WorkContext workContext);
+
+	/**
+	 * Task唯一性标识
+	 * 
+	 * @return
+	 */
+	default String getId() {
+		return this.toString();
+	}
 }

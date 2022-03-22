@@ -19,10 +19,11 @@ public class DefaultRouting implements Routing {
     }
 
 	public TaskRoutingWrap doRouting(WorkContext busContext) {
-		// 当只有一个routing时，不设置key并且Task中不设置RoutingKey，将直接跳转到toTask
 		if (routingConditions.size() == 1) {
 			RoutingCondition unique = routingConditions.get(0);
-			if (CONDITION_DEFAULT_VALUE.equals(unique.getCondition()) && StringUtils.isEmpty(busContext.getRoutingKey())) {
+			// 当只有一个routing时，不设置key并且Task中不设置RoutingKey，将直接跳转到toTask
+			if ((ifKeyEmpty(unique.getCondition()) && StringUtils.isEmpty(busContext.getRoutingKey())) 
+					|| unique.matched(busContext)) {
 				return unique.getTaskRoutingWrap();
 			}
 		} else {
@@ -34,7 +35,11 @@ public class DefaultRouting implements Routing {
 		}
 		return null;
 	}
-
+	
+	private boolean ifKeyEmpty(String condition) {
+		return StringUtils.isEmpty(condition) || CONDITION_DEFAULT_VALUE.equals(condition);
+	}
+	
     public List<RoutingCondition> getRoutingConditions() {
         return routingConditions;
     }

@@ -95,7 +95,7 @@
                 <!--</xsd:appinfo>-->
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="patten" type="xsd:string" default="string"><!-- string or regex -->
+        <xsd:attribute name="pattern" type="xsd:string" default="string"><!-- string or regex -->
             <![CDATA[ ]]>
         </xsd:attribute>
         <xsd:attribute name="extra" type="xsd:string" use="optional">
