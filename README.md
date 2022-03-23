@@ -350,6 +350,11 @@ Task在执行时依然按照定义的顺序调用，若为异步Task则触发调
 		<td>true</td>
 	</tr>
 	<tr>
+		<td>taskflow.work.maxTasks</td>
+		<td>允许执行的task次数上限</td>
+		<td>1000</td>
+	</tr>
+	<tr>
 		<td>taskflow.work.traceable</td>
 		<td>允许记录task执行时的参数情况；开启时每个task执行会记录下当时workcontext的快照</td>
 		<td>false</td>
