@@ -207,7 +207,7 @@
                 <!--</xsd:appinfo>-->
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="maxTasks" type="xsd:integer" default="100000">
+        <xsd:attribute name="maxTasks" type="xsd:integer" default="0">
             <![CDATA[ ]]>
         </xsd:attribute>
         <xsd:attribute name="finish" type="xsd:string">

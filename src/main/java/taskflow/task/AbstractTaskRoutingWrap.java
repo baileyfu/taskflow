@@ -18,6 +18,7 @@ public abstract class AbstractTaskRoutingWrap implements TaskRoutingWrap {
 		// 执行Task的业务方法
 		invokeTaskMethod(work);
 		if (routing != null) {
+			//当仅设置了key而未设置toTask，或toTask不存在时，此处next为null
 			TaskRoutingWrap next = routing.doRouting(work.getWorkContext());
 			if (next != null) {
 				next.doTask(work);

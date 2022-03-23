@@ -1,6 +1,7 @@
 package demo;
 
 import taskflow.config.bean.DefaultTaskExecutorFactory;
+import taskflow.routing.match.PatternType;
 import taskflow.task.Task;
 import taskflow.work.Work;
 import taskflow.work.builder.RouteAbleWorkBuilder;
@@ -64,8 +65,13 @@ public class WorkBuilderApplication {
 		RouteAbleWorkBuilder workBuilder = WorkBuilder.newRouteableInstance();
 		Work work = workBuilder.addTask(A,"a").putRouting(A, RoutingBuilder.newInstance().key("toB").toTask(B.getId()).extra("fromA").build())
 				   			   .addTask(B,"b").putRouting(B, RoutingBuilder.newInstance().key("toA").toTask(A.getId()).extra("fromB2A").build())
-				   			   			  .putRouting(B, RoutingBuilder.newInstance().key("toD").toTask(D.getId()).extra("fromB2D").build())
-				   			   		.putRouting(B, RoutingBuilder.newInstance().key("toB").toTask(B.getId()).extra("fromB2B").build())
+					   			   			  .putRouting(B, RoutingBuilder.newInstance().key("toD").toTask(D.getId()).extra("fromB2D").build())
+					   			   			  //指向当前task(自己)的routing，以循环执行
+					   			   			  .putRouting(B, RoutingBuilder.newInstance().key("toB").toTask(B.getId()).extra("needD").build())
+					   			   			  //重复的routing将被忽略(key和toTask相同即为重复)
+					   			   			  .putRouting(B, RoutingBuilder.newInstance().key("toB").toTask(B.getId()).extra("重复routing会被忽略").build())
+					   			   			  //无效的routing也将被忽略(key和toTask都未设置的routing是无效的)
+					   			   			  .putRouting(B, RoutingBuilder.newInstance().pattern(PatternType.string).extra("fromB2B1").build())
 				   			   .addTask(D,"d").addTask(C).setStart(A.getId()).setEnd(C.getId()).build();
 		String result = work.run().getResult();
 		System.out.println(result);

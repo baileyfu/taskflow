@@ -1,5 +1,7 @@
 package taskflow.work.builder;
 
+import org.apache.commons.lang3.StringUtils;
+
 import taskflow.routing.match.PatternType;
 
 public class RoutingBuilder {
@@ -10,19 +12,19 @@ public class RoutingBuilder {
 	}
 	
 	public RoutingBuilder key(String key) {
-		routing.key = key;
+		routing.key = StringUtils.defaultString(key);
 		return this;
 	}
 	public RoutingBuilder toTask(String toTask) {
-		routing.toTask = toTask;
+		routing.toTask = StringUtils.defaultString(toTask);
 		return this;
 	}
 	public RoutingBuilder pattern(PatternType pattern) {
-		routing.pattern = pattern;
+		routing.pattern = pattern == null ? PatternType.string : pattern;
 		return this;
 	}
 	public RoutingBuilder extra(String extra) {
-		routing.extra = extra;
+		routing.extra = StringUtils.defaultString(extra);
 		return this;
 	}
 	
@@ -50,9 +52,12 @@ public class RoutingBuilder {
 		public String getExtra() {
 			return extra;
 		}
+		public boolean isEffective() {
+			return !StringUtils.isEmpty(key) || !StringUtils.isEmpty(toTask);
+		}
 		@Override
 		public String toString() {
-			return "Routing [key=" + key + ", toTask=" + toTask + ", pattern=" + pattern + ", extra=" + extra + "]";
+			return "Routing [key=" + key + ", toTask=" + toTask + "]";
 		}
 		@Override
 		public boolean equals(Object obj) {

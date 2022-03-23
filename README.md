@@ -179,12 +179,15 @@ public class GetDiffTask {
 3. 如果最大值和最小值的差大于{x}输出“no”，否则输入“ok”
 4. {x}通过配置extra指定
 
+#### 4.1 XML方式
 在classpath下新建配置文件task-config.xml
 
-#### 第一步 编写Task类
+##### 第一步 编写Task类
+
 编写相应的业务逻辑代码，详见test/demo
 
 例如getDiff的核心代码如下：
+
 ```
 private NumberService numberService;
 public void getDiff(@Taskparam("maxValue") int a, @Taskparam("minValue") int b,WorkContext workContext) {
@@ -196,8 +199,11 @@ public void getDiff(@Taskparam("maxValue") int a, @Taskparam("minValue") int b,W
     }
 }
 ```
-#### 第二步 定义Task
+
+##### 第二步 定义Task
+
 task-config.xml加入如下配置
+
 ```
 <bean id="findNumberTaskBean" class="demo.task.FindNumber"/>
 
@@ -214,12 +220,16 @@ task-config.xml加入如下配置
 <tf:task id="soutOutOkTask" ref="findNumberTaskBean" method="soutOutOk"/>
 <tf:task id="soutOutNoTask" ref="findNumberTaskBean" method="soutOutNo"/>
 ```
-#### 第三步 定义Work
+##### 第三步 定义Work
+
 task-config.xml加入如下配置
+
 ```
 <tf:work id="testWork" start="findMaxTask" class="taskflow.work.CustomRouteWork"/>
 ```
-#### 第四步 运行
+
+##### 第四步 运行
+
 ```
 public class DemoApplication {
     public static void main(String[] args) {
@@ -238,6 +248,51 @@ public class DemoApplication {
         context.close();
     }
 }
+```
+
+#### 4.2 编程方式
+编程式定义work/task时，taskflow框架不再跟spring耦合，所有要使用到的业务bean应该自行管理。
+
+##### 第一步 定义Task
+编写相应的业务逻辑代码，详见test/demo/WorkBuilderDemoApplication.java
+
+示例代码如下：
+
+```
+Task findMaxTask = (workContext)->{
+		List<Integer> input = workContext.get("intList");
+		int maxValue = numberService.findMax(input);
+		workContext.put("maxValue", maxValue);
+};
+@Autowired
+FindNumber findNumber;
+Task getDiffTask = (workContext) -> {
+		int maxValue = workContext.get("maxValue");
+		int minValue = workContext.get("minValue");
+		findNumber.getDiff(maxValue, minValue, workContext);
+};
+```
+
+##### 第二步 使用WorkBuilder创建Work
+
+WorkBuilder可以创建RouteAbleWorkBuilder和SequentialWorkBuilder，分别用来生成顺序Work和可路由Work。
+
+```
+RouteAbleWorkBuilder workBuilder = WorkBuilder.newRouteableInstance();
+//添加task后可立即为其添加routing，多个routing可连续调用多次putRouting()方法来添加
+//定义routing时，若key和toTask都为空则routing无效，会被忽略
+//routing可指向当前task以循环执行，最大次数受maxTasks的影响；见test/demo.WorkBuilderApplication示例
+workBuilder.addTask(findMaxTask).putRouting(findMaxTask,RoutingBuilder.newInstance().toTask(findMinTask.getId()).build())
+...
+.addTask(findNumber::soutOutOk);
+```
+
+##### 第三步 运行work
+
+```
+Work work=workBuilder.build();
+work.putContext("intList", Arrays.asList(5, 7, 1, 0, 1, 3, 4, 5, 6, 4));
+String result = work.run().getResult();
 ```
 
 ### 5.异步Task
@@ -365,7 +420,7 @@ Task在执行时依然按照定义的顺序调用，若为异步Task则触发调
 		<td>3.1.0</td>
 		<td>1.work可复用<br/>
 		2.Task接口参数由Work修改为WorkContext<br/>
-		3.所有Task的如参不再接受Work,统一为WorkContext<br/>
+		3.所有Task的入参不再接受Work,统一为WorkContext<br/>
 		</td>
 		<td>2022-?-?</td>
 	</tr>

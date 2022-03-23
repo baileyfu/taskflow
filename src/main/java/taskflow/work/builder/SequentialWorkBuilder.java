@@ -64,6 +64,6 @@ public final class SequentialWorkBuilder extends WorkBuilder{
 		} catch (Exception e) {
 			throw new TaskFlowException("build work error!", e);
 		}
-		return work;
+		return postBuild(work);
 	}
 }

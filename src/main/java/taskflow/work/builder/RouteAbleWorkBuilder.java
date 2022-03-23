@@ -30,6 +30,7 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 	private CustomRouteWork work;
 	private String startTaskId;
 	private String endTaskId;
+	private String lastAddedTaskId;
 	RouteAbleWorkBuilder() {
 		this.taskMap = new HashMap<>();
 		taskRouting = new HashMap<>();
@@ -53,22 +54,41 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 
 	public RouteAbleWorkBuilder addTask(Task task) {
 		taskMap.put(task.getId(), task);
+		lastAddedTaskId = task.getId();
 		return this;
 	}
 	public RouteAbleWorkBuilder addTask(Task task,String extra) {
 		addExtra(task.getId(), extra);
 		return addTask(task);
 	}
-	
+	/**
+	 * 给最后一个add的task添加routing
+	 * @param routing
+	 * @return
+	 */
+	public RouteAbleWorkBuilder putRouting(Routing routing) {
+		if (lastAddedTaskId == null) {
+			throw new TaskFlowException("add a task before putting routing.");
+		}
+		return putRouting(lastAddedTaskId, routing);
+	}
+	/**
+	 * 给指定的task添加routing
+	 * @param task
+	 * @param routing
+	 * @return
+	 */
 	public RouteAbleWorkBuilder putRouting(Task task,Routing routing) {
-		String taskId=task.getId();
+		return putRouting(task.getId(), routing);
+	}
+	public RouteAbleWorkBuilder putRouting(String taskId,Routing routing) {
 		List<Routing> routings = taskRouting.get(taskId);
 		if (routings == null) {
 			routings = new ArrayList<>();
 			taskRouting.put(taskId, routings);
 		}
 		//排除重复routing
-		if(!routings.contains(routing)) {
+		if (routing.isEffective() && !routings.contains(routing)) {
 			routings.add(routing);
 		}
 		return this;
@@ -78,19 +98,18 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 		if (startTaskId == null || startTaskId.trim().equals("")) {
 			throw new TaskFlowException("the start task can not be empty!");
 		}
-		Task endTask = taskMap.get(endTaskId);
-		if (endTask == null) {
-			throw new TaskFlowException("the end task named '" + endTaskId + "' not exist!");
-		}
 		work = work == null ? new CustomRouteWork() : work;
 		work.setStart(assembleRoutingWrap(startTaskId));
-		work.setFinish(new DefaultTaskRoutingWrap(endTask));
+		Task endTask = taskMap.get(endTaskId);
+		if (endTask != null) {
+			work.setFinish(new DefaultTaskRoutingWrap(endTask));
+		}
 		if (taskRefExtraMap != null) {
 			for (Entry<String, String> entry : taskRefExtraMap.entrySet()) {
 				ExtraArgsHolder.putTaskExtra(entry.getKey(), entry.getValue());
 			}
 		}
-		return work;
+		return postBuild(work);
 	}
 	private Map<String, DefaultTaskRoutingWrap> assembledRoutingWrap = new HashMap<>();
 

@@ -20,19 +20,22 @@ public abstract class AbstractWork implements Work{
 	protected boolean traceable;
 	public AbstractWork() {
 		workContext = new MapWorkContext(this.getClass());
+		this.name = this.toString();
 	}
 
 	public AbstractWork(Function<Work, WorkContext> WorkContextCreator) {
 		workContext = WorkContextCreator.apply(this);
+		this.name = this.toString();
 	}
-
 
 	/**
 	 * 记录任务调用轨迹,并检查任务调用次数上限
 	 */
 	void receive(TaskRoutingWrap stationRoutingWrap) throws Exception {
 		((AbstractWorkContext)workContext).setCurrentTask(stationRoutingWrap.getName());
-		if (maxTasks > 0 && maxTasks <= executedTasks++) {
+		// 单个work定义的优先级高于系统定义
+		int maxTasks = this.maxTasks > 0 ? this.maxTasks : Integer.getInteger(PropertyNameAndValue.WORK_MAX_TASKS, 0);
+		if (maxTasks > 0 && maxTasks <= (executedTasks + 1)) {
 			throw new TaskFlowException("the work '"+name+"''s maxTasks is:" + maxTasks);
 		}
 		if (traceable) {
@@ -43,6 +46,7 @@ public abstract class AbstractWork implements Work{
 				taskTraces.add(new TaskTrace(stationRoutingWrap.getName(), workContext.toString()));
 			}
 		}
+		executedTasks++;
 	}
 	public String getName() {
 		return name;

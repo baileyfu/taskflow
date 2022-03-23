@@ -7,7 +7,6 @@ import java.util.Set;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
 import taskflow.config.bean.TaskBeanDefinition;
 import taskflow.config.bean.TaskDefinition;
@@ -23,11 +22,11 @@ import taskflow.config.bean.WorkDefinition;
 @Configuration
 public class TaskFlowConfiguration {
 	@Bean(initMethod = TaskFlowPropertySetterBean.NAME_OF_INIT_METHOD)
-	public TaskFlowPropertySetterBean taskFlowPropertySetter(ApplicationContext applicationContext) {
+	public TaskFlowPropertySetterBean taskFlowPropertySetter() {
 		return new TaskFlowPropertySetterBean();
 	}
 	@Bean(initMethod=TaskFlowBeanReloadProcessor.NAME_OF_INIT_METHOD)
-	public TaskFlowBeanReloadProcessor taskFlowBeanReloadProcessor(Environment environment) {
+	public TaskFlowBeanReloadProcessor taskFlowBeanReloadProcessor() {
 		return new TaskFlowBeanReloadProcessor();
 	}
 

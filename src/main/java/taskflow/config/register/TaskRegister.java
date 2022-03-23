@@ -36,15 +36,20 @@ public interface TaskRegister extends ConfigSourceAware{
 		Set<RouteDefinition> routeDefinitions=taskDefinition.getRouteDefinitions();
 		if(routeDefinitions!=null&&routeDefinitions.size()>0) {
 			for(RouteDefinition routeDefinition:routeDefinitions) {
-				RootBeanDefinition routingCondition = new RootBeanDefinition();
-				// 使用Pattern匹配路由
-				routingCondition.setBeanClass(PatternRoutingCondition.class);
-				routingCondition.getPropertyValues().add(RoutingConditionPropName.CONDITION, routeDefinition.getKey());
-				routingCondition.getPropertyValues().add(RoutingConditionPropName.PATTERN, PatternType.valueOf(routeDefinition.getPattern()));
-				routingCondition.getPropertyValues().add(RoutingConditionPropName.TASK_ROUTING_WRAP, new RuntimeBeanReference(routeDefinition.getToTask()));
-				routingConditions.add(routingCondition);
-				//保留task.routing.extra参数
-				ExtraArgsHolder.putTaskRoutingExtra(taskDefinition.getTaskId(), routeDefinition.getToTask(), routeDefinition.getExtra());
+				String key = routeDefinition.getKey();
+				String toTask = routeDefinition.getToTask();
+				//有效的routing
+				if (!StringUtils.isEmpty(key) || !StringUtils.isEmpty(toTask)) {
+					RootBeanDefinition routingCondition = new RootBeanDefinition();
+					// 使用Pattern匹配路由
+					routingCondition.setBeanClass(PatternRoutingCondition.class);
+					routingCondition.getPropertyValues().add(RoutingConditionPropName.CONDITION, routeDefinition.getKey());
+					routingCondition.getPropertyValues().add(RoutingConditionPropName.PATTERN, PatternType.valueOf(routeDefinition.getPattern()));
+					routingCondition.getPropertyValues().add(RoutingConditionPropName.TASK_ROUTING_WRAP, new RuntimeBeanReference(routeDefinition.getToTask()));
+					routingConditions.add(routingCondition);
+					//保留task.routing.extra参数
+					ExtraArgsHolder.putTaskRoutingExtra(taskDefinition.getTaskId(), routeDefinition.getToTask(), routeDefinition.getExtra());
+				}
 			}
 		}
 		RootBeanDefinition routing = new RootBeanDefinition();
