@@ -96,12 +96,15 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 	
 	public Work build() {
 		if (startTaskId == null || startTaskId.trim().equals("")) {
-			throw new TaskFlowException("the start task can not be empty!");
+			throw new TaskFlowException("build Work error : the start task can not be empty!");
 		}
 		work = work == null ? new CustomRouteWork() : work;
 		work.setStart(assembleRoutingWrap(startTaskId));
-		Task endTask = taskMap.get(endTaskId);
-		if (endTask != null) {
+		if (endTaskId != null && !endTaskId.equals("")) {
+			Task endTask = taskMap.get(endTaskId);
+			if (endTask == null) {
+				throw new TaskFlowException("build Work error : the end task named '" + endTaskId + "' not exist!");
+			}
 			work.setFinish(new DefaultTaskRoutingWrap(endTask));
 		}
 		if (taskRefExtraMap != null) {

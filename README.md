@@ -283,6 +283,8 @@ RouteAbleWorkBuilder workBuilder = WorkBuilder.newRouteableInstance();
 //定义routing时，若key和toTask都为空则routing无效，会被忽略
 //routing可指向当前task以循环执行，最大次数受maxTasks的影响；见test/demo.WorkBuilderApplication示例
 workBuilder.addTask(findMaxTask).putRouting(findMaxTask,RoutingBuilder.newInstance().toTask(findMinTask.getId()).build())
+           .addTask(getDiffTask,"{threshold:1}").putRouting(RoutingBuilder.newInstance().key("ok").toTask(soutOutOkTask.getId()).extra("HighPriority_OK").build())
+				   			        .putRouting(RoutingBuilder.newInstance().key("no").toTask(soutOutNoTask.getId()).extra("HighPriority_NO").build()
 ...
 .addTask(findNumber::soutOutOk);
 ```
@@ -426,6 +428,8 @@ Task在执行时依然按照定义的顺序调用，若为异步Task则触发调
 		<td>1.work可复用<br/>
 		2.Task接口参数由Work修改为WorkContext<br/>
 		3.所有Task的入参不再接受Work,统一为WorkContext<br/>
+		4.支持编程式定义work/task<br/>
+		5.新增系统参数maxTasks<br/>
 		</td>
 		<td>2022-?-?</td>
 	</tr>
