@@ -34,7 +34,10 @@ public abstract class WorkBuilder {
 	public void setTraceable(Boolean traceable) {
 		this.traceable = traceable;
 	}
-	public abstract Work build();
+	public Work build() {
+		return build(null);
+	};
+	public abstract Work build(String workName);
 	protected Work postBuild(Work work) {
 		if (maxTasks > 0) {
 			((AbstractWork) work).setMaxTasks(maxTasks);

@@ -33,6 +33,8 @@ public class WorkBuilderDemoApplication {
 		Task getDiffTask = (workContext) -> {
 			int maxValue = workContext.get("maxValue");
 			int minValue = workContext.get("minValue");
+			if (minValue < 1)
+				throw new RuntimeException();
 			findNumber.getDiff(maxValue, minValue, workContext);
 		};
 		Task soutOutOkTask = findNumber::soutOutOk;
@@ -46,12 +48,13 @@ public class WorkBuilderDemoApplication {
 				   .addTask(soutOutOkTask)
 				   .addTask(soutOutNoTask)
 				   .setStart(findMaxTask.getId())
-				   .build();
+				   .addEnd((wc)->{System.out.println("endTask总是最后一个执行，且无论之前task是否抛异常都会执行!");})
+				   .build("myWork");
 	}
 	public static void main(String[] args) {
 		WorkBuilderDemoApplication wb = new WorkBuilderDemoApplication();
 		Work work = wb.createWork();
-		work.putContext("intList", Arrays.asList(5, 7, 1, 0, 1, 3, 4, 5, 6, 4));
+		work.putContext("intList", Arrays.asList(5, 7, 1, 2, 1, 3, 4, 5, 6, 4));
 		String result = work.run().getResult();
 		System.out.println(result);
 	}

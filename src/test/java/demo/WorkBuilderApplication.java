@@ -53,7 +53,7 @@ public class WorkBuilderApplication {
 	static void runSequential() {
 		DefaultTaskExecutorFactory defaultTaskExecutorFactory = new DefaultTaskExecutorFactory();
 		SequentialWorkBuilder workBuilder = WorkBuilder.newSequentialInstance();
-		Work work = workBuilder.addAsyncTask(ASYNC, "palapala").addTask(A, "aaa").addTask(B, "needD").addTask(D,"ddd").addTask(C).build(defaultTaskExecutorFactory);
+		Work work = workBuilder.addAsyncTask(ASYNC, "palapala").addTask(A, "aaa").addTask(B, "needD").addTask(D,"ddd").addTask(C).build("workName",defaultTaskExecutorFactory);
 		work.putContext("","");
 		String result = work.run().getResult();
 		System.out.println(result);

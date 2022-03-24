@@ -18,7 +18,10 @@ public class NumberService {
 	}
 	
 	public int findMin(List<Integer> source) {
-		int min = 0;
+		if (source == null || source.size() == 0) {
+			return -1;
+		}
+		int min = source.get(0);
 		for (int i : source) {
 			min = min < i ? min : i;
 		}

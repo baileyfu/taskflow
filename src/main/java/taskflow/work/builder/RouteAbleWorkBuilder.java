@@ -52,6 +52,11 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 		return this;
 	}
 
+	public RouteAbleWorkBuilder addEnd(Task endTask) {
+		addTask(endTask);
+		return setEnd(endTask.getId());
+	}
+	
 	public RouteAbleWorkBuilder addTask(Task task) {
 		taskMap.put(task.getId(), task);
 		lastAddedTaskId = task.getId();
@@ -94,11 +99,14 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 		return this;
 	}
 	
-	public Work build() {
+	public Work build(String workName) {
 		if (startTaskId == null || startTaskId.trim().equals("")) {
 			throw new TaskFlowException("build Work error : the start task can not be empty!");
 		}
 		work = work == null ? new CustomRouteWork() : work;
+		if (workName != null && !workName.trim().equals("")) {
+			work.setName(workName);
+		}
 		work.setStart(assembleRoutingWrap(startTaskId));
 		if (endTaskId != null && !endTaskId.equals("")) {
 			Task endTask = taskMap.get(endTaskId);

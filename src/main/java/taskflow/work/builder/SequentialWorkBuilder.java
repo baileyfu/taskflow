@@ -43,12 +43,18 @@ public final class SequentialWorkBuilder extends WorkBuilder{
 		addExtra(ASYNC + task.getId(), extra);
 		return addAsyncTask(task);
 	}
-	public Work build() {
-		return build(null);
+
+	public Work build(String workName) {
+		return build(workName, null);
 	}
 	
 	public Work build(TaskExecutorFactory taskExecutorFactory) {
+		return build(null, taskExecutorFactory);
+	}
+	
+	public Work build(String workName,TaskExecutorFactory taskExecutorFactory) {
 		SequentialRouteWork work = workCreater.apply(taskRefExtraMap);
+		work.setName(workName);
 		work.setTaskExecutorFactory(taskExecutorFactory);
 		try {
 			for (Entry<String, Task> entry : taskMap.entrySet()) {
