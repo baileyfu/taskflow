@@ -46,6 +46,10 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 		this.startTaskId = startTaskId;
 		return this;
 	}
+	public RouteAbleWorkBuilder addStart(Task startTask) {
+		addTask(startTask);
+		return setStart(startTask.getId());
+	}
 	
 	public RouteAbleWorkBuilder setEnd(String endTaskId) {
 		this.endTaskId = endTaskId;
