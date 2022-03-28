@@ -64,7 +64,7 @@ public class WorkBuilderApplication {
 	static void runRouteable() {
 		RouteAbleWorkBuilder workBuilder = WorkBuilder.newRouteableInstance();
 		Work work = workBuilder.addTask(A,"a").putRouting(A, RoutingBuilder.newInstance().key("toB").toTask(B.getId()).extra("fromA").build())
-				   			   .addTask(B,"b").putRouting(B, RoutingBuilder.newInstance().key("toA").toTask(A.getId()).extra("fromB2A").build())
+				   			   .addTask(B,"b").putRouting(B.getId(), "toA",A.getId(),"fromB2A")
 					   			   			  .putRouting(B, RoutingBuilder.newInstance().key("toD").toTask(D.getId()).extra("fromB2D").build())
 					   			   			  //指向当前task(自己)的routing，以循环执行
 					   			   			  .putRouting(B, RoutingBuilder.newInstance().key("toB").toTask(B.getId()).extra("needD").build())

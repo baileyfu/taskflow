@@ -10,6 +10,7 @@ import taskflow.exception.TaskFlowException;
 import taskflow.routing.DefaultRouting;
 import taskflow.routing.PatternRoutingCondition;
 import taskflow.routing.RoutingCondition;
+import taskflow.routing.match.PatternType;
 import taskflow.task.DefaultTaskRoutingWrap;
 import taskflow.task.Task;
 import taskflow.task.TaskRoutingWrap;
@@ -76,9 +77,6 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 	 * @return
 	 */
 	public RouteAbleWorkBuilder putRouting(Routing routing) {
-		if (lastAddedTaskId == null) {
-			throw new TaskFlowException("add a task before putting routing.");
-		}
 		return putRouting(lastAddedTaskId, routing);
 	}
 	/**
@@ -91,6 +89,9 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 		return putRouting(task.getId(), routing);
 	}
 	public RouteAbleWorkBuilder putRouting(String taskId,Routing routing) {
+		if (taskId == null || taskId.equals("")) {
+			throw new TaskFlowException("add a task before putting routing.");
+		}
 		List<Routing> routings = taskRouting.get(taskId);
 		if (routings == null) {
 			routings = new ArrayList<>();
@@ -101,6 +102,27 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 			routings.add(routing);
 		}
 		return this;
+	}
+	public RouteAbleWorkBuilder putRouting(String key,String toTask) {
+		return putRouting(lastAddedTaskId, key, toTask, PatternType.string, null);
+	}
+	public RouteAbleWorkBuilder putRouting(String taskId,String key,String toTask) {
+		return putRouting(taskId, key, toTask, PatternType.string, null);
+	}
+
+	public RouteAbleWorkBuilder putRouting(String taskId, String key, String toTask, String extra) {
+		return putRouting(taskId, key, toTask, PatternType.string, extra);
+	}
+	/**
+	 * @param taskId
+	 * @param key
+	 * @param toTask
+	 * @param patternType
+	 * @param extra
+	 * @return
+	 */
+	public RouteAbleWorkBuilder putRouting(String taskId,String key,String toTask,PatternType patternType,String extra) {
+		return putRouting(taskId,RoutingBuilder.newInstance().key(key).toTask(toTask).pattern(patternType).extra(extra).build());
 	}
 	
 	public Work build(String workName) {
