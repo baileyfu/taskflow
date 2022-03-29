@@ -64,22 +64,22 @@ public class WorkBuilderApplication {
 	static void runRouteable() {
 		RouteAbleWorkBuilder workBuilder = WorkBuilder.newRouteableInstance();
 		Work work = workBuilder.addTask(A,"a").putRouting(A, RoutingBuilder.newInstance().key("toB").toTask(B.getId()).extra("fromA").build())
-				   			   .addTask(B,"b").putRouting(B.getId(), "toA",A.getId(),"fromB2A")
-					   			   			  .putRouting(B, RoutingBuilder.newInstance().key("toD").toTask(D.getId()).extra("fromB2D").build())
+				   			   .addTask(B,"b").putRouting("toA",A.getId(),"fromB2A")
+					   			   			  .putRouting("toD",D.getId(),"fromB2D")
 					   			   			  //指向当前task(自己)的routing，以循环执行
-					   			   			  .putRouting(B, RoutingBuilder.newInstance().key("toB").toTask(B.getId()).extra("needD").build())
+					   			   			  .putRouting("toB", B.getId(),PatternType.string,"needD")
 					   			   			  //重复的routing将被忽略(key和toTask相同即为重复)
-					   			   			  .putRouting(B, RoutingBuilder.newInstance().key("toB").toTask(B.getId()).extra("重复routing会被忽略").build())
+					   			   			  .putRouting(B.getId(),"toB", B.getId(),PatternType.string,"重复routing会被忽略")
 					   			   			  //无效的routing也将被忽略(key和toTask都未设置的routing是无效的)
-					   			   			  .putRouting(B, RoutingBuilder.newInstance().pattern(PatternType.string).extra("fromB2B1").build())
-				   			   .addTask(D,"d").addTask(C).setStart(A.getId()).setEnd(C.getId()).build();
+					   			   			  .putRouting(B, "", "", PatternType.string, "fromB2B1")
+				   			   .addTask(D,"d").setStart(A.getId()).addEnd((wc)->{wc.setResult("Result=from end task");}).build();
 		String result = work.run().getResult();
 		System.out.println(result);
 	}
 	
 	public static void main(String[] args) {
 		init();
-//		runSequential();
+		//runSequential();
 		runRouteable();
 	}
 }

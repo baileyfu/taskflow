@@ -103,17 +103,41 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 		}
 		return this;
 	}
+	/**
+	 * 给最后一个add的task添加routing
+	 * @param key
+	 * @param toTask
+	 * @return
+	 */
 	public RouteAbleWorkBuilder putRouting(String key,String toTask) {
 		return putRouting(lastAddedTaskId, key, toTask, PatternType.string, null);
 	}
-	public RouteAbleWorkBuilder putRouting(String taskId,String key,String toTask) {
-		return putRouting(taskId, key, toTask, PatternType.string, null);
-	}
-
-	public RouteAbleWorkBuilder putRouting(String taskId, String key, String toTask, String extra) {
-		return putRouting(taskId, key, toTask, PatternType.string, extra);
+	/**
+	 * 给最后一个add的task添加routing
+	 * @param key
+	 * @param toTask
+	 * @param extra
+	 * @return
+	 */
+	public RouteAbleWorkBuilder putRouting(String key, String toTask, String extra) {
+		return putRouting(lastAddedTaskId, key, toTask, PatternType.string, extra);
 	}
 	/**
+	 * 给最后一个add的task添加routing
+	 * @param key
+	 * @param toTask
+	 * @param patternType
+	 * @param extra
+	 * @return
+	 */
+	public RouteAbleWorkBuilder putRouting(String key,String toTask,PatternType patternType,String extra) {
+		return putRouting(lastAddedTaskId, key, toTask, PatternType.string, extra);
+	}
+	public RouteAbleWorkBuilder putRouting(Task task,String key,String toTask,PatternType patternType,String extra) {
+		return putRouting(task.getId(), key, toTask, PatternType.string, extra);
+	}
+	/**
+	 * 给指定的task添加routing
 	 * @param taskId
 	 * @param key
 	 * @param toTask
