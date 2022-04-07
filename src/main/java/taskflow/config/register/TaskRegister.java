@@ -20,9 +20,9 @@ import taskflow.constants.TaskRoutingPropName;
 import taskflow.routing.DefaultRouting;
 import taskflow.routing.PatternRoutingCondition;
 import taskflow.routing.match.PatternType;
-import taskflow.task.DefaultTaskRoutingWrap;
-import taskflow.task.ReflectedTaskRoutingWrap;
 import taskflow.task.TaskMethodInvoker;
+import taskflow.task.routing.DefaultTaskRoutingWrap;
+import taskflow.task.routing.ReflectedTaskRoutingWrap;
 import taskflow.work.context.ExtraArgsHolder;
 //后注册的Bean优先级高
 public interface TaskRegister extends ConfigSourceAware{
@@ -33,22 +33,27 @@ public interface TaskRegister extends ConfigSourceAware{
 		taskRoutingWrapDefinition.getPropertyValues().add(TaskRoutingPropName.NAME, taskDefinition.getTaskId());
 		// 解析routing condition
 		ManagedList<BeanDefinition> routingConditions = new ManagedList<>();
-		Set<RouteDefinition> routeDefinitions=taskDefinition.getRouteDefinitions();
-		if(routeDefinitions!=null&&routeDefinitions.size()>0) {
+		Set<RouteDefinition> routeDefinitions = taskDefinition.getRouteDefinitions();
+		if (routeDefinitions != null && routeDefinitions.size() > 0) {
 			for(RouteDefinition routeDefinition:routeDefinitions) {
 				String key = routeDefinition.getKey();
 				String toTask = routeDefinition.getToTask();
 				//有效的routing
 				if (!StringUtils.isEmpty(key) || !StringUtils.isEmpty(toTask)) {
 					RootBeanDefinition routingCondition = new RootBeanDefinition();
+					if(routeDefinition.isItWork()) {
+						//先注册TaskWrapper
+						toTask = TaskWrapperRegister.register(registry, toTask);
+					} else {
+						//保留task.routing.extra参数
+						ExtraArgsHolder.putTaskRoutingExtra(taskDefinition.getTaskId(), toTask, routeDefinition.getExtra());
+					}
 					// 使用Pattern匹配路由
 					routingCondition.setBeanClass(PatternRoutingCondition.class);
-					routingCondition.getPropertyValues().add(RoutingConditionPropName.CONDITION, routeDefinition.getKey());
+					routingCondition.getPropertyValues().add(RoutingConditionPropName.CONDITION, key);
 					routingCondition.getPropertyValues().add(RoutingConditionPropName.PATTERN, PatternType.valueOf(routeDefinition.getPattern()));
-					routingCondition.getPropertyValues().add(RoutingConditionPropName.TASK_ROUTING_WRAP, new RuntimeBeanReference(routeDefinition.getToTask()));
+					routingCondition.getPropertyValues().add(RoutingConditionPropName.TASK_ROUTING_WRAP, new RuntimeBeanReference(toTask));
 					routingConditions.add(routingCondition);
-					//保留task.routing.extra参数
-					ExtraArgsHolder.putTaskRoutingExtra(taskDefinition.getTaskId(), routeDefinition.getToTask(), routeDefinition.getExtra());
 				}
 			}
 		}

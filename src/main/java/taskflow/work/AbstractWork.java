@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import taskflow.constants.PropertyNameAndValue;
 import taskflow.exception.TaskFlowException;
-import taskflow.task.TaskRoutingWrap;
+import taskflow.task.routing.TaskRoutingWrap;
 import taskflow.work.context.AbstractWorkContext;
 import taskflow.work.context.MapWorkContext;
 import taskflow.work.context.TaskTrace;

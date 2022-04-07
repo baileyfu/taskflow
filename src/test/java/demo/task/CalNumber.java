@@ -8,4 +8,7 @@ public class CalNumber {
 		System.out.println("sub work execute...");
 	}
 	
+	public void someMethod() {
+		System.out.println("someMethod eecute...");
+	}
 }

@@ -30,17 +30,23 @@
 	<tf:task id="findMinTask" ref="findNumberTaskBean" method="findMin">
 	    <tf:routing toTask="getDiffTask"/>
 	</tf:task>
-	<tf:task id="getDiffTask" ref="findNumberTaskBean" method="getDiff" extra="{threshold:10}">
+	<tf:task id="getDiffTask" ref="findNumberTaskBean" method="getDiff" extra="{threshold:999}">
 		<!-- pattern取值:string或regex,默认string -->
 	    <tf:routing key="ok" toTask="soutOutOkTask" pattern="string" extra="HighPriority_OK"/>
 	    <tf:routing key="no" toTask="soutOutNoTask" extra="HighPriority_NO"/>
+	    <tf:routing key="else|other" toWork="otherWork" pattern="regex"/>
 	</tf:task>
 	<tf:task id="soutOutOkTask" ref="findNumberTaskBean" method="soutOutOk" extra="LowPriority_OK"/>
 	<tf:task id="soutOutNoTask" ref="findNumberTaskBean" method="soutOutNo" extra="LowPriority_NO"/>
     
     <tf:task id="calTask" ref="calNumberTaskBean" method="cal"/>
+    <tf:task id="otherTask" ref="calNumberTaskBean" method="someMethod"/>
     <!-- Work Define -->
-    <tf:work id="testWork" start="findMaxTask" traceable="true" class="taskflow.work.CustomRouteWork"/>
-    <tf:work id="subWork" start="calTask" class="taskflow.work.CustomRouteWork"/>
+    <tf:work id="subWork" start="calTask" traceable="true" class="taskflow.work.CustomRouteWork"/>
+    <tf:work id="otherWork" traceable="true" class="taskflow.work.SequentialRouteWork">
+    	<tf:task-ref value="otherTask"/>
+    </tf:work>
+    <!-- startWork/finishWork可以指定为其它workId , 但不能指定为当前workId -->
+    <tf:work id="testWork" start="findMaxTask" finishWork="subWork" traceable="true" class="taskflow.work.CustomRouteWork"/>
     <tf:workFactory/>
 </beans>

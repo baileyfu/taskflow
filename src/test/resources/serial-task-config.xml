@@ -29,6 +29,10 @@
     <tf:task id="step5" ref="taskCTaskBean" method="method3"/>
     <tf:task id="end" ref="taskCTaskBean" method="methodEnd"/>
     
+    <tf:work id="subWork" class="taskflow.work.SequentialRouteWork">
+    	<tf:task-ref value="end"/>
+    </tf:work>
+    
     <tf:work id="mySequentialTaskWork" traceable="true" class="demo.work.MySequentialWork">
         <tf:constructor-arg value="TestName"/>
     	<tf:constructor-arg value="15" type="int" index="1"/>
@@ -36,7 +40,9 @@
     	<tf:task-ref value="step3" extra="{y:1}" async="false"/>
     	<tf:task-ref value="step2" extra="{z:false}" async="true"/>
     	<tf:task-ref value="step5" async="false"/>
-    	<tf:task-ref value="end"/>
+    	<!-- <tf:task-ref value="end"/> -->
+    	<!-- value不能指定为当前workId -->
+    	<tf:work-ref value="subWork" async="false"/>
     </tf:work>
     
     <tf:workFactory/>

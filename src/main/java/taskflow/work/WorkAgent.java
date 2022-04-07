@@ -1,6 +1,6 @@
 package taskflow.work;
 
-import taskflow.task.TaskRoutingWrap;
+import taskflow.task.routing.TaskRoutingWrap;
 
 /**
  * 执行Work中不对外暴露的方法

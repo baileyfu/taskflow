@@ -7,8 +7,8 @@ import java.util.function.Function;
 
 import taskflow.config.bean.TaskExecutorFactory;
 import taskflow.exception.TaskFlowException;
-import taskflow.task.DefaultTaskRoutingWrap;
 import taskflow.task.Task;
+import taskflow.task.routing.DefaultTaskRoutingWrap;
 import taskflow.work.SequentialRouteWork;
 import taskflow.work.Work;
 

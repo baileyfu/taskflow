@@ -33,4 +33,14 @@ public class MapWorkContext extends AbstractWorkContext {
 	public String toString() {
 		return "MapWorkContext [context=" + context + ", " + super.toString() + "]";
 	}
+	@Override
+	public Map<String, Object> getAll() {
+		return context;
+	}
+	@Override
+	public void putAll(WorkContext workContext) {
+		if (workContext != null) {
+			context.putAll(workContext.getAll());
+		}
+	}
 }

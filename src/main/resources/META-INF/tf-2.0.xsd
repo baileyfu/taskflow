@@ -86,7 +86,7 @@
         <xsd:attribute name="key" type="xsd:string" default="@default">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="toTask" type="xsd:string" use="required">
+        <xsd:attribute name="toTask" type="xsd:string" use="optional">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
                 <!--<tool:annotation kind="ref">-->
@@ -94,6 +94,10 @@
                 <!--</tool:annotation>-->
                 <!--</xsd:appinfo>-->
             </xsd:annotation>
+        </xsd:attribute>
+        <!-- xsd无法实现属性互斥,暂由代码实现toTask/toWork互斥约束 -->
+        <xsd:attribute name="toWork" type="xsd:string" use="optional">
+            <![CDATA[ ]]>
         </xsd:attribute>
         <xsd:attribute name="pattern" type="xsd:string" default="string"><!-- string or regex -->
             <![CDATA[ ]]>
@@ -138,6 +142,7 @@
 			<xsd:choice minOccurs="0" maxOccurs="unbounded">
 				<xsd:element ref="constructor-arg"/>
 				<xsd:element ref="task-ref"/>
+				<xsd:element ref="work-ref"/>
 			</xsd:choice>
 		</xsd:sequence>
 	</xsd:group>
@@ -193,6 +198,16 @@
 			        </xsd:attribute>
 		        </xsd:complexType>
             </xsd:element>
+            <xsd:element name="work-ref">
+            	<xsd:complexType mixed="true">
+		            <xsd:attribute name="value" type="xsd:string">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
+			        <xsd:attribute name="async" type="xsd:boolean">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
+		        </xsd:complexType>
+            </xsd:element>
     <xsd:attributeGroup name="workAttributes">
         <!-- <xsd:attribute name="id" type="xsd:ID" use="required">
             <xsd:annotation>
@@ -207,6 +222,9 @@
                 <!--</xsd:appinfo>-->
             </xsd:annotation>
         </xsd:attribute>
+		<xsd:attribute name="startWork" type="xsd:string">
+            <xsd:annotation/>
+        </xsd:attribute>
         <xsd:attribute name="maxTasks" type="xsd:integer" default="0">
             <![CDATA[ ]]>
         </xsd:attribute>
@@ -218,6 +236,9 @@
                     </tool:annotation>
                 </xsd:appinfo>
             </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="finishWork" type="xsd:string">
+            <xsd:annotation/>
         </xsd:attribute>
         <xsd:attribute name="traceable" type="xsd:boolean" default="false">
             <![CDATA[ ]]>

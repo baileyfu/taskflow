@@ -42,6 +42,9 @@ public class FindNumber {
         } else {
             workContext.setRoutingKey("no");
         }
+        if(diff==999) {
+        	workContext.setRoutingKey("other");
+        }
     }
 
 	public void soutOutOk(WorkContext workContext) {

@@ -73,6 +73,8 @@ public class TaskDefinition {
 	public static class RouteDefinition{
 		private String key;
 		private String toTask;
+		//true则taskId为work
+		private boolean isItWork;
 		private String pattern;
 		private String extra;
 		public String getKey() {
@@ -86,6 +88,12 @@ public class TaskDefinition {
 		}
 		public void setToTask(String toTask) {
 			this.toTask = toTask;
+		}
+		public boolean isItWork() {
+			return isItWork;
+		}
+		public void setItWork(boolean isItWork) {
+			this.isItWork = isItWork;
 		}
 		public String getPattern() {
 			return pattern;
@@ -124,8 +132,9 @@ public class TaskDefinition {
 		}
 		@Override
 		public String toString() {
-			return "RouteDefinition [key=" + key + ", toTask=" + toTask + ", pattern=" + pattern + ", extra=" + extra
-					+ "]";
+			return "RouteDefinition [key=" + key + ", toTask=" + toTask + ", isItWork=" + isItWork + ", pattern="
+					+ pattern + ", extra=" + extra + "]";
 		}
+		
 	}
 }

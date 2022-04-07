@@ -1,8 +1,8 @@
 package taskflow.routing;
 
-import taskflow.task.TaskRoutingWrap;
 import taskflow.work.context.WorkContext;
 import taskflow.task.Task;
+import taskflow.task.routing.TaskRoutingWrap;
 
 /**
  * 当一个{@link Task}处理完毕后，可以动态确定下一个{@link Task}

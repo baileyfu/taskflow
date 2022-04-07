@@ -14,6 +14,7 @@ public enum Tag {
 	CONSTRUCTOR_ARG("constructor-arg"),
 	TASK("task"),
 	TASK_REF("task-ref"),
+	WORK_REF("work-ref"),
 	ROUTING("routing");
 	public String VALUE;
 	private Tag(String VALUE) {

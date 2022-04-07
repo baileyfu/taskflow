@@ -1,7 +1,7 @@
 package taskflow.work;
 
-import taskflow.task.AbstractTaskRoutingWrap;
-import taskflow.task.TaskRoutingWrap;
+import taskflow.task.routing.AbstractTaskRoutingWrap;
+import taskflow.task.routing.TaskRoutingWrap;
 import taskflow.work.context.WorkContext;
 
 /**

@@ -1,6 +1,6 @@
 package taskflow.routing;
 
-import taskflow.task.TaskRoutingWrap;
+import taskflow.task.routing.TaskRoutingWrap;
 
 /**
  * RoutingCondition抽象实现类，反向代理TaskRoutingWrap的调用。

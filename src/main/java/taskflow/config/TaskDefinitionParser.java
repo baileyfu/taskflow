@@ -6,9 +6,11 @@ import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.Assert;
 import org.w3c.dom.Element;
 
 import taskflow.config.bean.TaskDefinition;
@@ -17,7 +19,7 @@ import taskflow.config.register.TaskRegister;
 import taskflow.enums.ConfigSource;
 import taskflow.enums.Tag;
 import taskflow.enums.TagAttribute;
-import taskflow.task.TaskRoutingWrap;
+import taskflow.task.routing.TaskRoutingWrap;
 
 /**
  * 处理<tf:task>标签 对于ref的Task，使用{@link TaskRoutingWrap}进行包装 <br/>
@@ -45,7 +47,15 @@ public class TaskDefinitionParser implements BeanDefinitionParser,TaskRegister {
 				if (Tag.ROUTING.getTagName().equals(e.getTagName())) {
 					RouteDefinition routeDefinition=new RouteDefinition();
 					routeDefinition.setKey(e.getAttribute(TagAttribute.TASK_ROUTING_KEY.NAME));
-					routeDefinition.setToTask(e.getAttribute(TagAttribute.TASK_ROUTING_TO_TASK.NAME));
+					String toWork = e.getAttribute(TagAttribute.TASK_ROUTING_TO_WORK.NAME);
+					String toTask = e.getAttribute(TagAttribute.TASK_ROUTING_TO_TASK.NAME);
+					if (!StringUtils.isEmpty(toWork)) {
+						routeDefinition.setItWork(true);
+						routeDefinition.setToTask(toWork);
+						Assert.isTrue(StringUtils.isEmpty(toTask), "error on task '"+id+"' : toTask or toWork only one should be selected!");
+					} else {
+						routeDefinition.setToTask(toTask);
+					}
 					routeDefinition.setPattern(e.getAttribute(TagAttribute.TASK_ROUTING_PATTERN.NAME));
 					routeDefinition.setExtra(e.getAttribute(TagAttribute.TASK_ROUTING_EXTRA.NAME));
 					routeDefinitions.add(routeDefinition);

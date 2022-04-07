@@ -1,5 +1,6 @@
-package taskflow.task;
+package taskflow.task.routing;
 
+import taskflow.task.Task;
 import taskflow.work.Work;
 
 /**

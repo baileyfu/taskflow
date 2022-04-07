@@ -9,6 +9,10 @@ public class WorkDefinition {
 	private String workId;
 	private String start;
 	private String finish;
+	//start是否为work
+	private boolean isStartWork;
+	//finish是否为work
+	private boolean isFinishWork;
 	private int maxTasks;
 	private boolean traceable;
 	private String workClazz;
@@ -36,6 +40,18 @@ public class WorkDefinition {
 	}
 	public void setFinish(String finish) {
 		this.finish = finish;
+	}
+	public boolean isStartWork() {
+		return isStartWork;
+	}
+	public void setStartWork(boolean isStartWork) {
+		this.isStartWork = isStartWork;
+	}
+	public boolean isFinishWork() {
+		return isFinishWork;
+	}
+	public void setFinishWork(boolean isFinishWork) {
+		this.isFinishWork = isFinishWork;
 	}
 	public int getMaxTasks() {
 		return maxTasks;
@@ -138,6 +154,8 @@ public class WorkDefinition {
 	}
 	public static class TaskRef{
 		private String taskId;
+		//true则taskId为work
+		private boolean isItWork;
 		private String extra;
 		private boolean async;
 		public String getTaskId() {
@@ -145,6 +163,12 @@ public class WorkDefinition {
 		}
 		public void setTaskId(String taskId) {
 			this.taskId = taskId;
+		}
+		public boolean isItWork() {
+			return isItWork;
+		}
+		public void setItWork(boolean isItWork) {
+			this.isItWork = isItWork;
 		}
 		public String getExtra() {
 			return extra;
@@ -160,7 +184,8 @@ public class WorkDefinition {
 		}
 		@Override
 		public String toString() {
-			return "TaskRef [taskId=" + taskId + ", extra=" + extra + ", async=" + async + "]";
+			return "TaskRef [taskId=" + taskId + ", isItWork=" + isItWork + ", extra=" + extra + ", async=" + async + "]";
 		}
+		
 	}
 }

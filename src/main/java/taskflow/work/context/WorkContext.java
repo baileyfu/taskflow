@@ -19,12 +19,14 @@ public interface WorkContext {
 	 * @return
 	 */
 	<T> T get(String key);
+	Map<String,Object> getAll();
     /**
      * 设置上下文参数
      * @param key
      * @param value
      */
     void put(String key, Object value);
+    void putAll(WorkContext workContext);
     /**
           * 当前所有Task的额外配置参数
      * @return

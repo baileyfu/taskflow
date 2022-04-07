@@ -47,7 +47,7 @@ public class TaskParameterResolver {
 		}
     };
 
-    public static Object[] resolve(MethodParameter[] parameters, Work work) {
+    static Object[] resolve(MethodParameter[] parameters, Work work) {
         Object[] res = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             MethodParameter methodParameter = parameters[i];

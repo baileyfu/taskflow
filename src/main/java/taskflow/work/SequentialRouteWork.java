@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 import taskflow.config.bean.TaskExecutorFactory;
-import taskflow.task.AbstractTaskRoutingWrap;
-import taskflow.task.TaskRoutingWrap;
+import taskflow.task.routing.AbstractTaskRoutingWrap;
+import taskflow.task.routing.TaskRoutingWrap;
 import taskflow.work.context.AbstractWorkContext;
 import taskflow.work.context.PromiseMapWorkContext;
 import taskflow.work.context.WorkContext;
