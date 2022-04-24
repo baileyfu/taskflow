@@ -99,6 +99,9 @@
         <xsd:attribute name="toWork" type="xsd:string" use="optional">
             <![CDATA[ ]]>
         </xsd:attribute>
+        <xsd:attribute name="resultKey" type="xsd:string">
+            <![CDATA[ ]]>
+        </xsd:attribute>
         <xsd:attribute name="pattern" type="xsd:string" default="string"><!-- string or regex -->
             <![CDATA[ ]]>
         </xsd:attribute>
@@ -121,6 +124,29 @@
             <![CDATA[ ]]>
         </xsd:attribute>
     </xsd:complexType>
+
+
+	<xsd:element name="taskWrapper">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="beans:identifiedType">
+                	<xsd:group ref="taskElements"/>
+                    <xsd:attributeGroup ref="taskWrapperAttributes"/>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+	<xsd:attributeGroup name="taskWrapperAttributes">
+    	<xsd:attribute name="refWork" type="xsd:string" use="required">
+            <xsd:annotation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="resultKey" type="xsd:string" use="optional">
+            <xsd:annotation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+	
 
 
     <xsd:element name="work">
@@ -203,6 +229,9 @@
 		            <xsd:attribute name="value" type="xsd:string">
 			            <![CDATA[ ]]>
 			        </xsd:attribute>
+					<xsd:attribute name="resultKey" type="xsd:string">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
 			        <xsd:attribute name="async" type="xsd:boolean">
 			            <![CDATA[ ]]>
 			        </xsd:attribute>
@@ -243,7 +272,7 @@
         <xsd:attribute name="traceable" type="xsd:boolean" default="false">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.CustomRouteWork">
+        <xsd:attribute name="class" type="xsd:string" default="taskflow.work.CustomRouteWork">
             <![CDATA[ ]]>
         </xsd:attribute>
     </xsd:attributeGroup>

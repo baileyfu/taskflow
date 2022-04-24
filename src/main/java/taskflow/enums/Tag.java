@@ -13,6 +13,7 @@ public enum Tag {
 	WORK("work"),
 	CONSTRUCTOR_ARG("constructor-arg"),
 	TASK("task"),
+	TASKWRAPPER("taskWrapper"),
 	TASK_REF("task-ref"),
 	WORK_REF("work-ref"),
 	ROUTING("routing");

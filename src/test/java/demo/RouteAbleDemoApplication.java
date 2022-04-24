@@ -22,7 +22,7 @@ public class RouteAbleDemoApplication {
 		//XML方式配置TaskFlow通过系统Property来设置参数
 		//后设置的优先级高,会覆盖task-config.xml中指定的properties文件中的配置
 		System.setProperty(PropertyNameAndValue.WORK_TRACEABLE, "true");
-		System.setProperty(PropertyNameAndValue.LOG_PRINTABLE, "false");
+		System.setProperty(PropertyNameAndValue.LOG_PRINTABLE, "true");
 		System.setProperty(PropertyNameAndValue.LOG_PRINT_DETAIL, "true");
 		
 		

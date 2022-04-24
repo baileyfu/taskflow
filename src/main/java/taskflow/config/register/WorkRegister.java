@@ -24,6 +24,7 @@ import taskflow.config.bean.TaskExecutorFactory;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.ConstructorArg;
 import taskflow.config.bean.WorkDefinition.TaskRef;
+import taskflow.config.bean.WorkDefinition.WorkRef;
 import taskflow.constants.TFLogType;
 import taskflow.constants.WorkPropName;
 import taskflow.work.CustomRouteWork;
@@ -72,17 +73,11 @@ public interface WorkRegister extends ConfigSourceAware{
         	String start = workDefinition.getStart();
 			Assert.isTrue(!StringUtils.isEmpty(start), "Work '"+workId+"' must has a start task");
 			Assert.isTrue(!start.equals(workId), "the start of work '" + workId + "' can not be itself.");
-			if (workDefinition.isStartWork()) {
-				start = TaskWrapperRegister.register(registry, start);
-			}
             work.getPropertyValues().add(WorkPropName.START, new RuntimeBeanReference(start));
             
             String finish = workDefinition.getFinish();
             if (!StringUtils.isEmpty(finish)) {
                 Assert.isTrue(!finish.equals(workId), "the end of work '" + workId + "' can not be itself.");
-                if (workDefinition.isFinishWork()) {
-                	finish = TaskWrapperRegister.register(registry, finish);
-    			}
                 work.getPropertyValues().add(WorkPropName.FINISH, new RuntimeBeanReference(finish));
             }
 		} else if(SequentialRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有SerialRouteWork才解析sequence
@@ -94,11 +89,11 @@ public interface WorkRegister extends ConfigSourceAware{
 			for (TaskRef taskRef : taskRefs) {
 				String taskId = taskRef.getTaskId();
 				if (StringUtils.isEmpty(taskId)) {
-					throw new NullPointerException("the Work '"+workId+"' has a empty task-ref");
+					throw new NullPointerException("the Work '"+workId+"' has a empty task-ref/work-ref");
 				}
 				Assert.isTrue(!taskId.equals(workId), "the task of work '" + workId + "' can not be itself.");
-				if(taskRef.isItWork()) {
-					taskId = TaskWrapperRegister.register(registry, taskId);
+				if (taskRef instanceof WorkRef) {
+					taskId = TaskWrapperRegister.register(registry, (WorkRef) taskRef,(i,c)->logRegister(TFLogType.TASK, i, c));
 				}else {
 					String extra = taskRef.getExtra();
 					if (!StringUtils.isEmpty(extra)) {

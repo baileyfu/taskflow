@@ -17,7 +17,8 @@ public class TaskC  {
 	
 	public void method3(WorkContext workContext, @Taskparam("name") String x, @Taskparam(required = false) Date birth) {
 		System.out.println("TaskC's method3 be invoked !!! x : "+x+" , birth : "+birth+" , extra : "+workContext.getRuntimeArgs()+" called by :"+Thread.currentThread());
-		workContext.setResult("RESULT");
+		System.out.println("TaskC's method3 get result from subWork is : 'subWork'=" + workContext.get("subWork")+" , 'subWorkResult'="+ workContext.get("subWorkResult"));
+		workContext.setResult("RESULT from TaskC.method3()");
 	}
 
 	public void methodEnd(WorkContext workContext) {

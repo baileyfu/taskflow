@@ -36,7 +36,7 @@ public abstract class AbstractWork implements Work{
 		// 单个work定义的优先级高于系统定义
 		int maxTasks = this.maxTasks > 0 ? this.maxTasks : Integer.getInteger(PropertyNameAndValue.WORK_MAX_TASKS, 0);
 		if (maxTasks > 0 && maxTasks <= (executedTasks + 1)) {
-			throw new TaskFlowException("the work '"+name+"''s maxTasks is:" + maxTasks);
+			throw new TaskFlowException("the work '"+name+"''s maxTasks is:" + maxTasks+",the executed of times has been exceeded!");
 		}
 		if (traceable) {
 			if (Boolean.getBoolean(PropertyNameAndValue.WORK_TRACEABLE)) {
