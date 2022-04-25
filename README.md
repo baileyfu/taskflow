@@ -143,7 +143,7 @@ RouteAble Work的定义，如下：
 - start: 起始Task；从指定Task开始执行；必填
 - finish:最终Task；无论如何都会执行，即使执行过程中出现异常；选填
 
-#### 3.4 复用Work、
+#### 3.4 复用Work
 有时，一个work的通用性较好，希望将其作为其它work的一个task而被复用；使用taskWrapper标签将该work封装为task：
 ```
 <!- 通用性较好的work,将被复用 ->
@@ -163,6 +163,7 @@ RouteAble Work的定义，如下：
 	<!-- <tf:work-ref value="subWork"/> -->
 </tf:work>
 ```
+配置文件详情见[task-config.xml](./src/test/resources/task-config.xml)；
 编程式用例见[WorkBuilderDemoApplication](./src/test/java/demo/WorkBuilderDemoApplication.java)。
 
 #### 3.5 Extra的配置
