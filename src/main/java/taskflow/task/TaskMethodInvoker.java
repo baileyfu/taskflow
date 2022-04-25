@@ -13,7 +13,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
-import taskflow.work.SequentialRouteWork;
 import taskflow.work.Work;
 
 /**
@@ -80,7 +79,8 @@ public class TaskMethodInvoker {
     }
 
 
-    private MethodParameter[] initMethodParameters() {
+    @SuppressWarnings("deprecation")
+	private MethodParameter[] initMethodParameters() {
         int count = this.bridgedMethod.getParameterTypes().length;
         MethodParameter[] result = new MethodParameter[count];
         for (int i = 0; i < count; i++) {

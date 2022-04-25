@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 import taskflow.config.bean.TaskExecutorFactory;
-import taskflow.task.AbstractTaskRoutingWrap;
-import taskflow.task.TaskRoutingWrap;
+import taskflow.task.routing.AbstractTaskRoutingWrap;
+import taskflow.task.routing.TaskRoutingWrap;
 import taskflow.work.context.AbstractWorkContext;
 import taskflow.work.context.PromiseMapWorkContext;
 import taskflow.work.context.WorkContext;
@@ -15,7 +15,7 @@ import taskflow.work.context.WorkContextAgent;
 
 /**
  * 串行执行任务,由SerialWork指定任务路由顺序<br/>
- * 扩展时,构造器参数中extraArgsMap必须放到最后<br/>
+ * 扩展时,为防止跟其它Map类型参数冲突,构造器参数中extraArgsMap必须放到最后<br/>
  * 支持异步执行task；但异步task中所需的入参必须是确定的，即不能由其它task传入，而同步task中的入参可以由异步/同步task传入，因为异步task若依赖外部传入参数容易引起死锁。
  * 
  * @author bailey.fu
@@ -31,19 +31,18 @@ public class SequentialRouteWork extends AbstractWork {
 	//不对executedAsyncTask的递增操作进行并发控制,主要因为“是否存在尚未执行的异步Task”本就是额外加的一个弱校验,其结果的有效性不对预期设计构成大的影响。
 	private int executedAsyncTask;
 
-	public SequentialRouteWork() {
-		super((work) -> new PromiseMapWorkContext((SequentialRouteWork)work));
-	}
 	public SequentialRouteWork(Map<String,String> taskRefExtraMap) {
 		super((work) -> new PromiseMapWorkContext((SequentialRouteWork)work, taskRefExtraMap));
 	}
 	public void appendTask(TaskRoutingWrap task) {
 		if (task != null) {
+			tasks = tasks == null ? new LinkedHashMap<>() : tasks;
 			tasks.put(task.getName(), task);
 		}
 	}
 	public void appendAsyncTask(TaskRoutingWrap task) {
 		if (task != null) {
+			tasks = tasks == null ? new LinkedHashMap<>() : tasks;
 			tasks.put(task.getName(), task);
 			if (asyncTasks == null) {
 				asyncTasks = new HashSet<>();

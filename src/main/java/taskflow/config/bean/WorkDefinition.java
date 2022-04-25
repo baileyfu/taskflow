@@ -137,9 +137,9 @@ public class WorkDefinition {
 		}
 	}
 	public static class TaskRef{
-		private String taskId;
-		private String extra;
-		private boolean async;
+		protected String taskId;
+		protected String extra;
+		protected boolean async;
 		public String getTaskId() {
 			return taskId;
 		}
@@ -161,6 +161,37 @@ public class WorkDefinition {
 		@Override
 		public String toString() {
 			return "TaskRef [taskId=" + taskId + ", extra=" + extra + ", async=" + async + "]";
+		}
+	}
+	public static class WorkRef extends TaskRef{
+		private String refWork;
+		private String resultKey;
+
+		public String getRefWork() {
+			return refWork;
+		}
+
+		public void setRefWork(String refWork) {
+			this.refWork = refWork;
+		}
+
+		public String getResultKey() {
+			return resultKey;
+		}
+
+		public void setResultKey(String resultKey) {
+			this.resultKey = resultKey;
+		}
+
+		@Override
+		public String getExtra() {
+			return null;
+		}
+
+		@Override
+		public String toString() {
+			return "WorkRef [refWork=" + refWork + ", resultKey=" + resultKey + ", taskId=" + taskId + ", extra="
+					+ extra + ", async=" + async + "]";
 		}
 	}
 }

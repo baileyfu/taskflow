@@ -17,7 +17,7 @@ public class PatternRoutingCondition extends AbstractRoutingCondition {
 	public boolean matched(WorkContext workContext) {
 		String routingKey = workContext.getRoutingKey();
 		PatternMatch patternMatch = PatternFactory.getPatternMatch(pattern);
-		return patternMatch.isMatched(routingKey, condition);
+		return patternMatch.isMatched(condition, routingKey);
 	}
 	public PatternType getPattern() {
 		return pattern;

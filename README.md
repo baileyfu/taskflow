@@ -143,7 +143,30 @@ RouteAble Work的定义，如下：
 - start: 起始Task；从指定Task开始执行；必填
 - finish:最终Task；无论如何都会执行，即使执行过程中出现异常；选填
 
-#### 3.4 Extra的配置
+#### 3.4 复用Work
+有时，一个work的通用性较好，希望将其作为其它work的一个task而被复用；使用taskWrapper标签将该work封装为task：
+```
+<!- 通用性较好的work,将被复用 ->
+<tf:work id="subWork" start="calTask" traceable="true"/>
+<!-- 将subWork封装为task供其它work使用 -->
+<tf:taskWrapper id="subWorkWrapper" refWork="subWork" resultKey="subWorkResultName">
+    <tf:routing toTask="someTask"/>
+</tf:taskWrapper>
+
+
+<tf:work id="mainWork" class="taskflow.work.SequentialRouteWork">
+	<tf:task-ref value="task1"/>
+	<tf:task-ref value="task2"/>
+	<!-- 复用subWork,方式一：使用task-ref标签指定被taskWrapper封装过的work -->
+	<tf:task-ref value="subWorkWrapper"/>
+	<!-- 复用subWork,方式二：使用work-ref标签指定workId -->
+	<!-- <tf:work-ref value="subWork"/> -->
+</tf:work>
+```
+配置文件详情见[task-config.xml](./src/test/resources/task-config.xml)；
+编程式用例见[WorkBuilderDemoApplication](./src/test/java/demo/WorkBuilderDemoApplication.java)。
+
+#### 3.5 Extra的配置
 在开发中往往需要定义许多的Work，这些不同的Work可能会引用到同一个Task，在执行该Task时，不同的Work可能会需要不同的参数；
 
 extra可以用来指定处于不同Work中的同一个Task的执行参数；extra的数据类型为String，建议定义为JSON，这样更灵活；定义方式如下：
@@ -179,12 +202,15 @@ public class GetDiffTask {
 3. 如果最大值和最小值的差大于{x}输出“no”，否则输入“ok”
 4. {x}通过配置extra指定
 
+#### 4.1 XML方式
 在classpath下新建配置文件task-config.xml
 
-#### 第一步 编写Task类
+##### 第一步 编写Task类
+
 编写相应的业务逻辑代码，详见test/demo
 
 例如getDiff的核心代码如下：
+
 ```
 private NumberService numberService;
 public void getDiff(@Taskparam("maxValue") int a, @Taskparam("minValue") int b,WorkContext workContext) {
@@ -196,8 +222,11 @@ public void getDiff(@Taskparam("maxValue") int a, @Taskparam("minValue") int b,W
     }
 }
 ```
-#### 第二步 定义Task
+
+##### 第二步 定义Task
+
 task-config.xml加入如下配置
+
 ```
 <bean id="findNumberTaskBean" class="demo.task.FindNumber"/>
 
@@ -214,12 +243,16 @@ task-config.xml加入如下配置
 <tf:task id="soutOutOkTask" ref="findNumberTaskBean" method="soutOutOk"/>
 <tf:task id="soutOutNoTask" ref="findNumberTaskBean" method="soutOutNo"/>
 ```
-#### 第三步 定义Work
+##### 第三步 定义Work
+
 task-config.xml加入如下配置
+
 ```
 <tf:work id="testWork" start="findMaxTask" class="taskflow.work.CustomRouteWork"/>
 ```
-#### 第四步 运行
+
+##### 第四步 运行
+
 ```
 public class DemoApplication {
     public static void main(String[] args) {
@@ -238,6 +271,53 @@ public class DemoApplication {
         context.close();
     }
 }
+```
+
+#### 4.2 编程方式
+编程式定义work/task时，taskflow框架不再跟spring耦合，所有要使用到的业务bean应该自行管理。
+
+##### 第一步 定义Task
+编写相应的业务逻辑代码，详见test/demo/WorkBuilderDemoApplication.java
+
+示例代码如下：
+
+```
+Task findMaxTask = (workContext)->{
+		List<Integer> input = workContext.get("intList");
+		int maxValue = numberService.findMax(input);
+		workContext.put("maxValue", maxValue);
+};
+@Autowired
+FindNumber findNumber;
+Task getDiffTask = (workContext) -> {
+		int maxValue = workContext.get("maxValue");
+		int minValue = workContext.get("minValue");
+		findNumber.getDiff(maxValue, minValue, workContext);
+};
+```
+
+##### 第二步 使用WorkBuilder创建Work
+
+WorkBuilder可以创建RouteAbleWorkBuilder和SequentialWorkBuilder，分别用来生成顺序Work和可路由Work。
+
+```
+RouteAbleWorkBuilder workBuilder = WorkBuilder.newRouteableInstance();
+//添加task后可立即为其添加routing，多个routing可连续调用多次putRouting()方法来添加
+//定义routing时，若key和toTask都为空则routing无效，会被忽略
+//routing可指向当前task以循环执行，最大次数受maxTasks的影响；见test/demo.WorkBuilderApplication示例
+workBuilder.addTask(findMaxTask).putRouting(findMaxTask,RoutingBuilder.newInstance().toTask(findMinTask.getId()).build())
+           .addTask(getDiffTask,"{threshold:1}").putRouting(RoutingBuilder.newInstance().key("ok").toTask(soutOutOkTask.getId()).extra("HighPriority_OK").build())
+				   			        .putRouting(RoutingBuilder.newInstance().key("no").toTask(soutOutNoTask.getId()).extra("HighPriority_NO").build()
+...
+.addTask(findNumber::soutOutOk);
+```
+
+##### 第三步 运行work
+
+```
+Work work=workBuilder.build();
+work.putContext("intList", Arrays.asList(5, 7, 1, 0, 1, 3, 4, 5, 6, 4));
+String result = work.run().getResult();
 ```
 
 ### 5.异步Task
@@ -293,6 +373,11 @@ Task在执行时依然按照定义的顺序调用，若为异步Task则触发调
 		<td>taskflow.reload.enable</td>
 		<td>允许运行时动态重载work</td>
 		<td>true</td>
+	</tr>
+	<tr>
+		<td>taskflow.work.maxTasks</td>
+		<td>允许执行的task次数上限</td>
+		<td>1000</td>
 	</tr>
 	<tr>
 		<td>taskflow.work.traceable</td>
@@ -360,5 +445,15 @@ Task在执行时依然按照定义的顺序调用，若为异步Task则触发调
 		2.修改Work.dealException()方法为protected<br/>
 		3.xml形式注册work支持输出注册记录</td>
 		<td>2022-2-11</td>
+	</tr>
+	<tr>
+		<td>3.1.0</td>
+		<td>1.work可复用<br/>
+		2.Task接口参数由Work修改为WorkContext<br/>
+		3.所有Task的入参不再接受Work,统一为WorkContext<br/>
+		4.支持编程式定义work/task<br/>
+		5.新增系统参数maxTasks<br/>
+		</td>
+		<td>2022-4-25</td>
 	</tr>
 </table>

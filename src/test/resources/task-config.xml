@@ -30,16 +30,28 @@
 	<tf:task id="findMinTask" ref="findNumberTaskBean" method="findMin">
 	    <tf:routing toTask="getDiffTask"/>
 	</tf:task>
-	<tf:task id="getDiffTask" ref="findNumberTaskBean" method="getDiff" extra="{threshold:10}">
-	    <tf:routing key="ok" toTask="soutOutOkTask" extra="HighPriority_OK"/>
+	<tf:task id="getDiffTask" ref="findNumberTaskBean" method="getDiff" extra="{threshold:999}">
+		<!-- pattern取值:string或regex,默认string -->
+	    <tf:routing key="ok" toTask="soutOutOkTask" pattern="string" extra="HighPriority_OK"/>
 	    <tf:routing key="no" toTask="soutOutNoTask" extra="HighPriority_NO"/>
+	    <tf:routing key="else|other" toTask="otherWorkTaskWrapper" pattern="regex"/>
 	</tf:task>
 	<tf:task id="soutOutOkTask" ref="findNumberTaskBean" method="soutOutOk" extra="LowPriority_OK"/>
 	<tf:task id="soutOutNoTask" ref="findNumberTaskBean" method="soutOutNo" extra="LowPriority_NO"/>
     
+    <!-- otherWork中不可再引用此taskWrapper,否则会出现死循环调用 -->
+    <tf:taskWrapper id="otherWorkTaskWrapper" refWork="otherWork" resultKey="otherWorkTaskWrapper">
+	    <tf:routing toTask="calTask"/>
+	</tf:taskWrapper>
+	
     <tf:task id="calTask" ref="calNumberTaskBean" method="cal"/>
+    <tf:task id="otherTask" ref="calNumberTaskBean" method="someMethod"/>
     <!-- Work Define -->
-    <tf:work id="testWork" start="findMaxTask" traceable="true" class="taskflow.work.CustomRouteWork"/>
-    <tf:work id="subWork" start="calTask" class="taskflow.work.CustomRouteWork"/>
+    <tf:work id="subWork" start="calTask" traceable="true"/>
+    <tf:work id="otherWork" traceable="true" class="taskflow.work.SequentialRouteWork">
+    	<tf:task-ref value="otherTask"/>
+    </tf:work>
+    <!-- startWork/finishWork可以指定为其它workId , 但不能指定为当前workId -->
+    <tf:work id="testWork" start="findMaxTask" finishWork="subWork" traceable="true"/>
     <tf:workFactory/>
 </beans>

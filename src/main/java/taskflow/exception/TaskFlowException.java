@@ -1,7 +1,7 @@
 package taskflow.exception;
 
 public class TaskFlowException extends RuntimeException {
-	private static final long serialVersionUID = -5481911907487746989L;
+	private static final long serialVersionUID = 1L;
 
 	public TaskFlowException() {
     }

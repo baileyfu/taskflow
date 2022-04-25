@@ -70,10 +70,62 @@ public class TaskDefinition {
 		return "TaskDefinition [taskId=" + taskId + ", taskBeanId=" + taskBeanId + ", method=" + method + ", extra="
 				+ extra + ", routeDefinitions=" + routeDefinitions + "]";
 	}
+	public static class TaskWrapperDefinition{
+		private String taskId;
+		private String refWork;
+		private String resultKey;
+		//同一路由只允许定义一次
+		private Set<RouteDefinition> routeDefinitions;
+		public String getTaskId() {
+			return taskId;
+		}
+		public void setTaskId(String taskId) {
+			this.taskId = taskId;
+		}
+		public String getRefWork() {
+			return refWork;
+		}
+		public void setRefWork(String refWork) {
+			this.refWork = refWork;
+		}
+		public String getResultKey() {
+			return resultKey;
+		}
+		public void setResultKey(String resultKey) {
+			this.resultKey = resultKey;
+		}
+		public Set<RouteDefinition> getRouteDefinitions() {
+			return routeDefinitions;
+		}
+		public void setRouteDefinitions(Set<RouteDefinition> routeDefinitions) {
+			this.routeDefinitions = routeDefinitions;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			TaskDefinition other = (TaskDefinition) obj;
+			if (taskId == null) {
+				if (other.taskId != null)
+					return false;
+			} else if (!taskId.equals(other.taskId))
+				return false;
+			return true;
+		}
+		@Override
+		public String toString() {
+			return "TaskWrapperDefinition [taskId=" + taskId + ", refWork=" + refWork + ", resultKey=" + resultKey
+					+ ", routeDefinitions=" + routeDefinitions + "]";
+		}
+	}
 	public static class RouteDefinition{
 		private String key;
 		private String toTask;
-		private String patten;
+		private String pattern;
 		private String extra;
 		public String getKey() {
 			return key;
@@ -87,11 +139,11 @@ public class TaskDefinition {
 		public void setToTask(String toTask) {
 			this.toTask = toTask;
 		}
-		public String getPatten() {
-			return patten;
+		public String getPattern() {
+			return pattern;
 		}
-		public void setPatten(String patten) {
-			this.patten = patten;
+		public void setPattern(String pattern) {
+			this.pattern = pattern;
 		}
 		public String getExtra() {
 			return extra;
@@ -124,7 +176,7 @@ public class TaskDefinition {
 		}
 		@Override
 		public String toString() {
-			return "RouteDefinition [key=" + key + ", toTask=" + toTask + ", patten=" + patten + ", extra=" + extra
+			return "RouteDefinition [key=" + key + ", toTask=" + toTask + ", pattern=" + pattern + ", extra=" + extra
 					+ "]";
 		}
 	}

@@ -2,11 +2,11 @@ package taskflow.config;
 
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.CLASS_ATTRIBUTE;
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.ID_ATTRIBUTE;
-import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.VALUE_ATTRIBUTE;
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.INDEX_ATTRIBUTE;
-import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.TYPE_ATTRIBUTE;
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.NAME_ATTRIBUTE;
 import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.REF_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.TYPE_ATTRIBUTE;
+import static org.springframework.beans.factory.xml.BeanDefinitionParserDelegate.VALUE_ATTRIBUTE;
 
 import java.util.ArrayList;
 
@@ -20,6 +20,7 @@ import org.w3c.dom.Element;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.ConstructorArg;
 import taskflow.config.bean.WorkDefinition.TaskRef;
+import taskflow.config.bean.WorkDefinition.WorkRef;
 import taskflow.config.register.WorkRegister;
 import taskflow.enums.ConfigSource;
 import taskflow.enums.Tag;
@@ -41,8 +42,8 @@ public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
         WorkDefinition workDefinition=new WorkDefinition();
         workDefinition.setWorkId(id);
         workDefinition.setWorkClazz(clazz);
-        workDefinition.setStart(element.getAttribute(TagAttribute.WORK_START.NAME));
-        workDefinition.setFinish(element.getAttribute(TagAttribute.WORK_FINISH.NAME));
+		workDefinition.setStart(element.getAttribute(TagAttribute.WORK_START.NAME));
+		workDefinition.setFinish(element.getAttribute(TagAttribute.WORK_FINISH.NAME));
         workDefinition.setMaxTasks(NumberUtils.toInt(maxTasks,0));
         workDefinition.setTraceable(BooleanUtils.toBoolean(traceable));
 		ArrayList<ConstructorArg> constructorArgs = new ArrayList<>();
@@ -52,13 +53,21 @@ public class WorkDefinitionParser implements BeanDefinitionParser,WorkRegister {
 			org.w3c.dom.Node node = element.getChildNodes().item(i);
 			if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
 				Element elm = (Element) node;
-				if(Tag.TASK_REF.getTagName().equalsIgnoreCase(elm.getTagName())) {
+				if (Tag.TASK_REF.getTagName().equalsIgnoreCase(elm.getTagName())) {
 					TaskRef taskRef=new TaskRef();
 					taskRef.setTaskId(elm.getAttribute(VALUE_ATTRIBUTE));
 					taskRef.setExtra(elm.getAttribute(TagAttribute.TASK_EXTRA.NAME));
 					taskRef.setAsync(Boolean.valueOf(elm.getAttribute(TagAttribute.TASK_ASYNC.NAME)));
 					taskRefs.add(taskRef);
-				}else if(Tag.CONSTRUCTOR_ARG.getTagName().equalsIgnoreCase(elm.getTagName())) {
+				} if (Tag.WORK_REF.getTagName().equalsIgnoreCase(elm.getTagName())) {
+					WorkRef taskRef=new WorkRef();
+					String refWorkId = elm.getAttribute(VALUE_ATTRIBUTE);
+					taskRef.setTaskId(refWorkId);
+					taskRef.setRefWork(refWorkId);
+					taskRef.setResultKey(elm.getAttribute(TagAttribute.TASKWRAPPER_RESULT_KEY.NAME));
+					taskRef.setAsync(Boolean.valueOf(elm.getAttribute(TagAttribute.TASK_ASYNC.NAME)));
+					taskRefs.add(taskRef);
+				} else if (Tag.CONSTRUCTOR_ARG.getTagName().equalsIgnoreCase(elm.getTagName())) {
 					ConstructorArg constructorArg = new ConstructorArg();
 					constructorArg.setIndex(NumberUtils.toInt(elm.getAttribute(INDEX_ATTRIBUTE), 0));
 					constructorArg.setName(elm.getAttribute(NAME_ATTRIBUTE));

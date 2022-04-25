@@ -24,6 +24,7 @@ import taskflow.config.bean.TaskExecutorFactory;
 import taskflow.config.bean.WorkDefinition;
 import taskflow.config.bean.WorkDefinition.ConstructorArg;
 import taskflow.config.bean.WorkDefinition.TaskRef;
+import taskflow.config.bean.WorkDefinition.WorkRef;
 import taskflow.constants.TFLogType;
 import taskflow.constants.WorkPropName;
 import taskflow.work.CustomRouteWork;
@@ -65,38 +66,44 @@ public interface WorkRegister extends ConfigSourceAware{
         	}
         }
         //set property
-        work.getPropertyValues().add(WorkPropName.NAME, workDefinition.getWorkId());
+		String workId = workDefinition.getWorkId();
+        work.getPropertyValues().add(WorkPropName.NAME, workId);
         work.getPropertyValues().add(WorkPropName.TRACEABLE, workDefinition.getTraceable());
         if(CustomRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有CustomRouteWork才解析start和finish
         	String start = workDefinition.getStart();
-			Assert.isTrue(!StringUtils.isEmpty(start), "Work '"+workDefinition.getWorkId()+"' must has a start task");
+			Assert.isTrue(!StringUtils.isEmpty(start), "Work '"+workId+"' must has a start task");
+			Assert.isTrue(!start.equals(workId), "the start of work '" + workId + "' can not be itself.");
+            work.getPropertyValues().add(WorkPropName.START, new RuntimeBeanReference(start));
+            
             String finish = workDefinition.getFinish();
-        	
-        	RuntimeBeanReference startBean = new RuntimeBeanReference(start);
-            work.getPropertyValues().add(WorkPropName.START, startBean);
             if (!StringUtils.isEmpty(finish)) {
-                RuntimeBeanReference finishBean = new RuntimeBeanReference(finish);
-                work.getPropertyValues().add(WorkPropName.FINISH, finishBean);
+                Assert.isTrue(!finish.equals(workId), "the end of work '" + workId + "' can not be itself.");
+                work.getPropertyValues().add(WorkPropName.FINISH, new RuntimeBeanReference(finish));
             }
 		} else if(SequentialRouteWork.class.isAssignableFrom(work.getBeanClass())) {//只有SerialRouteWork才解析sequence
         	ManagedMap<String, RuntimeBeanReference> tasksMap=new ManagedMap<>();
 			ArrayList<TaskRef> taskRefs = workDefinition.getTaskRefs();
-			Assert.isTrue(taskRefs != null && taskRefs.size() > 0, "the Work '"+workDefinition.getWorkId()+"' must has a task-ref at least!");
+			Assert.isTrue(taskRefs != null && taskRefs.size() > 0, "the Work '"+workId+"' must has a task-ref at least!");
 			Map<String, String> taskRefExtraMap = null;
 			HashSet<String> asyncTasks = null;
 			for (TaskRef taskRef : taskRefs) {
 				String taskId = taskRef.getTaskId();
 				if (StringUtils.isEmpty(taskId)) {
-					throw new NullPointerException("the Work '"+workDefinition.getWorkId()+"' has a empty task-ref");
+					throw new NullPointerException("the Work '"+workId+"' has a empty task-ref/work-ref");
+				}
+				Assert.isTrue(!taskId.equals(workId), "the task of work '" + workId + "' can not be itself.");
+				if (taskRef instanceof WorkRef) {
+					taskId = TaskWrapperRegister.register(registry, (WorkRef) taskRef,(i,c)->logRegister(TFLogType.TASK, i, c));
+				}else {
+					String extra = taskRef.getExtra();
+					if (!StringUtils.isEmpty(extra)) {
+						if (taskRefExtraMap == null) {
+							taskRefExtraMap = new HashMap<>();
+						}
+						taskRefExtraMap.put(taskId, extra.trim());
+					}
 				}
 				tasksMap.put(taskId, new RuntimeBeanReference(taskId));
-				String extra = taskRef.getExtra();
-				if (!StringUtils.isEmpty(extra)) {
-					if (taskRefExtraMap == null) {
-						taskRefExtraMap = new HashMap<>();
-					}
-					taskRefExtraMap.put(taskId, extra.trim());
-				}
 				if (taskRef.isAsync()) {
 					if (asyncTasks == null) {
 						asyncTasks = new HashSet<>();
@@ -104,10 +111,10 @@ public interface WorkRegister extends ConfigSourceAware{
 					asyncTasks.add(taskId);
 				}
 			}
-			if (taskRefExtraMap != null) {
+//			if (taskRefExtraMap != null) {
 				//extra构造参数必须放到最后
 				constructorArgumentValues.addIndexedArgumentValue(constructorArgumentValues.getArgumentCount(), taskRefExtraMap);
-			}
+//			}
 			if (asyncTasks != null) {
 				work.getPropertyValues().add(WorkPropName.ASYNC_TASKS, asyncTasks);
 				try {

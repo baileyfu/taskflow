@@ -3,26 +3,27 @@ package demo.task;
 import java.util.Date;
 
 import taskflow.annotation.Taskparam;
-import taskflow.work.Work;
+import taskflow.work.context.WorkContext;
 
 public class TaskC  {
 
-	public void method1(Work work) {
-		System.out.println("TaskC's method1 be invoked!!! extra : "+work.getWorkContext().getRuntimeArgs()+"--->"+Thread.currentThread());
+	public void method1(WorkContext workContext) {
+		System.out.println("TaskC's method1 be invoked!!! extra : "+workContext.getRuntimeArgs()+"--->"+Thread.currentThread());
 	}
 
 	public void method2() {
 		System.out.println("TaskC's method2 be invoked+++>"+Thread.currentThread());
 	}
 	
-	public void method3(Work work, @Taskparam("name") String x, @Taskparam(required = false) Date birth) {
-		System.out.println("TaskC's method3 be invoked !!! x : "+x+" , birth : "+birth+" , extra : "+work.getWorkContext().getRuntimeArgs()+" called by :"+Thread.currentThread());
-		work.getWorkContext().setResult("RESULT");
+	public void method3(WorkContext workContext, @Taskparam("name") String x, @Taskparam(required = false) Date birth) {
+		System.out.println("TaskC's method3 be invoked !!! x : "+x+" , birth : "+birth+" , extra : "+workContext.getRuntimeArgs()+" called by :"+Thread.currentThread());
+		System.out.println("TaskC's method3 get result from subWork is : 'subWork'=" + workContext.get("subWork")+" , 'subWorkResult'="+ workContext.get("subWorkResult"));
+		workContext.setResult("RESULT from TaskC.method3()");
 	}
 
-	public void methodEnd(Work work) {
-		System.out.println("TaskC's methodEnd be invoked !!! birth : "+work.getContext("birth")+" called by :"+Thread.currentThread());
-		work.getWorkContext().setResult("OVER");
+	public void methodEnd(WorkContext workContext) {
+		System.out.println("TaskC's methodEnd be invoked !!! birth : "+workContext.get("birth")+" called by :"+Thread.currentThread());
+		workContext.setResult("OVER");
 	}
 
 }

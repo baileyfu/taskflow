@@ -21,8 +21,9 @@ public class MapWorkContext extends AbstractWorkContext {
 		this.setTaskRefExtraMap(taskRefExtraMap);
 	}
 
-	public Object get(String parameterName) {
-		return context.get(parameterName);
+	@SuppressWarnings("unchecked")
+	public <T> T get(String parameterName) {
+		return (T)context.get(parameterName);
 	}
 	public void put(String key, Object value) {
 		context.put(key, value);
@@ -31,5 +32,15 @@ public class MapWorkContext extends AbstractWorkContext {
 	@Override
 	public String toString() {
 		return "MapWorkContext [context=" + context + ", " + super.toString() + "]";
+	}
+	@Override
+	public Map<String, Object> getAll() {
+		return context;
+	}
+	@Override
+	public void putAll(WorkContext workContext) {
+		if (workContext != null) {
+			context.putAll(workContext.getAll());
+		}
 	}
 }

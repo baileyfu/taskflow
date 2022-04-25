@@ -1,4 +1,4 @@
-package taskflow.task;
+package taskflow.task.routing;
 
 import taskflow.routing.Routing;
 import taskflow.work.Work;
@@ -13,9 +13,12 @@ public abstract class AbstractTaskRoutingWrap implements TaskRoutingWrap {
 
 	public void doTask(Work work) throws Exception {
 		WorkAgent.callReceive(work, this);
+		// 将key重置为null,防止前一个task设置的key对当前task的执行造成影响
+		work.getWorkContext().setRoutingKey(null);
 		// 执行Task的业务方法
 		invokeTaskMethod(work);
 		if (routing != null) {
+			//当仅设置了key而未设置toTask，或toTask不存在时，此处next为null
 			TaskRoutingWrap next = routing.doRouting(work.getWorkContext());
 			if (next != null) {
 				next.doTask(work);

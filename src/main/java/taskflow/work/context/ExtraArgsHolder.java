@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ExtraArgsHolder {
-	//task定义的运行时参数
+	//定义task指定的运行时参数
 	private static Map<String, String> TASK_EXTRA_MAP;
-	//task.routing定义的运行时参数;key格式：previousTask_currentTask
+	//定义task.routing时指定s的运行时参数;key格式：previousTask_currentTask
 	private static Map<String, String> TASK_ROUTING_EXTRA_MAP;
 	
 	protected Map<String, String> takeAllExtra() {

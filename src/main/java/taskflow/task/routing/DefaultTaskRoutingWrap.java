@@ -1,5 +1,6 @@
-package taskflow.task;
+package taskflow.task.routing;
 
+import taskflow.task.Task;
 import taskflow.work.Work;
 
 /**
@@ -19,6 +20,6 @@ public class DefaultTaskRoutingWrap extends AbstractTaskRoutingWrap {
 	}
 	@Override
 	protected void invokeTaskMethod(Work work) throws Exception {
-		task.execute(work);
+		task.execute(work.getWorkContext());
 	}
 }

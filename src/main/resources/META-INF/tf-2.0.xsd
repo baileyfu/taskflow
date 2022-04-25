@@ -86,7 +86,7 @@
         <xsd:attribute name="key" type="xsd:string" default="@default">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="toTask" type="xsd:string" use="required">
+        <xsd:attribute name="toTask" type="xsd:string" use="optional">
             <xsd:annotation>
                 <!--<xsd:appinfo>-->
                 <!--<tool:annotation kind="ref">-->
@@ -95,7 +95,14 @@
                 <!--</xsd:appinfo>-->
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="patten" type="xsd:string" default="string"><!-- string or regex -->
+        <!-- xsd无法实现属性互斥,暂由代码实现toTask/toWork互斥约束 -->
+        <xsd:attribute name="toWork" type="xsd:string" use="optional">
+            <![CDATA[ ]]>
+        </xsd:attribute>
+        <xsd:attribute name="resultKey" type="xsd:string">
+            <![CDATA[ ]]>
+        </xsd:attribute>
+        <xsd:attribute name="pattern" type="xsd:string" default="string"><!-- string or regex -->
             <![CDATA[ ]]>
         </xsd:attribute>
         <xsd:attribute name="extra" type="xsd:string" use="optional">
@@ -119,6 +126,29 @@
     </xsd:complexType>
 
 
+	<xsd:element name="taskWrapper">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="beans:identifiedType">
+                	<xsd:group ref="taskElements"/>
+                    <xsd:attributeGroup ref="taskWrapperAttributes"/>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+	<xsd:attributeGroup name="taskWrapperAttributes">
+    	<xsd:attribute name="refWork" type="xsd:string" use="required">
+            <xsd:annotation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="resultKey" type="xsd:string" use="optional">
+            <xsd:annotation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+	
+
+
     <xsd:element name="work">
         <xsd:annotation>
             <xsd:documentation><![CDATA[ The method invoke timeout. ]]></xsd:documentation>
@@ -138,6 +168,7 @@
 			<xsd:choice minOccurs="0" maxOccurs="unbounded">
 				<xsd:element ref="constructor-arg"/>
 				<xsd:element ref="task-ref"/>
+				<xsd:element ref="work-ref"/>
 			</xsd:choice>
 		</xsd:sequence>
 	</xsd:group>
@@ -193,6 +224,19 @@
 			        </xsd:attribute>
 		        </xsd:complexType>
             </xsd:element>
+            <xsd:element name="work-ref">
+            	<xsd:complexType mixed="true">
+		            <xsd:attribute name="value" type="xsd:string">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
+					<xsd:attribute name="resultKey" type="xsd:string">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
+			        <xsd:attribute name="async" type="xsd:boolean">
+			            <![CDATA[ ]]>
+			        </xsd:attribute>
+		        </xsd:complexType>
+            </xsd:element>
     <xsd:attributeGroup name="workAttributes">
         <!-- <xsd:attribute name="id" type="xsd:ID" use="required">
             <xsd:annotation>
@@ -207,7 +251,10 @@
                 <!--</xsd:appinfo>-->
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="maxTasks" type="xsd:integer" default="100000">
+		<xsd:attribute name="startWork" type="xsd:string">
+            <xsd:annotation/>
+        </xsd:attribute>
+        <xsd:attribute name="maxTasks" type="xsd:integer" default="0">
             <![CDATA[ ]]>
         </xsd:attribute>
         <xsd:attribute name="finish" type="xsd:string">
@@ -219,10 +266,13 @@
                 </xsd:appinfo>
             </xsd:annotation>
         </xsd:attribute>
+        <xsd:attribute name="finishWork" type="xsd:string">
+            <xsd:annotation/>
+        </xsd:attribute>
         <xsd:attribute name="traceable" type="xsd:boolean" default="false">
             <![CDATA[ ]]>
         </xsd:attribute>
-        <xsd:attribute name="class" type="xsd:string" default="taskflow.worker.CustomRouteWork">
+        <xsd:attribute name="class" type="xsd:string" default="taskflow.work.CustomRouteWork">
             <![CDATA[ ]]>
         </xsd:attribute>
     </xsd:attributeGroup>

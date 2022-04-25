@@ -9,6 +9,7 @@ import org.springframework.core.MethodParameter;
 import org.springframework.core.ParameterNameDiscoverer;
 
 import taskflow.annotation.Taskparam;
+import taskflow.exception.TaskFlowException;
 import taskflow.work.Work;
 import taskflow.work.context.AbstractWorkContext;
 import taskflow.work.context.WorkContext;
@@ -46,14 +47,15 @@ public class TaskParameterResolver {
 		}
     };
 
-    public static Object[] resolve(MethodParameter[] parameters, Work work) {
+    static Object[] resolve(MethodParameter[] parameters, Work work) {
         Object[] res = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             MethodParameter methodParameter = parameters[i];
             methodParameter.initParameterNameDiscovery(parameterNameDiscoverer);
             if (methodParameter.getParameterType().isAssignableFrom(Work.class)) {
-                res[i] = work;
-                continue;
+				throw new TaskFlowException("the parameter's type of Task in work '"+work.getName()+"' can not be Work.class,instead with WorkContext.class");
+//                res[i] = work;
+//                continue;
             } else if (methodParameter.getParameterType().isAssignableFrom(WorkContext.class)) {
                 res[i] = work.getWorkContext();
                 continue;
