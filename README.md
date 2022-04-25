@@ -143,19 +143,29 @@ RouteAble Work的定义，如下：
 - start: 起始Task；从指定Task开始执行；必填
 - finish:最终Task；无论如何都会执行，即使执行过程中出现异常；选填
 
-可复用Work
-
-有时，一个work的通用性较好，其可作为其它work的一个task而被复用；使用taskWrapper将该work封装为task：
+#### 3.4 复用Work、
+有时，一个work的通用性较好，希望将其作为其它work的一个task而被复用；使用taskWrapper标签将该work封装为task：
 ```
+<!- 通用性较好的work,将被复用 ->
+<tf:work id="subWork" start="calTask" traceable="true"/>
 <!-- 将subWork封装为task供其它work使用 -->
 <tf:taskWrapper id="subWorkWrapper" refWork="subWork" resultKey="subWorkResultName">
-    <tf:routing toTask="calTask"/>
+    <tf:routing toTask="someTask"/>
 </tf:taskWrapper>
-<!- 通用性较好的work ->
-<tf:work id="subWork" start="calTask" traceable="true"/>
-```
 
-#### 3.4 Extra的配置
+
+<tf:work id="mainWork" class="taskflow.work.SequentialRouteWork">
+	<tf:task-ref value="task1"/>
+	<tf:task-ref value="task2"/>
+	<!-- 复用subWork,方式一：使用task-ref标签指定被taskWrapper封装过的work -->
+	<tf:task-ref value="subWorkWrapper"/>
+	<!-- 复用subWork,方式二：使用work-ref标签指定workId -->
+	<!-- <tf:work-ref value="subWork"/> -->
+</tf:work>
+```
+编程式用例见[WorkBuilderDemoApplication](./src/test/java/demo/WorkBuilderDemoApplication.java)。
+
+#### 3.5 Extra的配置
 在开发中往往需要定义许多的Work，这些不同的Work可能会引用到同一个Task，在执行该Task时，不同的Work可能会需要不同的参数；
 
 extra可以用来指定处于不同Work中的同一个Task的执行参数；extra的数据类型为String，建议定义为JSON，这样更灵活；定义方式如下：
