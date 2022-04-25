@@ -54,7 +54,9 @@ public final class SequentialWorkBuilder extends WorkBuilder{
 	
 	public Work build(String workName,TaskExecutorFactory taskExecutorFactory) {
 		SequentialRouteWork work = workCreater.apply(taskRefExtraMap);
-		work.setName(workName);
+		if (workName != null && !workName.trim().equals("")) {
+			work.setName(workName);
+		}
 		work.setTaskExecutorFactory(taskExecutorFactory);
 		try {
 			for (Entry<String, Task> entry : taskMap.entrySet()) {

@@ -35,7 +35,7 @@ public class FindNumber {
 		workContext.put("minValue", minValue);
 	}
 
-	public void getDiff(@Taskparam("maxValue") int a, int minValue,WorkContext workContext) {
+	public int getDiff(@Taskparam("maxValue") int a, int minValue,WorkContext workContext) {
 		int diff = workContext.getRuntimeArgsJSON().getInteger("threshold");
         if (numberService.checkNumber(a, minValue, diff)) {
             workContext.setRoutingKey("ok");
@@ -45,6 +45,7 @@ public class FindNumber {
         if(diff==999) {
         	workContext.setRoutingKey("other");
         }
+        return diff;
     }
 
 	public void soutOutOk(WorkContext workContext) {

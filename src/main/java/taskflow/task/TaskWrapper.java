@@ -35,7 +35,9 @@ public class TaskWrapper implements Task{
 		 */
 		//workContext.getRuntimeArgs()
 		target.getWorkContext().putAll(workContext);
-		Object result = target.run().getResult();
+		WorkContext targetWorkContext = target.run();
+		workContext.setRoutingKey(targetWorkContext.getRoutingKey());
+		Object result = targetWorkContext.getResult();
 		if (result != null) {
 			workContext.put(resultName, result);
 		}

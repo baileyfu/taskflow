@@ -40,7 +40,7 @@
     	<tf:task-ref value="step3" extra="{y:1}" async="false"/>
     	<tf:task-ref value="step2" extra="{z:false}" async="true"/>
     	<!-- value不能指定为当前workId -->
-    	<!-- resultKey为此work-ref执行结果（即work.run().getResult()）放入mySequentialTaskWork的WorkContext中的key，供后续task使用;默认为work-ref的id -->
+    	<!-- resultKey为此work-ref执行结果（即work.run().getResult()）放入mySequentialTaskWork的WorkContext中的key，供后续task使用;默认为work-ref的value -->
     	<tf:work-ref value="subWork" resultKey="subWorkResult" async="false"/>
     	<tf:task-ref value="step5" async="false"/>
     	<!-- <tf:task-ref value="end"/> -->

@@ -163,7 +163,9 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 			if (endTask == null) {
 				throw new TaskFlowException("build Work error : the end task named '" + endTaskId + "' not exist!");
 			}
-			work.setFinish(new DefaultTaskRoutingWrap(endTask));
+			DefaultTaskRoutingWrap finish = new DefaultTaskRoutingWrap(endTask);
+			finish.setName(endTask.getId());
+			work.setFinish(finish);
 		}
 		if (taskRefExtraMap != null) {
 			for (Entry<String, String> entry : taskRefExtraMap.entrySet()) {

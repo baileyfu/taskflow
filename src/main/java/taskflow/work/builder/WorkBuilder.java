@@ -52,6 +52,17 @@ public abstract class WorkBuilder {
 	public static SequentialWorkBuilder newSequentialInstance() {
 		return new SequentialWorkBuilder(DEFAULT_WORK_CREATER);
 	}
+	public static SequentialWorkBuilder newSequentialInstance(boolean traceable) {
+		SequentialWorkBuilder sequentialWorkBuilder = new SequentialWorkBuilder(DEFAULT_WORK_CREATER);
+		sequentialWorkBuilder.setTraceable(traceable);
+		return sequentialWorkBuilder;
+	}
+	public static SequentialWorkBuilder newSequentialInstance(boolean traceable,int maxTasks) {
+		SequentialWorkBuilder sequentialWorkBuilder = new SequentialWorkBuilder(DEFAULT_WORK_CREATER);
+		sequentialWorkBuilder.setTraceable(traceable);
+		sequentialWorkBuilder.setMaxTasks(maxTasks);
+		return sequentialWorkBuilder;
+	}
 
 	public static SequentialWorkBuilder newSequentialInstance(Function<Map<String, String>,SequentialRouteWork> workCreater) {
 		return new SequentialWorkBuilder(workCreater);
@@ -60,8 +71,30 @@ public abstract class WorkBuilder {
 	public static RouteAbleWorkBuilder newRouteableInstance() {
 		return new RouteAbleWorkBuilder();
 	}
+	public static RouteAbleWorkBuilder newRouteableInstance(boolean traceable) {
+		RouteAbleWorkBuilder routeAbleWorkBuilder=new RouteAbleWorkBuilder();
+		routeAbleWorkBuilder.setTraceable(traceable);
+		return routeAbleWorkBuilder;
+	}
+	public static RouteAbleWorkBuilder newRouteableInstance(boolean traceable,int maxTasks) {
+		RouteAbleWorkBuilder routeAbleWorkBuilder=new RouteAbleWorkBuilder();
+		routeAbleWorkBuilder.setTraceable(traceable);
+		routeAbleWorkBuilder.setMaxTasks(maxTasks);
+		return routeAbleWorkBuilder;
+	}
 	
 	public static RouteAbleWorkBuilder newRouteableInstance(CustomRouteWork work) {
 		return new RouteAbleWorkBuilder(work);
+	}
+	public static RouteAbleWorkBuilder newRouteableInstance(CustomRouteWork work,boolean traceable) {
+		RouteAbleWorkBuilder routeAbleWorkBuilder=new RouteAbleWorkBuilder();
+		routeAbleWorkBuilder.setTraceable(traceable);
+		return routeAbleWorkBuilder;
+	}
+	public static RouteAbleWorkBuilder newRouteableInstance(CustomRouteWork work,boolean traceable,int maxTasks) {
+		RouteAbleWorkBuilder routeAbleWorkBuilder=new RouteAbleWorkBuilder();
+		routeAbleWorkBuilder.setTraceable(traceable);
+		routeAbleWorkBuilder.setMaxTasks(maxTasks);
+		return routeAbleWorkBuilder;
 	}
 }
