@@ -143,6 +143,18 @@ RouteAble Work的定义，如下：
 - start: 起始Task；从指定Task开始执行；必填
 - finish:最终Task；无论如何都会执行，即使执行过程中出现异常；选填
 
+可复用Work
+
+有时，一个work的通用性较好，其可作为其它work的一个task而被复用；使用taskWrapper将该work封装为task：
+```
+<!-- 将subWork封装为task供其它work使用 -->
+<tf:taskWrapper id="subWorkWrapper" refWork="subWork" resultKey="subWorkResultName">
+    <tf:routing toTask="calTask"/>
+</tf:taskWrapper>
+<!- 通用性较好的work ->
+<tf:work id="subWork" start="calTask" traceable="true"/>
+```
+
 #### 3.4 Extra的配置
 在开发中往往需要定义许多的Work，这些不同的Work可能会引用到同一个Task，在执行该Task时，不同的Work可能会需要不同的参数；
 

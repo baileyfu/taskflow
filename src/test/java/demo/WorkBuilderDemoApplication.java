@@ -48,6 +48,7 @@ public class WorkBuilderDemoApplication {
 		//定义task
 		Task findMaxTask = findNumber::findMax;
 		Task findMinTask = findNumber::findMin;
+		//将其它work包装为task
 		Task getDiffTask = new TaskWrapper(createSubWork(),"diffResult");
 		Task soutOutOkTask = findNumber::soutOutOk;
 		Task soutOutNoTask = findNumber::soutOutNo;
@@ -55,8 +56,8 @@ public class WorkBuilderDemoApplication {
 		RouteAbleWorkBuilder workBuilder = WorkBuilder.newRouteableInstance(true);
 		return workBuilder.addTask(findMaxTask).putRouting(findMaxTask,RoutingBuilder.newInstance().toTask(findMinTask.getId()).build())
 				   .addTask(findMinTask).putRouting(RoutingBuilder.newInstance().toTask(getDiffTask.getId()).build())
-				   .addTask(getDiffTask,"{threshold:1}").putRouting(RoutingBuilder.newInstance().key("ok").toTask(soutOutOkTask.getId()).extra("HighPriority_OK").build())
-				   										.putRouting(RoutingBuilder.newInstance().key("no").toTask(soutOutNoTask.getId()).extra("HighPriority_NO").build())
+				   .addTask(getDiffTask).putRouting(RoutingBuilder.newInstance().key("ok").toTask(soutOutOkTask.getId()).extra("HighPriority_OK").build())
+				   						.putRouting(RoutingBuilder.newInstance().key("no").toTask(soutOutNoTask.getId()).extra("HighPriority_NO").build())
 				   .addTask(soutOutOkTask)
 				   .addTask(soutOutNoTask)
 				   .setStart(findMaxTask.getId())
@@ -64,9 +65,7 @@ public class WorkBuilderDemoApplication {
 				   .build("myWork");
 	}
 	public static void main(String[] args) {
-		System.setProperty(PropertyNameAndValue.WORK_TRACEABLE, "true");
-		System.setProperty(PropertyNameAndValue.LOG_PRINTABLE, "true");
-		System.setProperty(PropertyNameAndValue.LOG_PRINT_DETAIL, "true");
+		System.setProperty(PropertyNameAndValue.WORK_TRACEABLE, "false");
 		WorkBuilderDemoApplication wb = new WorkBuilderDemoApplication();
 		Work work = wb.createWork();
 		work.putContext("intList", Arrays.asList(5, 7, 1, 2, 1, 3, 4, 5, 6, 4));

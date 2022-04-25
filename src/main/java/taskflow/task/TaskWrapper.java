@@ -31,9 +31,9 @@ public class TaskWrapper implements Task{
 	public void execute(WorkContext workContext) {
 		Assert.notNull(target, "the work of TaskWrapper can not be null!");
 		/**
-		 * work类型的task不考虑extra
+		 * work类型的task不支持extra
 		 */
-		//workContext.getRuntimeArgs()
+//		workContext.getRuntimeArgs();
 		target.getWorkContext().putAll(workContext);
 		WorkContext targetWorkContext = target.run();
 		workContext.setRoutingKey(targetWorkContext.getRoutingKey());
