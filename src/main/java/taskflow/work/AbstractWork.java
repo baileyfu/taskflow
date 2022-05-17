@@ -18,6 +18,7 @@ public abstract class AbstractWork implements Work{
 	protected WorkContext workContext;
 	protected ArrayList<TaskTrace> taskTraces;
 	protected boolean traceable;
+	private boolean executed;
 	public AbstractWork() {
 		workContext = new MapWorkContext(this.getClass());
 		this.name = this.toString();
@@ -105,4 +106,15 @@ public abstract class AbstractWork implements Work{
 		workContext.holderException(((AbstractWorkContext) workContext).getCurrentTask(), workException);
 		throw new TaskFlowException("TaskFlow's work '"+name+"' occur error!", workException);
 	}
+	
+	@Override
+	public WorkContext run() {
+		if (executed) {
+			throw new TaskFlowException("Non repeatable ! the Work '" + name + "' has already executed!");
+		}
+		executed = true;
+		return execute();
+	}
+
+	abstract protected WorkContext execute(); 
 }

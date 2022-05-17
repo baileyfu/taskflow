@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 import taskflow.exception.TaskFlowException;
 import taskflow.routing.DefaultRouting;
@@ -28,17 +29,13 @@ import taskflow.work.context.ExtraArgsHolder;
 public final class RouteAbleWorkBuilder extends WorkBuilder {
 	private Map<String, Task> taskMap = null;
 	private Map<String, List<Routing>> taskRouting = null;
-	private CustomRouteWork work;
+	private Supplier<CustomRouteWork> workCreater;
 	private String startTaskId;
 	private String endTaskId;
 	private String lastAddedTaskId;
-	RouteAbleWorkBuilder() {
-		this.taskMap = new HashMap<>();
-		taskRouting = new HashMap<>();
-	}
 
-	RouteAbleWorkBuilder(CustomRouteWork work) {
-		this.work = work;
+	RouteAbleWorkBuilder(Supplier<CustomRouteWork> workCreater) {
+		this.workCreater = workCreater;
 		this.taskMap = new HashMap<>();
 		taskRouting = new HashMap<>();
 	}
@@ -153,7 +150,7 @@ public final class RouteAbleWorkBuilder extends WorkBuilder {
 		if (startTaskId == null || startTaskId.trim().equals("")) {
 			throw new TaskFlowException("build Work error : the start task can not be empty!");
 		}
-		work = work == null ? new CustomRouteWork() : work;
+		CustomRouteWork work = workCreater.get();
 		if (workName != null && !workName.trim().equals("")) {
 			work.setName(workName);
 		}

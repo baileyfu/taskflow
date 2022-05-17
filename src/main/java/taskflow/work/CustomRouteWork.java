@@ -15,7 +15,7 @@ public class CustomRouteWork extends AbstractWork {
 	public CustomRouteWork() {
 	}
 
-	public WorkContext run() {
+	public WorkContext execute() {
 		try {
 			try {
 				start.doTask(this);

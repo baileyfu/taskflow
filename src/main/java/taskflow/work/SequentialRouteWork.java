@@ -24,7 +24,6 @@ import taskflow.work.context.WorkContextAgent;
  * @description
  */
 public class SequentialRouteWork extends AbstractWork {
-	private boolean executed = false;
 	private LinkedHashMap<String, TaskRoutingWrap> tasks;
 	private TaskExecutorFactory taskExecutorFactory;
 	private HashSet<String> asyncTasks;
@@ -51,23 +50,20 @@ public class SequentialRouteWork extends AbstractWork {
 		}
 	}
 	@Override
-	public WorkContext run() {
-		if(!executed) {
-			executed=true;
-			try {
-				if (tasks != null && tasks.size() > 0) {
-					for (TaskRoutingWrap task : tasks.values()) {
-						if (asyncTasks != null && asyncTasks.contains(task.getName())) {
-							executeAsynchronously(task);
-						} else {
-							executeSynchronously(task);
-						}
+	public WorkContext execute() {
+		try {
+			if (tasks != null && tasks.size() > 0) {
+				for (TaskRoutingWrap task : tasks.values()) {
+					if (asyncTasks != null && asyncTasks.contains(task.getName())) {
+						executeAsynchronously(task);
+					} else {
+						executeSynchronously(task);
 					}
 				}
-			} catch (Exception e) {
-				preDealException(e);
-				dealExcpetion(e);
 			}
+		} catch (Exception e) {
+			preDealException(e);
+			dealExcpetion(e);
 		}
 		return workContext;
 	}
