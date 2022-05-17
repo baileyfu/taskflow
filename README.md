@@ -2,7 +2,7 @@
 以Athlizo的business-flow为蓝本修改而成的任务流框架.原项目地址:
 - github:[https://github.com/Athlizo/business-flow-parent](https://github.com/Athlizo/business-flow-parent)
 
-本项目增加了部分功能，支持SpringBoot，支持动态修改，支持异步执行等；并调整了原框架中的一些概念：
+本项目增加了部分功能，支持SpringBoot，支持动态修改、异步执行及功能复用等；并调整了原框架中的一些概念：
 - Work：表示一项工作；由若干个任务组成，并维护各项任务执行时所需的上下文环境；根据执行方式分为下面两种：
   - Sequential Work：顺序工作；其任务按创建时的顺序依次执行；
   - RouteAble Work：可路由工作；任务根据条件决定执行顺序；
@@ -25,7 +25,7 @@
 	</tr>
 </table>
 
-在执行任务中，任意同步Task抛出异常将中断Work的执行。推荐实现Work的dealExcpetion方法自定义异常的处理。已经在执行的异步Task不受异常影响，但尚未执行的异步Task将不再执行。
+* 在执行任务中，任意同步Task抛出异常将中断Work的执行。推荐实现Work的dealExcpetion方法自定义异常的处理。已经在执行的异步Task不受异常影响，但尚未执行的异步Task将不再执行。
 
 ### 2.API介绍
 #### 2.1 WorkContext接口
@@ -33,7 +33,7 @@
 
 在Task中通过WorkContext来获取之前Task设置的数据，或设置当前Task的执行数据，传递给下一个Task；
 
-改进后，支持设置额外的参数传递给特定Task或Routing，详见Usage；
+改进后，支持设置运行时参数传递给特定Task或Routing，详见Usage；
 
 #### 2.2 SequentialRouteWork类
 Sequential Work的实现类。可直接使用，或进行扩展来自定义异常处理（dealExcpetion方法）和Task执行前置处理（receive方法；每个Task执行前会调用此方法）。
@@ -61,11 +61,11 @@ public class GetDiff implements Task {
     @Autowired
     private SomeBizService bizService;
     @Override
-    public void execute(Work work) {
-        int maxValue = work.getContext（"maxValue"）；
-        int minValue = work.getContext（"minValue"）；
+    public void execute(WorkContext workContext) {
+        int maxValue = workContext.get（"maxValue"）；
+        int minValue = workContext.get（"minValue"）；
         //设置处理结果传递给下一个Task
-        work.putContext（"effective"，bizService.isEffective(maxValue,minValue)）；
+        workContext.put（"effective"，bizService.isEffective(maxValue,minValue)）；
     }
 }
 ```
@@ -75,13 +75,13 @@ public class GetDiffTask {
     @Autowired
     private SomeBizService bizService;
     //方法名任意
-    public void checkIfEffective(Work work) {
-        int maxValue = work.getContext（"maxValue"）；
-        int minValue = work.getContext（"minValue"）；
+    public void checkIfEffective(WorkContext workContext) {
+        int maxValue = workContext.put（"maxValue"）；
+        int minValue = workContext.put（"minValue"）；
         //设置处理结果传递给下一个Task
-        work.putContext（"effective"，bizService.isEffective(maxValue,minValue)）；
-        //如果是RouteAble Work，可以指定Routing规则
-        （（CustomRouteWork）work).setRoutingKey("some routing key");
+        workContext.put（"effective"，bizService.isEffective(maxValue,minValue)）；
+        //如果是RouteAble Work，可以指定Routing规则，否则设置了也无效
+        workContext.setRoutingKey("some routing key");
     }
 }
 ```
@@ -132,7 +132,7 @@ Sequential Work的定义，如下：
 其中：
 - id: 对应的一个Spring Bean的name
 - traceable: 是否记录Task调用轨迹；true会记录执行每个task时的WorkContext内容快照
-- maxTasks:规定了Work如果处理的次数大于这个数就会跑出异常（防止死循环）
+- maxTasks:规定了Work如果处理的次数大于这个数就会抛出异常（防止死循环）
 - class:制定Work的类型;可自行扩展
 
 RouteAble Work的定义，如下：
@@ -184,11 +184,7 @@ extra可以用来指定处于不同Work中的同一个Task的执行参数；extr
 extra的获取：
 ~~~~
 public class GetDiffTask {
-    public void checkIfEffective(Work work) {
-        String extra = work.getWorkContext().getRuntimeArgs()；
-        ...
-    }
-    public void otherTaskMethod(WorkContext workContext) {
+    public void checkIfEffective(WorkContext workContext) {
         String extra = workContext.getRuntimeArgs()；
         ...
     }
