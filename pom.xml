@@ -11,7 +11,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<taskflow.version>3.0.0-RELEASE</taskflow.version>
-		<fastjson.version>1.2.78</fastjson.version>
+		<fastjson.version>1.2.83</fastjson.version>
 	</properties>
 	<profiles>
 		<profile>
