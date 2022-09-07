@@ -105,7 +105,7 @@ public abstract class AbstractWorkContext extends ExtraArgsHolder implements Wor
 
 	@Override
 	public String toString() {
-		return "AbstractWorkContext [currentTask=" + currentTask + ", routingKey=" + routingKey + ", result=" + result 
+		return "AbstractWorkContext [workClazz="+workClazz+", currentTask=" + currentTask + ", routingKey=" + routingKey + ", result=" + result 
 				+ ", exceptions=" + exceptions 
 				+ ", taskRefExtraMap=" + taskRefExtraMap
 				+ ", " + super.toString() + "]";
